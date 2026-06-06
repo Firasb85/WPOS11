@@ -9,38 +9,442 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSnapshotsIndexRouteImport } from './routes/_authenticated/snapshots/index'
+import { Route as AuthenticatedEvidenceIndexRouteImport } from './routes/_authenticated/evidence/index'
+import { Route as AuthenticatedDiagnosticsIndexRouteImport } from './routes/_authenticated/diagnostics/index'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedSnapshotsNewRouteImport } from './routes/_authenticated/snapshots/new'
+import { Route as AuthenticatedReportsExportRouteImport } from './routes/_authenticated/reports/export'
+import { Route as AuthenticatedReportsDiagnosticsRouteImport } from './routes/_authenticated/reports/diagnostics'
+import { Route as AuthenticatedProcessesStepsRouteImport } from './routes/_authenticated/processes/steps'
+import { Route as AuthenticatedProcessesLibraryRouteImport } from './routes/_authenticated/processes/library'
+import { Route as AuthenticatedOrganizationTeamsRouteImport } from './routes/_authenticated/organization/teams'
+import { Route as AuthenticatedOrganizationHierarchyRouteImport } from './routes/_authenticated/organization/hierarchy'
+import { Route as AuthenticatedOrganizationEmployeesRouteImport } from './routes/_authenticated/organization/employees'
+import { Route as AuthenticatedOrganizationDepartmentsRouteImport } from './routes/_authenticated/organization/departments'
+import { Route as AuthenticatedOrganizationCompaniesRouteImport } from './routes/_authenticated/organization/companies'
+import { Route as AuthenticatedOrganizationBranchesRouteImport } from './routes/_authenticated/organization/branches'
+import { Route as AuthenticatedKpisLibraryRouteImport } from './routes/_authenticated/kpis/library'
+import { Route as AuthenticatedKpisCategoriesRouteImport } from './routes/_authenticated/kpis/categories'
+import { Route as AuthenticatedJobsProfilesRouteImport } from './routes/_authenticated/jobs/profiles'
+import { Route as AuthenticatedJobsListRouteImport } from './routes/_authenticated/jobs/list'
+import { Route as AuthenticatedJobsGradesRouteImport } from './routes/_authenticated/jobs/grades'
+import { Route as AuthenticatedJobsFamiliesRouteImport } from './routes/_authenticated/jobs/families'
+import { Route as AuthenticatedEvidenceNewRouteImport } from './routes/_authenticated/evidence/new'
+import { Route as AuthenticatedDiagnosticsNewRouteImport } from './routes/_authenticated/diagnostics/new'
+import { Route as AuthenticatedDashboardSupervisorRouteImport } from './routes/_authenticated/dashboard/supervisor'
+import { Route as AuthenticatedDashboardDepartmentRouteImport } from './routes/_authenticated/dashboard/department'
+import { Route as AuthenticatedDashboardCeoRouteImport } from './routes/_authenticated/dashboard/ceo'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
+import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
+import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin/audit'
 
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSnapshotsIndexRoute =
+  AuthenticatedSnapshotsIndexRouteImport.update({
+    id: '/snapshots/',
+    path: '/snapshots/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedEvidenceIndexRoute =
+  AuthenticatedEvidenceIndexRouteImport.update({
+    id: '/evidence/',
+    path: '/evidence/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDiagnosticsIndexRoute =
+  AuthenticatedDiagnosticsIndexRouteImport.update({
+    id: '/diagnostics/',
+    path: '/diagnostics/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSnapshotsNewRoute =
+  AuthenticatedSnapshotsNewRouteImport.update({
+    id: '/snapshots/new',
+    path: '/snapshots/new',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportsExportRoute =
+  AuthenticatedReportsExportRouteImport.update({
+    id: '/reports/export',
+    path: '/reports/export',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportsDiagnosticsRoute =
+  AuthenticatedReportsDiagnosticsRouteImport.update({
+    id: '/reports/diagnostics',
+    path: '/reports/diagnostics',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProcessesStepsRoute =
+  AuthenticatedProcessesStepsRouteImport.update({
+    id: '/processes/steps',
+    path: '/processes/steps',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProcessesLibraryRoute =
+  AuthenticatedProcessesLibraryRouteImport.update({
+    id: '/processes/library',
+    path: '/processes/library',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOrganizationTeamsRoute =
+  AuthenticatedOrganizationTeamsRouteImport.update({
+    id: '/organization/teams',
+    path: '/organization/teams',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOrganizationHierarchyRoute =
+  AuthenticatedOrganizationHierarchyRouteImport.update({
+    id: '/organization/hierarchy',
+    path: '/organization/hierarchy',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOrganizationEmployeesRoute =
+  AuthenticatedOrganizationEmployeesRouteImport.update({
+    id: '/organization/employees',
+    path: '/organization/employees',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOrganizationDepartmentsRoute =
+  AuthenticatedOrganizationDepartmentsRouteImport.update({
+    id: '/organization/departments',
+    path: '/organization/departments',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOrganizationCompaniesRoute =
+  AuthenticatedOrganizationCompaniesRouteImport.update({
+    id: '/organization/companies',
+    path: '/organization/companies',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOrganizationBranchesRoute =
+  AuthenticatedOrganizationBranchesRouteImport.update({
+    id: '/organization/branches',
+    path: '/organization/branches',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedKpisLibraryRoute =
+  AuthenticatedKpisLibraryRouteImport.update({
+    id: '/kpis/library',
+    path: '/kpis/library',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedKpisCategoriesRoute =
+  AuthenticatedKpisCategoriesRouteImport.update({
+    id: '/kpis/categories',
+    path: '/kpis/categories',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedJobsProfilesRoute =
+  AuthenticatedJobsProfilesRouteImport.update({
+    id: '/jobs/profiles',
+    path: '/jobs/profiles',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedJobsListRoute = AuthenticatedJobsListRouteImport.update({
+  id: '/jobs/list',
+  path: '/jobs/list',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedJobsGradesRoute = AuthenticatedJobsGradesRouteImport.update({
+  id: '/jobs/grades',
+  path: '/jobs/grades',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedJobsFamiliesRoute =
+  AuthenticatedJobsFamiliesRouteImport.update({
+    id: '/jobs/families',
+    path: '/jobs/families',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedEvidenceNewRoute =
+  AuthenticatedEvidenceNewRouteImport.update({
+    id: '/evidence/new',
+    path: '/evidence/new',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDiagnosticsNewRoute =
+  AuthenticatedDiagnosticsNewRouteImport.update({
+    id: '/diagnostics/new',
+    path: '/diagnostics/new',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDashboardSupervisorRoute =
+  AuthenticatedDashboardSupervisorRouteImport.update({
+    id: '/dashboard/supervisor',
+    path: '/dashboard/supervisor',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDashboardDepartmentRoute =
+  AuthenticatedDashboardDepartmentRouteImport.update({
+    id: '/dashboard/department',
+    path: '/dashboard/department',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDashboardCeoRoute =
+  AuthenticatedDashboardCeoRouteImport.update({
+    id: '/dashboard/ceo',
+    path: '/dashboard/ceo',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/admin/settings',
+    path: '/admin/settings',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
+  id: '/admin/roles',
+  path: '/admin/roles',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/dashboard/ceo': typeof AuthenticatedDashboardCeoRoute
+  '/dashboard/department': typeof AuthenticatedDashboardDepartmentRoute
+  '/dashboard/supervisor': typeof AuthenticatedDashboardSupervisorRoute
+  '/diagnostics/new': typeof AuthenticatedDiagnosticsNewRoute
+  '/evidence/new': typeof AuthenticatedEvidenceNewRoute
+  '/jobs/families': typeof AuthenticatedJobsFamiliesRoute
+  '/jobs/grades': typeof AuthenticatedJobsGradesRoute
+  '/jobs/list': typeof AuthenticatedJobsListRoute
+  '/jobs/profiles': typeof AuthenticatedJobsProfilesRoute
+  '/kpis/categories': typeof AuthenticatedKpisCategoriesRoute
+  '/kpis/library': typeof AuthenticatedKpisLibraryRoute
+  '/organization/branches': typeof AuthenticatedOrganizationBranchesRoute
+  '/organization/companies': typeof AuthenticatedOrganizationCompaniesRoute
+  '/organization/departments': typeof AuthenticatedOrganizationDepartmentsRoute
+  '/organization/employees': typeof AuthenticatedOrganizationEmployeesRoute
+  '/organization/hierarchy': typeof AuthenticatedOrganizationHierarchyRoute
+  '/organization/teams': typeof AuthenticatedOrganizationTeamsRoute
+  '/processes/library': typeof AuthenticatedProcessesLibraryRoute
+  '/processes/steps': typeof AuthenticatedProcessesStepsRoute
+  '/reports/diagnostics': typeof AuthenticatedReportsDiagnosticsRoute
+  '/reports/export': typeof AuthenticatedReportsExportRoute
+  '/snapshots/new': typeof AuthenticatedSnapshotsNewRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/diagnostics/': typeof AuthenticatedDiagnosticsIndexRoute
+  '/evidence/': typeof AuthenticatedEvidenceIndexRoute
+  '/snapshots/': typeof AuthenticatedSnapshotsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/dashboard/ceo': typeof AuthenticatedDashboardCeoRoute
+  '/dashboard/department': typeof AuthenticatedDashboardDepartmentRoute
+  '/dashboard/supervisor': typeof AuthenticatedDashboardSupervisorRoute
+  '/diagnostics/new': typeof AuthenticatedDiagnosticsNewRoute
+  '/evidence/new': typeof AuthenticatedEvidenceNewRoute
+  '/jobs/families': typeof AuthenticatedJobsFamiliesRoute
+  '/jobs/grades': typeof AuthenticatedJobsGradesRoute
+  '/jobs/list': typeof AuthenticatedJobsListRoute
+  '/jobs/profiles': typeof AuthenticatedJobsProfilesRoute
+  '/kpis/categories': typeof AuthenticatedKpisCategoriesRoute
+  '/kpis/library': typeof AuthenticatedKpisLibraryRoute
+  '/organization/branches': typeof AuthenticatedOrganizationBranchesRoute
+  '/organization/companies': typeof AuthenticatedOrganizationCompaniesRoute
+  '/organization/departments': typeof AuthenticatedOrganizationDepartmentsRoute
+  '/organization/employees': typeof AuthenticatedOrganizationEmployeesRoute
+  '/organization/hierarchy': typeof AuthenticatedOrganizationHierarchyRoute
+  '/organization/teams': typeof AuthenticatedOrganizationTeamsRoute
+  '/processes/library': typeof AuthenticatedProcessesLibraryRoute
+  '/processes/steps': typeof AuthenticatedProcessesStepsRoute
+  '/reports/diagnostics': typeof AuthenticatedReportsDiagnosticsRoute
+  '/reports/export': typeof AuthenticatedReportsExportRoute
+  '/snapshots/new': typeof AuthenticatedSnapshotsNewRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/diagnostics': typeof AuthenticatedDiagnosticsIndexRoute
+  '/evidence': typeof AuthenticatedEvidenceIndexRoute
+  '/snapshots': typeof AuthenticatedSnapshotsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/dashboard/ceo': typeof AuthenticatedDashboardCeoRoute
+  '/_authenticated/dashboard/department': typeof AuthenticatedDashboardDepartmentRoute
+  '/_authenticated/dashboard/supervisor': typeof AuthenticatedDashboardSupervisorRoute
+  '/_authenticated/diagnostics/new': typeof AuthenticatedDiagnosticsNewRoute
+  '/_authenticated/evidence/new': typeof AuthenticatedEvidenceNewRoute
+  '/_authenticated/jobs/families': typeof AuthenticatedJobsFamiliesRoute
+  '/_authenticated/jobs/grades': typeof AuthenticatedJobsGradesRoute
+  '/_authenticated/jobs/list': typeof AuthenticatedJobsListRoute
+  '/_authenticated/jobs/profiles': typeof AuthenticatedJobsProfilesRoute
+  '/_authenticated/kpis/categories': typeof AuthenticatedKpisCategoriesRoute
+  '/_authenticated/kpis/library': typeof AuthenticatedKpisLibraryRoute
+  '/_authenticated/organization/branches': typeof AuthenticatedOrganizationBranchesRoute
+  '/_authenticated/organization/companies': typeof AuthenticatedOrganizationCompaniesRoute
+  '/_authenticated/organization/departments': typeof AuthenticatedOrganizationDepartmentsRoute
+  '/_authenticated/organization/employees': typeof AuthenticatedOrganizationEmployeesRoute
+  '/_authenticated/organization/hierarchy': typeof AuthenticatedOrganizationHierarchyRoute
+  '/_authenticated/organization/teams': typeof AuthenticatedOrganizationTeamsRoute
+  '/_authenticated/processes/library': typeof AuthenticatedProcessesLibraryRoute
+  '/_authenticated/processes/steps': typeof AuthenticatedProcessesStepsRoute
+  '/_authenticated/reports/diagnostics': typeof AuthenticatedReportsDiagnosticsRoute
+  '/_authenticated/reports/export': typeof AuthenticatedReportsExportRoute
+  '/_authenticated/snapshots/new': typeof AuthenticatedSnapshotsNewRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/diagnostics/': typeof AuthenticatedDiagnosticsIndexRoute
+  '/_authenticated/evidence/': typeof AuthenticatedEvidenceIndexRoute
+  '/_authenticated/snapshots/': typeof AuthenticatedSnapshotsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin/audit'
+    | '/admin/roles'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/dashboard/ceo'
+    | '/dashboard/department'
+    | '/dashboard/supervisor'
+    | '/diagnostics/new'
+    | '/evidence/new'
+    | '/jobs/families'
+    | '/jobs/grades'
+    | '/jobs/list'
+    | '/jobs/profiles'
+    | '/kpis/categories'
+    | '/kpis/library'
+    | '/organization/branches'
+    | '/organization/companies'
+    | '/organization/departments'
+    | '/organization/employees'
+    | '/organization/hierarchy'
+    | '/organization/teams'
+    | '/processes/library'
+    | '/processes/steps'
+    | '/reports/diagnostics'
+    | '/reports/export'
+    | '/snapshots/new'
+    | '/dashboard/'
+    | '/diagnostics/'
+    | '/evidence/'
+    | '/snapshots/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin/audit'
+    | '/admin/roles'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/dashboard/ceo'
+    | '/dashboard/department'
+    | '/dashboard/supervisor'
+    | '/diagnostics/new'
+    | '/evidence/new'
+    | '/jobs/families'
+    | '/jobs/grades'
+    | '/jobs/list'
+    | '/jobs/profiles'
+    | '/kpis/categories'
+    | '/kpis/library'
+    | '/organization/branches'
+    | '/organization/companies'
+    | '/organization/departments'
+    | '/organization/employees'
+    | '/organization/hierarchy'
+    | '/organization/teams'
+    | '/processes/library'
+    | '/processes/steps'
+    | '/reports/diagnostics'
+    | '/reports/export'
+    | '/snapshots/new'
+    | '/dashboard'
+    | '/diagnostics'
+    | '/evidence'
+    | '/snapshots'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/_authenticated/admin/audit'
+    | '/_authenticated/admin/roles'
+    | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/users'
+    | '/_authenticated/dashboard/ceo'
+    | '/_authenticated/dashboard/department'
+    | '/_authenticated/dashboard/supervisor'
+    | '/_authenticated/diagnostics/new'
+    | '/_authenticated/evidence/new'
+    | '/_authenticated/jobs/families'
+    | '/_authenticated/jobs/grades'
+    | '/_authenticated/jobs/list'
+    | '/_authenticated/jobs/profiles'
+    | '/_authenticated/kpis/categories'
+    | '/_authenticated/kpis/library'
+    | '/_authenticated/organization/branches'
+    | '/_authenticated/organization/companies'
+    | '/_authenticated/organization/departments'
+    | '/_authenticated/organization/employees'
+    | '/_authenticated/organization/hierarchy'
+    | '/_authenticated/organization/teams'
+    | '/_authenticated/processes/library'
+    | '/_authenticated/processes/steps'
+    | '/_authenticated/reports/diagnostics'
+    | '/_authenticated/reports/export'
+    | '/_authenticated/snapshots/new'
+    | '/_authenticated/dashboard/'
+    | '/_authenticated/diagnostics/'
+    | '/_authenticated/evidence/'
+    | '/_authenticated/snapshots/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +452,298 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/snapshots/': {
+      id: '/_authenticated/snapshots/'
+      path: '/snapshots'
+      fullPath: '/snapshots/'
+      preLoaderRoute: typeof AuthenticatedSnapshotsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/evidence/': {
+      id: '/_authenticated/evidence/'
+      path: '/evidence'
+      fullPath: '/evidence/'
+      preLoaderRoute: typeof AuthenticatedEvidenceIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/diagnostics/': {
+      id: '/_authenticated/diagnostics/'
+      path: '/diagnostics'
+      fullPath: '/diagnostics/'
+      preLoaderRoute: typeof AuthenticatedDiagnosticsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/snapshots/new': {
+      id: '/_authenticated/snapshots/new'
+      path: '/snapshots/new'
+      fullPath: '/snapshots/new'
+      preLoaderRoute: typeof AuthenticatedSnapshotsNewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/reports/export': {
+      id: '/_authenticated/reports/export'
+      path: '/reports/export'
+      fullPath: '/reports/export'
+      preLoaderRoute: typeof AuthenticatedReportsExportRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/reports/diagnostics': {
+      id: '/_authenticated/reports/diagnostics'
+      path: '/reports/diagnostics'
+      fullPath: '/reports/diagnostics'
+      preLoaderRoute: typeof AuthenticatedReportsDiagnosticsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/processes/steps': {
+      id: '/_authenticated/processes/steps'
+      path: '/processes/steps'
+      fullPath: '/processes/steps'
+      preLoaderRoute: typeof AuthenticatedProcessesStepsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/processes/library': {
+      id: '/_authenticated/processes/library'
+      path: '/processes/library'
+      fullPath: '/processes/library'
+      preLoaderRoute: typeof AuthenticatedProcessesLibraryRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/organization/teams': {
+      id: '/_authenticated/organization/teams'
+      path: '/organization/teams'
+      fullPath: '/organization/teams'
+      preLoaderRoute: typeof AuthenticatedOrganizationTeamsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/organization/hierarchy': {
+      id: '/_authenticated/organization/hierarchy'
+      path: '/organization/hierarchy'
+      fullPath: '/organization/hierarchy'
+      preLoaderRoute: typeof AuthenticatedOrganizationHierarchyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/organization/employees': {
+      id: '/_authenticated/organization/employees'
+      path: '/organization/employees'
+      fullPath: '/organization/employees'
+      preLoaderRoute: typeof AuthenticatedOrganizationEmployeesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/organization/departments': {
+      id: '/_authenticated/organization/departments'
+      path: '/organization/departments'
+      fullPath: '/organization/departments'
+      preLoaderRoute: typeof AuthenticatedOrganizationDepartmentsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/organization/companies': {
+      id: '/_authenticated/organization/companies'
+      path: '/organization/companies'
+      fullPath: '/organization/companies'
+      preLoaderRoute: typeof AuthenticatedOrganizationCompaniesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/organization/branches': {
+      id: '/_authenticated/organization/branches'
+      path: '/organization/branches'
+      fullPath: '/organization/branches'
+      preLoaderRoute: typeof AuthenticatedOrganizationBranchesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/kpis/library': {
+      id: '/_authenticated/kpis/library'
+      path: '/kpis/library'
+      fullPath: '/kpis/library'
+      preLoaderRoute: typeof AuthenticatedKpisLibraryRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/kpis/categories': {
+      id: '/_authenticated/kpis/categories'
+      path: '/kpis/categories'
+      fullPath: '/kpis/categories'
+      preLoaderRoute: typeof AuthenticatedKpisCategoriesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/jobs/profiles': {
+      id: '/_authenticated/jobs/profiles'
+      path: '/jobs/profiles'
+      fullPath: '/jobs/profiles'
+      preLoaderRoute: typeof AuthenticatedJobsProfilesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/jobs/list': {
+      id: '/_authenticated/jobs/list'
+      path: '/jobs/list'
+      fullPath: '/jobs/list'
+      preLoaderRoute: typeof AuthenticatedJobsListRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/jobs/grades': {
+      id: '/_authenticated/jobs/grades'
+      path: '/jobs/grades'
+      fullPath: '/jobs/grades'
+      preLoaderRoute: typeof AuthenticatedJobsGradesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/jobs/families': {
+      id: '/_authenticated/jobs/families'
+      path: '/jobs/families'
+      fullPath: '/jobs/families'
+      preLoaderRoute: typeof AuthenticatedJobsFamiliesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/evidence/new': {
+      id: '/_authenticated/evidence/new'
+      path: '/evidence/new'
+      fullPath: '/evidence/new'
+      preLoaderRoute: typeof AuthenticatedEvidenceNewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/diagnostics/new': {
+      id: '/_authenticated/diagnostics/new'
+      path: '/diagnostics/new'
+      fullPath: '/diagnostics/new'
+      preLoaderRoute: typeof AuthenticatedDiagnosticsNewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard/supervisor': {
+      id: '/_authenticated/dashboard/supervisor'
+      path: '/dashboard/supervisor'
+      fullPath: '/dashboard/supervisor'
+      preLoaderRoute: typeof AuthenticatedDashboardSupervisorRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard/department': {
+      id: '/_authenticated/dashboard/department'
+      path: '/dashboard/department'
+      fullPath: '/dashboard/department'
+      preLoaderRoute: typeof AuthenticatedDashboardDepartmentRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard/ceo': {
+      id: '/_authenticated/dashboard/ceo'
+      path: '/dashboard/ceo'
+      fullPath: '/dashboard/ceo'
+      preLoaderRoute: typeof AuthenticatedDashboardCeoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/roles': {
+      id: '/_authenticated/admin/roles'
+      path: '/admin/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/audit': {
+      id: '/_authenticated/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
+  AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedDashboardCeoRoute: typeof AuthenticatedDashboardCeoRoute
+  AuthenticatedDashboardDepartmentRoute: typeof AuthenticatedDashboardDepartmentRoute
+  AuthenticatedDashboardSupervisorRoute: typeof AuthenticatedDashboardSupervisorRoute
+  AuthenticatedDiagnosticsNewRoute: typeof AuthenticatedDiagnosticsNewRoute
+  AuthenticatedEvidenceNewRoute: typeof AuthenticatedEvidenceNewRoute
+  AuthenticatedJobsFamiliesRoute: typeof AuthenticatedJobsFamiliesRoute
+  AuthenticatedJobsGradesRoute: typeof AuthenticatedJobsGradesRoute
+  AuthenticatedJobsListRoute: typeof AuthenticatedJobsListRoute
+  AuthenticatedJobsProfilesRoute: typeof AuthenticatedJobsProfilesRoute
+  AuthenticatedKpisCategoriesRoute: typeof AuthenticatedKpisCategoriesRoute
+  AuthenticatedKpisLibraryRoute: typeof AuthenticatedKpisLibraryRoute
+  AuthenticatedOrganizationBranchesRoute: typeof AuthenticatedOrganizationBranchesRoute
+  AuthenticatedOrganizationCompaniesRoute: typeof AuthenticatedOrganizationCompaniesRoute
+  AuthenticatedOrganizationDepartmentsRoute: typeof AuthenticatedOrganizationDepartmentsRoute
+  AuthenticatedOrganizationEmployeesRoute: typeof AuthenticatedOrganizationEmployeesRoute
+  AuthenticatedOrganizationHierarchyRoute: typeof AuthenticatedOrganizationHierarchyRoute
+  AuthenticatedOrganizationTeamsRoute: typeof AuthenticatedOrganizationTeamsRoute
+  AuthenticatedProcessesLibraryRoute: typeof AuthenticatedProcessesLibraryRoute
+  AuthenticatedProcessesStepsRoute: typeof AuthenticatedProcessesStepsRoute
+  AuthenticatedReportsDiagnosticsRoute: typeof AuthenticatedReportsDiagnosticsRoute
+  AuthenticatedReportsExportRoute: typeof AuthenticatedReportsExportRoute
+  AuthenticatedSnapshotsNewRoute: typeof AuthenticatedSnapshotsNewRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDiagnosticsIndexRoute: typeof AuthenticatedDiagnosticsIndexRoute
+  AuthenticatedEvidenceIndexRoute: typeof AuthenticatedEvidenceIndexRoute
+  AuthenticatedSnapshotsIndexRoute: typeof AuthenticatedSnapshotsIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
+  AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedDashboardCeoRoute: AuthenticatedDashboardCeoRoute,
+  AuthenticatedDashboardDepartmentRoute: AuthenticatedDashboardDepartmentRoute,
+  AuthenticatedDashboardSupervisorRoute: AuthenticatedDashboardSupervisorRoute,
+  AuthenticatedDiagnosticsNewRoute: AuthenticatedDiagnosticsNewRoute,
+  AuthenticatedEvidenceNewRoute: AuthenticatedEvidenceNewRoute,
+  AuthenticatedJobsFamiliesRoute: AuthenticatedJobsFamiliesRoute,
+  AuthenticatedJobsGradesRoute: AuthenticatedJobsGradesRoute,
+  AuthenticatedJobsListRoute: AuthenticatedJobsListRoute,
+  AuthenticatedJobsProfilesRoute: AuthenticatedJobsProfilesRoute,
+  AuthenticatedKpisCategoriesRoute: AuthenticatedKpisCategoriesRoute,
+  AuthenticatedKpisLibraryRoute: AuthenticatedKpisLibraryRoute,
+  AuthenticatedOrganizationBranchesRoute:
+    AuthenticatedOrganizationBranchesRoute,
+  AuthenticatedOrganizationCompaniesRoute:
+    AuthenticatedOrganizationCompaniesRoute,
+  AuthenticatedOrganizationDepartmentsRoute:
+    AuthenticatedOrganizationDepartmentsRoute,
+  AuthenticatedOrganizationEmployeesRoute:
+    AuthenticatedOrganizationEmployeesRoute,
+  AuthenticatedOrganizationHierarchyRoute:
+    AuthenticatedOrganizationHierarchyRoute,
+  AuthenticatedOrganizationTeamsRoute: AuthenticatedOrganizationTeamsRoute,
+  AuthenticatedProcessesLibraryRoute: AuthenticatedProcessesLibraryRoute,
+  AuthenticatedProcessesStepsRoute: AuthenticatedProcessesStepsRoute,
+  AuthenticatedReportsDiagnosticsRoute: AuthenticatedReportsDiagnosticsRoute,
+  AuthenticatedReportsExportRoute: AuthenticatedReportsExportRoute,
+  AuthenticatedSnapshotsNewRoute: AuthenticatedSnapshotsNewRoute,
+  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedDiagnosticsIndexRoute: AuthenticatedDiagnosticsIndexRoute,
+  AuthenticatedEvidenceIndexRoute: AuthenticatedEvidenceIndexRoute,
+  AuthenticatedSnapshotsIndexRoute: AuthenticatedSnapshotsIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
