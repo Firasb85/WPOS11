@@ -38,7 +38,7 @@ function ProcessLibraryPage() {
                   <div><p className="text-xs text-red-500 mb-1"><AlertTriangle className="w-3 h-3 inline mr-0.5" />Errors:</p><div className="flex flex-wrap gap-1">{s.errors.map(e => <span key={e} className="px-2 py-0.5 bg-red-50 text-red-600 rounded text-xs">{e}</span>)}</div></div>
                 </div>
               </div>
-            ))}</Card> : <div className="flex items-center justify-center h-64 text-gray-400"><p>Select a process to view details</p></div>}
+            ))}</div></Card> : <div className="flex items-center justify-center h-64 text-gray-400"><p>Select a process to view details</p></div>}
         </div>
       </div>
     </div>

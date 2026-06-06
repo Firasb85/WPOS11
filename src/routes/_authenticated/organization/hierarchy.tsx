@@ -46,7 +46,7 @@ function HierarchyPage() {
       { type: 'branch', name: 'Jeddah Branch', children: [
         { type: 'department', name: 'Finance', subtitle: 'Fahad Al-Otaibi' },
       ]},
-    ]},
+    ],
   };
 
   return (
