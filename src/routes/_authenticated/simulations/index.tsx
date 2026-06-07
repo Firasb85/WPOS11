@@ -5,10 +5,12 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { FormSelect, FormInput } from "~/components/wpos/FormInput";
 import { Play, BarChart3, Brain, DollarSign, TrendingUp, Target } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/simulations/")({
   component: SimulationsPage,
 });
 function SimulationsPage() {
+  const { data: metrics } = useCeoDashboard();
   const l = "ar";
   const scenarios = [
     {

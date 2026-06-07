@@ -4,10 +4,12 @@ import { Card } from "~/components/wpos/Card";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, Shield, Clock } from "lucide-react";
+import { useEmployeesList } from "@/hooks/useOrganization";
 export const Route = createFileRoute("/_authenticated/admin/users")({
   component: UserManagementPage,
 });
 function UserManagementPage() {
+  const { data: employees } = useEmployeesList({ pageSize: 100 });
   const users = [
     {
       id: "1",

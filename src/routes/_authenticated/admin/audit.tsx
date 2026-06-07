@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { DataTable } from "~/components/wpos/DataTable";
 import { UserCircle, Download } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/audit")({ component: AuditLogsPage });
 function AuditLogsPage() {
+  const { data: metrics } = useCeoDashboard();
   const logs = [
     {
       id: "1",

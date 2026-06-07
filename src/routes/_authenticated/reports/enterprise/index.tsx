@@ -12,10 +12,14 @@ import {
   Building2,
   BarChart3,
 } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/reports/enterprise/")({
   component: EnterpriseReportsPage,
 });
 function EnterpriseReportsPage() {
+  const { data: ceoMetrics } = useCeoDashboard();
+  const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
   const reportTypes = [
     {

@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Save } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/settings")({ component: SettingsPage });
 function SettingsPage() {
+  const { data: metrics } = useCeoDashboard();
   return (
     <div>
       <PageHeader title="System Settings" description="Configure system preferences" />

@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Download, FileText, FileSpreadsheet, Printer } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/reports/export")({ component: ExportPage });
 function ExportPage() {
+  const { data: metrics } = useCeoDashboard();
   return (
     <div>
       <PageHeader title="Export Reports" description="Export diagnostic and performance reports" />

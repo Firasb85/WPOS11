@@ -3,12 +3,14 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Users, Shield, ScrollText, Settings, Key } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdministrationIndexPage,
 });
 
 function AdministrationIndexPage() {
+  const { data: metrics } = useCeoDashboard();
   const sections = [
     {
       href: "/admin/users",

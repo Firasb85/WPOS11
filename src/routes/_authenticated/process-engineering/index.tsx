@@ -4,10 +4,12 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Play, BarChart3, AlertTriangle, CheckCircle, Clock, Activity } from "lucide-react";
+import { useProcesses } from "@/hooks/useProcesses";
 export const Route = createFileRoute("/_authenticated/process-engineering/")({
   component: ProcessEngineeringPage,
 });
 function ProcessEngineeringPage() {
+  const { data: processes } = useProcesses();
   const l = "ar";
   const executions = [
     {

@@ -11,6 +11,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
+import { useCompanies, useBranches, useDepartments, useTeams } from "@/hooks/useOrganization";
 
 export const Route = createFileRoute("/_authenticated/organization/hierarchy")({
   component: HierarchyPage,
@@ -75,6 +76,8 @@ function Node({ node, depth = 0 }: { node: OrgNode; depth?: number }) {
 }
 
 function HierarchyPage() {
+  const { data: companies } = useCompanies();
+  const { data: branches } = useBranches();
   const tree: OrgNode = {
     type: "company",
     name: "Acme Corporation",

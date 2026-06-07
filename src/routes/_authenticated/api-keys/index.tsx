@@ -4,8 +4,10 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, Key, Copy, Clock, Shield, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/api-keys/")({ component: ApiKeysPage });
 function ApiKeysPage() {
+  const { data: metrics } = useCeoDashboard();
   const l = "ar";
   const [showKey, setShowKey] = useState<string | null>(null);
   const keys = [

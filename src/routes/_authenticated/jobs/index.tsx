@@ -3,12 +3,16 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { FolderTree, Layers, FileText, Briefcase } from "lucide-react";
+import { useJobFamilies, useJobGrades, useJobs } from "@/hooks/useJobs";
 
 export const Route = createFileRoute("/_authenticated/jobs/")({
   component: JobArchitectureIndexPage,
 });
 
 function JobArchitectureIndexPage() {
+  const { data: families } = useJobFamilies();
+  const { data: grades } = useJobGrades();
+  const { data: jobs } = useJobs();
   const sections = [
     {
       href: "/jobs/families",

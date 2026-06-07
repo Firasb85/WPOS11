@@ -3,12 +3,14 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { Shield, CheckCircle, XCircle, Clock, TrendingUp } from "lucide-react";
+import { useEvidenceMetrics } from "@/hooks/useAnalytics";
 
 export const Route = createFileRoute("/_authenticated/analytics/evidence-quality")({
   component: EvidenceQualityPage,
 });
 
 function EvidenceQualityPage() {
+  const { data: evidenceMetrics } = useEvidenceMetrics();
   const l = "ar";
   const byType = [
     { label: "System Generated", la: "منشأ من النظام", count: 15, rel: 92 },

@@ -13,10 +13,12 @@ import {
   Shield,
 } from "lucide-react";
 import { useState } from "react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/ai-assistant/")({
   component: AiAssistantPage,
 });
 function AiAssistantPage() {
+  const { data: metrics } = useCeoDashboard();
   const l = "ar";
   const [mode, setMode] = useState("summarize");
   const interactions = [

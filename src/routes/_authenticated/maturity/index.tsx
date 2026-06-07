@@ -5,8 +5,10 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { MaturityBadge } from "~/components/wpos/MaturityBadge";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { BarChart3, TrendingUp, Users, GitMerge, Shield, Stethoscope } from "lucide-react";
+import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/maturity/")({ component: MaturityPage });
 function MaturityPage() {
+  const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
   const dimensions = [
     {

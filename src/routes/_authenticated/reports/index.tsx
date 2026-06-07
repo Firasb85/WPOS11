@@ -3,10 +3,12 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { FileSearch, FileBarChart, Download } from "lucide-react";
+import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
 
 export const Route = createFileRoute("/_authenticated/reports/")({ component: ReportsIndexPage });
 
 function ReportsIndexPage() {
+  const { data: diagMetrics } = useDiagnosticMetrics();
   const sections = [
     {
       href: "/reports/diagnostics",

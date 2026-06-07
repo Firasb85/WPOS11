@@ -3,6 +3,7 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { Share2, Database, ArrowRight, GitBranch } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 
 export const Route = createFileRoute("/_authenticated/lineage/")({
   component: DataLineagePage,
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/_authenticated/lineage/")({
 
 function DataLineagePage() {
   const { t, lang: l } = useLanguage();
+  const { data: metrics } = useCeoDashboard();
 
   const lineageEntries = [
     {

@@ -3,12 +3,24 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Building, GitBranch, Building2, Users, UserCircle, GitFork } from "lucide-react";
+import {
+  useCompanies,
+  useBranches,
+  useDepartments,
+  useTeams,
+  useEmployeesList,
+} from "@/hooks/useOrganization";
 
 export const Route = createFileRoute("/_authenticated/organization/")({
   component: OrganizationIndexPage,
 });
 
 function OrganizationIndexPage() {
+  const { data: companies } = useCompanies();
+  const { data: branches } = useBranches();
+  const { data: depts } = useDepartments();
+  const { data: teams } = useTeams();
+  const { data: emps } = useEmployeesList();
   const sections = [
     {
       href: "/organization/companies",

@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 import {
   Settings,
   FileText,
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/_authenticated/advanced/")({
 
 function AdvancedIndexPage() {
   const { t, lang: l } = useLanguage();
+  const { data: metrics } = useCeoDashboard();
 
   const sections = [
     {

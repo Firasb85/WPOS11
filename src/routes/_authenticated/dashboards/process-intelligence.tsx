@@ -5,12 +5,14 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { DependencyGraph } from "~/components/wpos/visualizations/DependencyGraph";
 import { GitBranch, AlertTriangle, Shield, TrendingUp } from "lucide-react";
+import { useProcesses } from "@/hooks/useProcesses";
 
 export const Route = createFileRoute("/_authenticated/dashboards/process-intelligence")({
   component: ProcessIntelligencePage,
 });
 
 function ProcessIntelligencePage() {
+  const { data: processes } = useProcesses();
   const l = "ar";
   const graph = {
     nodes: [

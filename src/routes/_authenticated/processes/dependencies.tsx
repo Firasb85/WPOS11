@@ -8,12 +8,14 @@ import {
 } from "~/components/wpos/visualizations/DependencyGraph";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { GitBranch, AlertTriangle, Share2, Shield } from "lucide-react";
+import { useProcesses } from "@/hooks/useProcesses";
 
 export const Route = createFileRoute("/_authenticated/processes/dependencies")({
   component: ProcessDependenciesPage,
 });
 
 function ProcessDependenciesPage() {
+  const { data: processes } = useProcesses();
   const l = "ar";
   const graph = {
     nodes: [

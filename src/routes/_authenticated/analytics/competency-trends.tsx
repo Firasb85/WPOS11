@@ -3,12 +3,14 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { TrendingUp, TrendingDown, Brain } from "lucide-react";
+import { useEmployeeCompetencies } from "@/hooks/useCompetencies";
 
 export const Route = createFileRoute("/_authenticated/analytics/competency-trends")({
   component: CompetencyTrendsPage,
 });
 
 function CompetencyTrendsPage() {
+  const { data: empComps } = useEmployeeCompetencies();
   const l = "ar";
   const trends = [
     { comp: "Data Analysis", compAr: "تحليل البيانات", q1: 1.8, q2: 1.7, q3: 1.5, trend: "down" },

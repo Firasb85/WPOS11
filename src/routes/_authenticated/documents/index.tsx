@@ -3,8 +3,10 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, FileText, Download, Search, Clock, User, Tag } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/documents/")({ component: DocumentsPage });
 function DocumentsPage() {
+  const { data: metrics } = useCeoDashboard();
   const l = "ar";
   const types = [
     { type: "policy", tA: "سياسة", c: 3 },

@@ -11,10 +11,14 @@ import {
   Activity,
   Brain,
 } from "lucide-react";
+import { useProcesses } from "@/hooks/useProcesses";
+import { useKpis } from "@/hooks/useKpis";
 export const Route = createFileRoute("/_authenticated/knowledge-graph/")({
   component: KnowledgeGraphPage,
 });
 function KnowledgeGraphPage() {
+  const { data: processes } = useProcesses();
+  const { data: kpis } = useKpis();
   const l = "ar";
   const nodes = [
     {

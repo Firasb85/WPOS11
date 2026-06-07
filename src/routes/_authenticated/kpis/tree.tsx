@@ -4,10 +4,13 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { KpiTreeView } from "~/components/wpos/visualizations/KpiTreeView";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { Share2, TrendingUp, GitBranch, Layers } from "lucide-react";
+import { useKpis, useKpiCategories } from "@/hooks/useKpis";
 
 export const Route = createFileRoute("/_authenticated/kpis/tree")({ component: KpiTreePage });
 
 function KpiTreePage() {
+  const { data: kpis } = useKpis();
+  const { data: cats } = useKpiCategories();
   const l = "ar";
   const tree = {
     kpi: {

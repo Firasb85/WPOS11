@@ -3,12 +3,14 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { HeatmapGrid } from "~/components/wpos/visualizations/HeatmapGrid";
 import { Brain, AlertTriangle, TrendingUp, Users, Download } from "lucide-react";
+import { useEmployeeCompetencies } from "@/hooks/useCompetencies";
 
 export const Route = createFileRoute("/_authenticated/competency/gaps")({
   component: CompetencyGapsPage,
 });
 
 function CompetencyGapsPage() {
+  const { data: empComps } = useEmployeeCompetencies();
   const currentLang = "ar";
   const heatmapData = [
     {

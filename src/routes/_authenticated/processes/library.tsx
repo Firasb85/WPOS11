@@ -4,10 +4,12 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, GitMerge, AlertTriangle, UserCircle } from "lucide-react";
 import { useState } from "react";
+import { useProcesses } from "@/hooks/useProcesses";
 export const Route = createFileRoute("/_authenticated/processes/library")({
   component: ProcessLibraryPage,
 });
 function ProcessLibraryPage() {
+  const { data: processesData } = useProcesses();
   const [selected, setSelected] = useState<string | null>("1");
   const processes = [
     {

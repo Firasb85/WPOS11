@@ -4,10 +4,12 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Search, AlertTriangle, CheckCircle, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
+import { useProcesses } from "@/hooks/useProcesses";
 export const Route = createFileRoute("/_authenticated/process-engineering/mining")({
   component: ProcessMiningPage,
 });
 function ProcessMiningPage() {
+  const { data: processes } = useProcesses();
   const l = "ar";
   const results = [
     {

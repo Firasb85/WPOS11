@@ -3,10 +3,13 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Tags, Gauge, Share2 } from "lucide-react";
+import { useKpiCategories, useKpis } from "@/hooks/useKpis";
 
 export const Route = createFileRoute("/_authenticated/kpis/")({ component: KpisIndexPage });
 
 function KpisIndexPage() {
+  const { data: categories } = useKpiCategories();
+  const { data: kpis } = useKpis();
   const sections = [
     {
       href: "/kpis/categories",

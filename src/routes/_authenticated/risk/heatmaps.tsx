@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { Grid3x3, AlertTriangle, Building2, GitMerge } from "lucide-react";
+import { useDepartmentMetrics } from "@/hooks/useAnalytics";
 
 export const Route = createFileRoute("/_authenticated/risk/heatmaps")({ component: HeatmapsPage });
 
@@ -66,6 +67,7 @@ function makeHeatmap(
 }
 
 function HeatmapsPage() {
+  const { data: deptMetrics } = useDepartmentMetrics();
   const l = "ar";
   const skillGapData = [
     { empAr: "أحمد خالد", data: 3 },

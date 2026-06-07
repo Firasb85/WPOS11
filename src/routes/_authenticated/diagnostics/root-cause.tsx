@@ -13,11 +13,14 @@ import {
   Brain,
   Building2,
 } from "lucide-react";
+import { useRootCauseMetrics, useDiagnosticMetrics } from "@/hooks/useAnalytics";
 
 export const Route = createFileRoute("/_authenticated/diagnostics/root-cause")({
   component: RootCauseDashboardPage,
 });
 function RootCauseDashboardPage() {
+  const { data: rootCauses } = useRootCauseMetrics();
+  const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
   const causes = [
     {

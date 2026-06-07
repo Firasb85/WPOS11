@@ -4,12 +4,15 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { MaturityBadge } from "~/components/wpos/MaturityBadge";
 import { Stethoscope, TrendingUp, AlertTriangle, BarChart3, Brain } from "lucide-react";
+import { useDiagnosticMetrics, useRootCauseMetrics } from "@/hooks/useAnalytics";
 
 export const Route = createFileRoute("/_authenticated/dashboards/diagnostic-intelligence")({
   component: DiagnosticIntelligencePage,
 });
 
 function DiagnosticIntelligencePage() {
+  const { data: diagMetrics } = useDiagnosticMetrics();
+  const { data: rootCauseData } = useRootCauseMetrics();
   const l = "ar";
   const rootCauses = [
     { label: "Skill Gap", labelAr: "فجوة مهارية", count: 12, pct: 28, trend: "increasing" },

@@ -3,10 +3,12 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Plus, FileText, Briefcase, Award } from "lucide-react";
 import { useState } from "react";
+import { useJobs } from "@/hooks/useJobs";
 export const Route = createFileRoute("/_authenticated/jobs/profiles")({
   component: JobProfilesPage,
 });
 function JobProfilesPage() {
+  const { data: jobs } = useJobs();
   const [selected, setSelected] = useState<string | null>("1");
   const profiles = [
     {

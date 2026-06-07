@@ -4,8 +4,10 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Shield, AlertTriangle, Users, Building2, ArrowUp, ArrowDown } from "lucide-react";
+import { useDepartmentMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/risk/")({ component: RiskDashboardPage });
 function RiskDashboardPage() {
+  const { data: deptMetrics } = useDepartmentMetrics();
   const l = "ar";
   const deptScores = [
     { name: "Operations", nA: "العمليات", s: 72, l: "high", e: 12 },

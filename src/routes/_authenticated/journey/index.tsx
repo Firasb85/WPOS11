@@ -3,8 +3,10 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { Activity, Stethoscope, Briefcase, ClipboardList, CheckCircle, Clock } from "lucide-react";
+import { useEmployeesList } from "@/hooks/useOrganization";
 export const Route = createFileRoute("/_authenticated/journey/")({ component: JourneyPage });
 function JourneyPage() {
+  const { data: employees } = useEmployeesList({ pageSize: 50 });
   const l = "ar";
   const entries = [
     {

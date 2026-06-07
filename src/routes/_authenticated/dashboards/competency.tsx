@@ -4,12 +4,14 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { HeatmapGrid } from "~/components/wpos/visualizations/HeatmapGrid";
 import { Brain, TrendingUp, AlertTriangle, Users } from "lucide-react";
+import { useEmployeeCompetencies } from "@/hooks/useCompetencies";
 
 export const Route = createFileRoute("/_authenticated/dashboards/competency")({
   component: CompetencyDashboardPage,
 });
 
 function CompetencyDashboardPage() {
+  const { data: empComps } = useEmployeeCompetencies();
   const l = "ar";
   const heatmapData = [
     {

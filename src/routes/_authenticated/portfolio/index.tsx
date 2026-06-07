@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { FolderOpen, TrendingUp } from "lucide-react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 
 export const Route = createFileRoute("/_authenticated/portfolio/")({
   component: PortfolioPage,
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/_authenticated/portfolio/")({
 
 function PortfolioPage() {
   const { t, lang: l } = useLanguage();
+  const { data: metrics } = useCeoDashboard();
 
   const portfolios = [
     {

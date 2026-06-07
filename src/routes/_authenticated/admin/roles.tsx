@@ -3,10 +3,12 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Shield, Plus, Check, Lock } from "lucide-react";
 import { useState } from "react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/roles")({
   component: RoleManagementPage,
 });
 function RoleManagementPage() {
+  const { data: metrics } = useCeoDashboard();
   const [selected, setSelected] = useState("super_admin");
   const roles = [
     {

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 import {
   Building2,
   GitBranch,
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/digital-twin/")({
   component: DigitalTwinPage,
 });
 function DigitalTwinPage() {
+  const { data: metrics } = useCeoDashboard();
   const l = "ar";
   const entities = [
     {

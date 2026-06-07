@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { MaturityBadge } from "~/components/wpos/MaturityBadge";
+import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useCases } from "@/hooks/useCases";
 import {
   BarChart3,
   Users,
@@ -21,6 +23,8 @@ export const Route = createFileRoute("/_authenticated/command-center/")({
   component: CommandCenterPage,
 });
 function CommandCenterPage() {
+  const { data: ceoMetrics } = useCeoDashboard();
+  const { data: cases } = useCases();
   const l = "ar";
   const criticalKPIs = [
     {

@@ -5,10 +5,12 @@ import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { FormSelect, FormTextarea } from "~/components/wpos/FormInput";
 import { Plus, Shield, Settings, GitBranch, Activity, Play, Save } from "lucide-react";
 import { useState } from "react";
+import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/rules-engine/")({
   component: RulesEnginePage,
 });
 function RulesEnginePage() {
+  const { data: metrics } = useCeoDashboard();
   const l = "ar";
   const [type, setType] = useState("all");
   const [testResult, setTestResult] = useState<string | null>(null);
