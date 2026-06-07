@@ -1,33 +1,38 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  type UseQueryOptions,
+} from "@tanstack/react-query";
 
-const QUERY_KEYS = {
-  employees: ['employees'] as const,
-  diagnostics: ['diagnostics'] as const,
-  cases: ['cases'] as const,
-  kpis: ['kpis'] as const,
-};
-
-// Generic query hook factory
-export function useListQuery<T>(
+/**
+ * Generic query hook factory for list endpoints.
+ */
+export function useListQuery<TData, TFilters = Record<string, unknown>>(
   key: string[],
-  queryFn: (filters: any) => Promise<any>,
-  options?: any
+  queryFn: (filters: TFilters) => Promise<TData>,
+  options?: {
+    filters?: TFilters;
+    queryOptions?: Partial<UseQueryOptions<TData>>;
+  },
 ) {
   return useQuery({
     queryKey: key,
-    queryFn: () => queryFn(options?.filters),
+    queryFn: () => queryFn(options?.filters as TFilters),
     ...options?.queryOptions,
   });
 }
 
-// Generic mutation hook factory
-export function useActionMutation<T, U>(
-  action: (input: T) => Promise<U>,
+/**
+ * Generic mutation hook factory with cache invalidation.
+ */
+export function useActionMutation<TInput, TOutput>(
+  action: (input: TInput) => Promise<TOutput>,
   options?: {
     invalidateKeys?: string[][];
-    onSuccess?: (data: U) => void;
+    onSuccess?: (data: TOutput) => void;
     onError?: (error: Error) => void;
-  }
+  },
 ) {
   const queryClient = useQueryClient();
 
@@ -35,7 +40,7 @@ export function useActionMutation<T, U>(
     mutationFn: action,
     onSuccess: (data) => {
       if (options?.invalidateKeys) {
-        options.invalidateKeys.forEach(key => {
+        options.invalidateKeys.forEach((key) => {
           queryClient.invalidateQueries({ queryKey: key });
         });
       }
