@@ -48,6 +48,7 @@ import { Route as AuthenticatedBenchmarksIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedApiKeysIndexRouteImport } from './routes/_authenticated/api-keys/index'
 import { Route as AuthenticatedAnalyticsIndexRouteImport } from './routes/_authenticated/analytics/index'
 import { Route as AuthenticatedAiAssistantIndexRouteImport } from './routes/_authenticated/ai-assistant/index'
+import { Route as AuthenticatedAdvancedIndexRouteImport } from './routes/_authenticated/advanced/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedActionPlansIndexRouteImport } from './routes/_authenticated/action-plans/index'
 import { Route as AuthenticatedSnapshotsNewRouteImport } from './routes/_authenticated/snapshots/new'
@@ -323,6 +324,12 @@ const AuthenticatedAiAssistantIndexRoute =
   AuthenticatedAiAssistantIndexRouteImport.update({
     id: '/ai-assistant/',
     path: '/ai-assistant/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdvancedIndexRoute =
+  AuthenticatedAdvancedIndexRouteImport.update({
+    id: '/advanced/',
+    path: '/advanced/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
@@ -674,6 +681,7 @@ export interface FileRoutesByFullPath {
   '/snapshots/new': typeof AuthenticatedSnapshotsNewRoute
   '/action-plans/': typeof AuthenticatedActionPlansIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/advanced/': typeof AuthenticatedAdvancedIndexRoute
   '/ai-assistant/': typeof AuthenticatedAiAssistantIndexRoute
   '/analytics/': typeof AuthenticatedAnalyticsIndexRoute
   '/api-keys/': typeof AuthenticatedApiKeysIndexRoute
@@ -765,6 +773,7 @@ export interface FileRoutesByTo {
   '/snapshots/new': typeof AuthenticatedSnapshotsNewRoute
   '/action-plans': typeof AuthenticatedActionPlansIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/advanced': typeof AuthenticatedAdvancedIndexRoute
   '/ai-assistant': typeof AuthenticatedAiAssistantIndexRoute
   '/analytics': typeof AuthenticatedAnalyticsIndexRoute
   '/api-keys': typeof AuthenticatedApiKeysIndexRoute
@@ -858,6 +867,7 @@ export interface FileRoutesById {
   '/_authenticated/snapshots/new': typeof AuthenticatedSnapshotsNewRoute
   '/_authenticated/action-plans/': typeof AuthenticatedActionPlansIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/advanced/': typeof AuthenticatedAdvancedIndexRoute
   '/_authenticated/ai-assistant/': typeof AuthenticatedAiAssistantIndexRoute
   '/_authenticated/analytics/': typeof AuthenticatedAnalyticsIndexRoute
   '/_authenticated/api-keys/': typeof AuthenticatedApiKeysIndexRoute
@@ -951,6 +961,7 @@ export interface FileRouteTypes {
     | '/snapshots/new'
     | '/action-plans/'
     | '/admin/'
+    | '/advanced/'
     | '/ai-assistant/'
     | '/analytics/'
     | '/api-keys/'
@@ -1042,6 +1053,7 @@ export interface FileRouteTypes {
     | '/snapshots/new'
     | '/action-plans'
     | '/admin'
+    | '/advanced'
     | '/ai-assistant'
     | '/analytics'
     | '/api-keys'
@@ -1134,6 +1146,7 @@ export interface FileRouteTypes {
     | '/_authenticated/snapshots/new'
     | '/_authenticated/action-plans/'
     | '/_authenticated/admin/'
+    | '/_authenticated/advanced/'
     | '/_authenticated/ai-assistant/'
     | '/_authenticated/analytics/'
     | '/_authenticated/api-keys/'
@@ -1454,6 +1467,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-assistant'
       fullPath: '/ai-assistant/'
       preLoaderRoute: typeof AuthenticatedAiAssistantIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/advanced/': {
+      id: '/_authenticated/advanced/'
+      path: '/advanced'
+      fullPath: '/advanced/'
+      preLoaderRoute: typeof AuthenticatedAdvancedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/admin/': {
@@ -1865,6 +1885,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSnapshotsNewRoute: typeof AuthenticatedSnapshotsNewRoute
   AuthenticatedActionPlansIndexRoute: typeof AuthenticatedActionPlansIndexRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdvancedIndexRoute: typeof AuthenticatedAdvancedIndexRoute
   AuthenticatedAiAssistantIndexRoute: typeof AuthenticatedAiAssistantIndexRoute
   AuthenticatedAnalyticsIndexRoute: typeof AuthenticatedAnalyticsIndexRoute
   AuthenticatedApiKeysIndexRoute: typeof AuthenticatedApiKeysIndexRoute
@@ -1971,6 +1992,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSnapshotsNewRoute: AuthenticatedSnapshotsNewRoute,
   AuthenticatedActionPlansIndexRoute: AuthenticatedActionPlansIndexRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdvancedIndexRoute: AuthenticatedAdvancedIndexRoute,
   AuthenticatedAiAssistantIndexRoute: AuthenticatedAiAssistantIndexRoute,
   AuthenticatedAnalyticsIndexRoute: AuthenticatedAnalyticsIndexRoute,
   AuthenticatedApiKeysIndexRoute: AuthenticatedApiKeysIndexRoute,
