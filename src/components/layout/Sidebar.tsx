@@ -139,32 +139,55 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
     const isExpanded = expanded.includes(item.href);
     const label = lang === "ar" ? item.labelAr : item.label;
 
+    // Parent items with children: clicking toggles expand/collapse only.
+    // Leaf items (no children): clicking navigates to the route.
+    const handleClick = (e: React.MouseEvent) => {
+      if (hasChildren) {
+        e.preventDefault(); // Don't navigate — just toggle
+        toggle(item.href);
+      }
+    };
+
+    const sharedClasses = `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer transition-all no-underline ${
+      active
+        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+    }`;
+
     return (
       <div key={item.href}>
-        <Link
-          to={item.href}
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer transition-all no-underline ${
-            active
-              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
-              : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-          }`}
-          style={{ paddingLeft: `${depth * 12 + 12}px` }}
-          onClick={() => hasChildren && toggle(item.href)}
-          aria-current={active ? "page" : undefined}
-        >
-          <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-          {isOpen && (
-            <>
-              <span className="flex-1 truncate">{label}</span>
-              {hasChildren && (
+        {hasChildren ? (
+          // Parent with children — render as button to toggle expand
+          <button
+            type="button"
+            className={`${sharedClasses} w-full`}
+            style={{ paddingLeft: `${depth * 12 + 12}px` }}
+            onClick={handleClick}
+            aria-expanded={isExpanded}
+          >
+            <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+            {isOpen && (
+              <>
+                <span className="flex-1 truncate text-left">{label}</span>
                 <ChevronDown
                   className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                   aria-hidden="true"
                 />
-              )}
-            </>
-          )}
-        </Link>
+              </>
+            )}
+          </button>
+        ) : (
+          // Leaf item — render as Link to navigate
+          <Link
+            to={item.href}
+            className={sharedClasses}
+            style={{ paddingLeft: `${depth * 12 + 12}px` }}
+            aria-current={active ? "page" : undefined}
+          >
+            <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+            {isOpen && <span className="flex-1 truncate">{label}</span>}
+          </Link>
+        )}
         {hasChildren && isExpanded && isOpen && (
           <div className="mt-0.5">
             {item.children!.map((c: NavItem) => renderItem(c, depth + 1))}
