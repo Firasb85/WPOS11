@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '../../../components/wpos/PageHeader';
-import { Card } from '../../../components/wpos/Card';
+import { PageHeader } from '~/components/wpos/PageHeader';
+import { Card } from '~/components/wpos/Card';
 import { Save, X, Upload } from 'lucide-react';
 export const Route = createFileRoute('/_authenticated/evidence/new')({ component: NewEvidencePage });
 function NewEvidencePage() {
