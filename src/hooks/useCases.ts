@@ -64,7 +64,6 @@ export function useAddIntervention() {
   });
 }
 
-
 export function useAddActionPlan() {
   const qc = useQueryClient();
   return useMutation({

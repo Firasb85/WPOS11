@@ -28,8 +28,14 @@ function CasesListPage() {
   };
 
   const tableData = (cases ?? []).map((c) => {
-    const emp = (c as unknown as Record<string, unknown>).employees as Record<string, unknown> | null;
-    const dept = (c as unknown as Record<string, unknown>).departments as Record<string, unknown> | null;
+    const emp = (c as unknown as Record<string, unknown>).employees as Record<
+      string,
+      unknown
+    > | null;
+    const dept = (c as unknown as Record<string, unknown>).departments as Record<
+      string,
+      unknown
+    > | null;
     return {
       id: c.id,
       caseNumber: c.case_number,

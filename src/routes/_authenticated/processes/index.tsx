@@ -1,97 +1,208 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
-import { Link } from "@tanstack/react-router";
-import { Library, ListOrdered, Share2 } from "lucide-react";
+import { DataTable } from "~/components/wpos/DataTable";
+import { StatusBadge } from "~/components/wpos/StatusBadge";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useProcesses, useCreateProcess, useDeleteProcess } from "@/hooks/useProcesses";
+import { useDepartments } from "@/hooks/useOrganization";
+import { Plus, GitMerge, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/processes/")({
-  component: ProcessArchitectureIndexPage,
+  component: ProcessesIndexPage,
 });
 
-function ProcessArchitectureIndexPage() {
-  const sections = [
-    {
-      href: "/processes/library",
-      icon: Library,
-      label: "Process Library",
-      labelAr: "مكتبة العمليات",
-      desc: "All documented business processes",
-      descAr: "جميع العمليات التجارية الموثقة",
-      count: 42,
-      color: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
-    },
-    {
-      href: "/processes/steps",
-      icon: ListOrdered,
-      label: "Process Steps",
-      labelAr: "خطوات العمليات",
-      desc: "Step-by-step procedure definitions",
-      descAr: "تعريفات الإجراءات خطوة بخطوة",
-      count: 186,
-      color: "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400",
-    },
-    {
-      href: "/processes/dependencies",
-      icon: Share2,
-      label: "Dependency Mapping",
-      labelAr: "خريطة التبعيات",
-      desc: "Process interdependency analysis",
-      descAr: "تحليل الاعتماديات بين العمليات",
-      count: 28,
-      color: "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
-    },
-  ];
+function ProcessesIndexPage() {
+  const { t, lang: l } = useLanguage();
+  const { data: processes, isLoading } = useProcesses();
+  const { data: depts } = useDepartments();
+  const createMutation = useCreateProcess();
+  const deleteMutation = useDeleteProcess();
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    code: "",
+    department_id: "",
+    risk_level: "medium",
+    criticality: "medium",
+    description: "",
+  });
 
-  const stats = [
-    { label: "Total Processes", labelAr: "إجمالي العمليات", value: "42" },
-    { label: "Total Steps", labelAr: "إجمالي الخطوات", value: "186" },
-    { label: "Dependencies", labelAr: "التبعيات", value: "28" },
-    { label: "Coverage", labelAr: "التغطية", value: "76%" },
-  ];
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await createMutation.mutateAsync({
+      ...formData,
+      department_id: formData.department_id || null,
+    });
+    setFormData({
+      name: "",
+      code: "",
+      department_id: "",
+      risk_level: "medium",
+      criticality: "medium",
+      description: "",
+    });
+    setShowForm(false);
+  };
+
+  const tableData = (processes ?? []).map((p) => {
+    const dept = (p as Record<string, unknown>).departments as Record<string, unknown> | null;
+    return {
+      id: p.id,
+      name: p.name,
+      code: p.code ?? "-",
+      department: (dept?.name as string) ?? "-",
+      risk: p.risk_level ?? "medium",
+      criticality: p.criticality ?? "medium",
+    };
+  });
 
   return (
     <div>
       <PageHeader
-        title="Process Architecture"
-        titleAr="هيكل العمليات"
-        description="Document and manage your operational process framework"
-        descriptionAr="توثيق وإدارة إطار العمليات التشغيلية"
-      />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            className="p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 text-center"
+        title="Processes"
+        titleAr="العمليات"
+        description="Manage business processes"
+        descriptionAr="إدارة عمليات العمل"
+        currentLang={l}
+        actions={
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
           >
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{s.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{s.label}</p>
-            <p className="text-xs text-gray-400">{s.labelAr}</p>
-          </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {sections.map(({ href, icon: Icon, label, labelAr, desc, descAr, count, color }) => (
-          <Link key={href} to={href} className="no-underline">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-start gap-4">
-                <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}
-                >
-                  <Icon className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{label}</h3>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">{count}</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{desc}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{descAr}</p>
-                </div>
+            <Plus className="w-4 h-4" />
+            {t("Add Process", "إضافة عملية")}
+          </button>
+        }
+      />
+      {showForm && (
+        <Card className="mb-6">
+          <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">
+                {t("Name", "الاسم")} *
+              </label>
+              <input
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">
+                {t("Code", "الرمز")} *
+              </label>
+              <input
+                required
+                value={formData.code}
+                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">
+                {t("Department", "الإدارة")}
+              </label>
+              <select
+                value={formData.department_id}
+                onChange={(e) => setFormData({ ...formData, department_id: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
+              >
+                <option value="">{t("Select", "اختر")}</option>
+                {(depts ?? []).map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="md:col-span-3 flex gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-sm"
+              >
+                {t("Cancel", "إلغاء")}
+              </button>
+              <button
+                type="submit"
+                disabled={createMutation.isPending}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                {createMutation.isPending ? t("Creating...", "جاري...") : t("Create", "إنشاء")}
+              </button>
+            </div>
+          </form>
+        </Card>
+      )}
+      <DataTable
+        columns={[
+          {
+            key: "name",
+            label: t("Process", "العملية"),
+            sortable: true,
+            render: (row) => (
+              <div className="flex items-center gap-2">
+                <GitMerge className="w-4 h-4 text-blue-500" />
+                <span className="font-medium">{row.name}</span>
               </div>
-            </Card>
-          </Link>
-        ))}
-      </div>
+            ),
+          },
+          { key: "code", label: t("Code", "الرمز") },
+          { key: "department", label: t("Department", "الإدارة") },
+          {
+            key: "risk",
+            label: t("Risk", "المخاطر"),
+            render: (row) => (
+              <StatusBadge
+                status={
+                  row.risk === "critical"
+                    ? "red"
+                    : row.risk === "high"
+                      ? "orange"
+                      : row.risk === "medium"
+                        ? "yellow"
+                        : "green"
+                }
+                label={row.risk}
+              />
+            ),
+          },
+          {
+            key: "criticality",
+            label: t("Criticality", "الأهمية"),
+            render: (row) => (
+              <StatusBadge
+                status={
+                  row.criticality === "critical"
+                    ? "red"
+                    : row.criticality === "high"
+                      ? "orange"
+                      : "yellow"
+                }
+                label={row.criticality}
+              />
+            ),
+          },
+          {
+            key: "id",
+            label: "",
+            render: (row) => (
+              <button
+                onClick={() => deleteMutation.mutate(row.id)}
+                className="p-1 text-red-400 hover:text-red-600"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            ),
+          },
+        ]}
+        data={tableData}
+        isLoading={isLoading}
+        searchable
+      />
     </div>
   );
 }

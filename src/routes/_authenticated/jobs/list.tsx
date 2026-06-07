@@ -1,63 +1,76 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { PageHeader } from "~/components/wpos/PageHeader";
+import { Card } from "~/components/wpos/Card";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Plus, Briefcase } from "lucide-react";
-export const Route = createFileRoute("/_authenticated/jobs/list")({ component: JobsListPage });
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useJobs, useDeleteJob } from "@/hooks/useJobs";
+import { Briefcase, Trash2 } from "lucide-react";
+
+export const Route = createFileRoute("/_authenticated/jobs/list")({
+  component: JobsListPage,
+});
+
 function JobsListPage() {
-  const data = [
-    {
-      id: "1",
-      title: "Senior Operations Analyst",
-      employee: "Ahmad Khalid",
-      dept: "Operations",
-      status: "active",
-    },
-    {
-      id: "2",
-      title: "Operations Analyst",
-      employee: "Layla Ibrahim",
-      dept: "Operations",
-      status: "active",
-    },
-    {
-      id: "3",
-      title: "Junior Analyst",
-      employee: "Omar Hassan",
-      dept: "Operations",
-      status: "active",
-    },
-  ];
+  const { t, lang: l } = useLanguage();
+  const { data: jobs, isLoading } = useJobs();
+  const deleteMutation = useDeleteJob();
+
+  const tableData = (jobs ?? []).map((j) => ({
+    id: j.id,
+    title: j.title,
+    status: j.status ?? "active",
+  }));
+
   return (
     <div>
       <PageHeader
         title="Jobs"
-        description="Manage job positions"
-        actions={
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
-            <Plus className="w-4 h-4" />
-            Add Job
-          </button>
-        }
+        titleAr="الوظائف"
+        description="Manage job definitions"
+        descriptionAr="إدارة تعريفات الوظائف"
+        currentLang={l}
       />
       <DataTable
         columns={[
           {
             key: "title",
-            label: "Title",
+            label: t("Title", "المسمى"),
             sortable: true,
-            render: (i) => (
+            render: (row) => (
               <div className="flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-gray-400" />
-                <span className="font-medium">{i.title}</span>
+                <Briefcase className="w-4 h-4 text-blue-500" />
+                <span className="font-medium">{row.title}</span>
               </div>
             ),
           },
-          { key: "employee", label: "Employee" },
-          { key: "dept", label: "Department" },
-          { key: "status", label: "Status", render: (i) => <StatusBadge status={i.status} /> },
+          {
+            key: "status",
+            label: t("Status", "الحالة"),
+            render: (row) => (
+              <StatusBadge
+                status={row.status === "active" ? "green" : "gray"}
+                label={row.status}
+              />
+            ),
+          },
+          {
+            key: "id",
+            label: "",
+            render: (row) => (
+              <button
+                onClick={() => deleteMutation.mutate(row.id)}
+                className="p-1 text-red-400 hover:text-red-600"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            ),
+          },
         ]}
-        data={data}
+        data={tableData}
+        isLoading={isLoading}
+        searchable
       />
     </div>
   );

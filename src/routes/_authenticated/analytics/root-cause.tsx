@@ -1,108 +1,67 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { StatsCard } from "~/components/wpos/StatsCard";
-import {
-  Search,
-  TrendingUp,
-  AlertTriangle,
-  BarChart3,
-  ArrowUp,
-  ArrowDown,
-  Minus,
-} from "lucide-react";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useRootCauseMetrics } from "@/hooks/useAnalytics";
+import { Search, BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/analytics/root-cause")({
-  component: RootCauseAnalysisPage,
+  component: RootCauseAnalyticsPage,
 });
 
-function RootCauseAnalysisPage() {
-  const l = "ar";
-  const rootCauses = [
-    { label: "Skill Gap", la: "فجوة مهارية", count: 12, pct: 28, trend: "increasing", chg: 15 },
-    { label: "Process Issue", la: "مشكلة إجرائية", count: 10, pct: 23, trend: "stable", chg: 2 },
-    { label: "Knowledge Gap", la: "فجوة معرفية", count: 7, pct: 16, trend: "stable", chg: 1 },
-    { label: "Tool Issue", la: "مشكلة أدوات", count: 5, pct: 12, trend: "decreasing", chg: -8 },
-    { label: "Motivation", la: "تحفيز", count: 4, pct: 9, trend: "increasing", chg: 10 },
-  ];
-  const TrendIcon = ({ trend }: { trend: string }) => {
-    if (trend === "increasing") return <ArrowUp className="w-3 h-3 text-red-500" />;
-    if (trend === "decreasing") return <ArrowDown className="w-3 h-3 text-green-500" />;
-    return <Minus className="w-3 h-3 text-gray-400" />;
-  };
+function RootCauseAnalyticsPage() {
+  const { t, lang: l } = useLanguage();
+  const { data: causes, isLoading } = useRootCauseMetrics();
+  const items = causes ?? [];
+  const maxCount = Math.max(...items.map((c) => c.count), 1);
+
   return (
     <div>
       <PageHeader
         title="Root Cause Analysis"
         titleAr="تحليل الأسباب الجذرية"
-        description="Track root cause frequencies"
-        descriptionAr="تتبع تكرار الأسباب الجذرية"
+        description="Distribution of root causes from diagnostic reports — live data"
+        descriptionAr="توزيع الأسباب الجذرية من تقارير التشخيص — بيانات حية"
         currentLang={l}
       />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <StatsCard title="Total" titleAr="الإجمالي" value="43" icon={<Search />} currentLang={l} />
-        <StatsCard
-          title="Top Category"
-          titleAr="الفئة الأعلى"
-          value={l === "ar" ? "فجوة مهارية" : "Skill Gap"}
-          icon={<BarChart3 />}
-          currentLang={l}
-        />
-        <StatsCard
-          title="Avg per Month"
-          titleAr="المتوسط الشهري"
-          value="7.2"
-          change={2.1}
-          icon={<TrendingUp />}
-          status="warning"
-          currentLang={l}
-        />
-        <StatsCard
-          title="Improving"
-          titleAr="تتحسن"
-          value="2"
-          icon={<AlertTriangle />}
-          status="good"
-          currentLang={l}
-        />
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>{l === "ar" ? "توزيع الأسباب الجذرية" : "Root Cause Distribution"}</CardTitle>
-        </CardHeader>
-        <div className="space-y-2">
-          {rootCauses.map((rc, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 p-2.5 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg"
-            >
-              <span className="text-xs font-medium text-gray-400 w-5">{i + 1}</span>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium">{l === "ar" ? rc.la : rc.label}</span>
-                  <div className="flex items-center gap-2">
-                    <TrendIcon trend={rc.trend} />
-                    <span className="text-sm font-bold">{rc.count}</span>
-                    <span className="text-xs text-gray-400">({rc.pct}%)</span>
-                  </div>
-                </div>
-                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      {isLoading ? (
+        <div className="h-64 bg-white rounded-xl border animate-pulse" />
+      ) : items.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">
+          <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
+          <p className="text-sm">
+            {t(
+              "No root cause data yet. Generate diagnostic hypotheses first.",
+              "لا توجد بيانات أسباب جذرية بعد.",
+            )}
+          </p>
+        </div>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <BarChart3 className="w-4 h-4 inline mr-2" />
+              {t("Root Cause Distribution", "توزيع الأسباب الجذرية")}
+            </CardTitle>
+          </CardHeader>
+          <div className="space-y-4">
+            {items.map((c) => (
+              <div key={c.category} className="flex items-center gap-4">
+                <div className="w-36 text-sm font-medium capitalize">{c.category}</div>
+                <div className="flex-1 h-8 bg-gray-100 rounded-lg overflow-hidden relative">
                   <div
-                    className={`h-full rounded-full ${rc.trend === "increasing" ? "bg-red-500" : rc.trend === "decreasing" ? "bg-green-500" : "bg-blue-500"}`}
-                    style={{ width: `${rc.pct}%` }}
+                    className="h-full bg-blue-500 rounded-lg transition-all"
+                    style={{ width: `${(c.count / maxCount) * 100}%` }}
                   />
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700">
+                    {c.count} ({c.pct}%)
+                  </span>
                 </div>
               </div>
-              <span
-                className={`text-xs px-1.5 py-0.5 rounded ${rc.chg > 0 ? "bg-red-100 text-red-700" : rc.chg < 0 ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}
-              >
-                {rc.chg > 0 ? "+" : ""}
-                {rc.chg}%
-              </span>
-            </div>
-          ))}
-        </div>
-      </Card>
+            ))}
+          </div>
+        </Card>
+      )}
     </div>
   );
 }

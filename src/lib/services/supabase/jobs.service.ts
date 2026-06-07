@@ -56,7 +56,7 @@ export const jobsService = {
   async listJobs() {
     const { data, error } = await supabase
       .from("jobs")
-      .select("*, job_families(name), job_grades(name)")
+      .select("*")
       .is("deleted_at", null)
       .order("title");
     if (error) throw error;
