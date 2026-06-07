@@ -3,114 +3,77 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Plus, Shield, Clock } from "lucide-react";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useEmployeesList } from "@/hooks/useOrganization";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
+import { Users, UserCircle } from "lucide-react";
+
 export const Route = createFileRoute("/_authenticated/admin/users")({
-  component: UserManagementPage,
+  component: AdminUsersPage,
 });
-function UserManagementPage() {
-  const { data: employees } = useEmployeesList({ pageSize: 100 });
-  const users = [
-    {
-      id: "1",
-      email: "ahmad@acme.com",
-      firstName: "Ahmad",
-      lastName: "Ali",
-      role: "Super Admin",
-      status: "active",
-      lastLogin: "2026-06-06 10:30",
-    },
-    {
-      id: "2",
-      email: "khaled@acme.com",
-      firstName: "Khalid",
-      lastName: "Al-Saud",
-      role: "Dept Manager",
-      status: "active",
-      lastLogin: "2026-06-05 14:15",
-    },
-    {
-      id: "3",
-      email: "nora@acme.com",
-      firstName: "Nora",
-      lastName: "Al-Faisal",
-      role: "HR Director",
-      status: "active",
-      lastLogin: "2026-06-06 09:00",
-    },
-  ];
+
+function AdminUsersPage() {
+  const { t, lang: l } = useLanguage();
+  const { data: employees, isLoading } = useEmployeesList({ pageSize: 100 });
+
+  const tableData = (employees?.data ?? []).map((e) => ({
+    id: e.id,
+    name: `${e.first_name} ${e.last_name}`,
+    email: e.email ?? "-",
+    code: e.employee_code ?? "-",
+    status: e.is_active ? "active" : "inactive",
+  }));
+
   return (
-    <div>
-      <PageHeader
-        title="User Management"
-        description="Manage system users"
-        actions={
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
-            <Plus className="w-4 h-4" />
-            Add User
-          </button>
-        }
-      />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {[
-          { label: "Total Users", count: 12 },
-          { label: "Active", count: 12, color: "text-green-600" },
-          { label: "Roles", count: 7, color: "text-blue-600" },
-        ].map((s) => (
-          <Card key={s.label}>
-            <div className="text-center">
-              <p className={`text-2xl font-bold ${s.color || "text-gray-900"}`}>{s.count}</p>
-              <p className="text-xs text-gray-500 mt-1">{s.label}</p>
-            </div>
-          </Card>
-        ))}
+    <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
+      <div>
+        <PageHeader
+          title="User Management"
+          titleAr="إدارة المستخدمين"
+          description="Manage system users and access — live data"
+          descriptionAr="إدارة مستخدمي النظام والوصول — بيانات حية"
+          currentLang={l}
+        />
+        <DataTable
+          columns={[
+            {
+              key: "name",
+              label: t("Name", "الاسم"),
+              sortable: true,
+              render: (row) => (
+                <div className="flex items-center gap-2">
+                  <UserCircle className="w-5 h-5 text-blue-500" />
+                  <div>
+                    <span className="font-medium">{row.name}</span>
+                    <p className="text-xs text-gray-400">{row.code}</p>
+                  </div>
+                </div>
+              ),
+            },
+            { key: "email", label: t("Email", "البريد") },
+            {
+              key: "status",
+              label: t("Status", "الحالة"),
+              render: (row) => (
+                <StatusBadge
+                  status={row.status === "active" ? "green" : "red"}
+                  label={row.status}
+                />
+              ),
+            },
+          ]}
+          data={tableData}
+          isLoading={isLoading}
+          searchable
+        />
+        {!isLoading && tableData.length === 0 && (
+          <div className="text-center py-12 text-gray-400">
+            <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
+            <p className="text-sm">{t("No users found.", "لا يوجد مستخدمون.")}</p>
+          </div>
+        )}
       </div>
-      <DataTable
-        columns={[
-          {
-            key: "name",
-            label: "User",
-            sortable: true,
-            render: (i) => (
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {i.firstName[0] + i.lastName[0]}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">
-                    {i.firstName} {i.lastName}
-                  </p>
-                  <p className="text-xs text-gray-500">{i.email}</p>
-                </div>
-              </div>
-            ),
-          },
-          {
-            key: "role",
-            label: "Role",
-            render: (i) => (
-              <div className="flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-gray-400" />
-                <span>{i.role}</span>
-              </div>
-            ),
-          },
-          { key: "status", label: "Status", render: (i) => <StatusBadge status={i.status} /> },
-          {
-            key: "lastLogin",
-            label: "Last Login",
-            render: (i) => (
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-gray-400" />
-                <span className="text-xs text-gray-500">{i.lastLogin}</span>
-              </div>
-            ),
-          },
-        ]}
-        data={users}
-      />
-    </div>
+    </PermissionGuard>
   );
 }
