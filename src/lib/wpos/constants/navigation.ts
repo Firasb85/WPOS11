@@ -1,14 +1,21 @@
 import type { NavItem } from '../types';
 
-export const navigation: NavItem[] = [
+export type Role = 'ADMIN' | 'MANAGER' | 'USER' | 'CEO';
+
+export type SecureNavItem = NavItem & {
+  allowedRoles?: Role[];
+  children?: SecureNavItem[];
+};
+
+export const navigation: SecureNavItem[] = [
   {label:'Dashboards',labelAr:'لوحات القيادة',href:'/dashboard',icon:'LayoutDashboard',module:'dashboard',children:[
-    {label:'CEO Dashboard',labelAr:'لوحة الرئيس التنفيذي',href:'/dashboard/ceo',icon:'BarChart3',module:'dashboard'},
-    {label:'Department Dashboard',labelAr:'لوحة الإدارة',href:'/dashboard/department',icon:'Building2',module:'dashboard'},
-    {label:'Supervisor Dashboard',labelAr:'لوحة المشرف',href:'/dashboard/supervisor',icon:'Users',module:'dashboard'},
+    {label:'CEO Dashboard',labelAr:'لوحة الرئيس التنفيذي',href:'/dashboard/ceo',icon:'BarChart3',module:'dashboard', allowedRoles: ['CEO', 'ADMIN']},
+    {label:'Department Dashboard',labelAr:'لوحة الإدارة',href:'/dashboard/department',icon:'Building2',module:'dashboard', allowedRoles: ['MANAGER', 'ADMIN']},
+    {label:'Supervisor Dashboard',labelAr:'لوحة المشرف',href:'/dashboard/supervisor',icon:'Users',module:'dashboard', allowedRoles: ['MANAGER', 'ADMIN']},
     {label:'Competency Dashboard',labelAr:'لوحة الكفاءات',href:'/dashboards/competency',icon:'Brain',module:'dashboard'},
     {label:'Diagnostic Intelligence',labelAr:'لوحة ذكاء التشخيص',href:'/dashboards/diagnostic-intelligence',icon:'Stethoscope',module:'dashboard'},
     {label:'Process Intelligence',labelAr:'لوحة ذكاء العمليات',href:'/dashboards/process-intelligence',icon:'GitMerge',module:'dashboard'},
-    {label:'Executive Analytics',labelAr:'تحليلات تنفيذية',href:'/executive',icon:'BarChart3',module:'dashboard'},
+    {label:'Executive Analytics',labelAr:'تحليلات تنفيذية',href:'/executive',icon:'BarChart3',module:'dashboard', allowedRoles: ['CEO', 'ADMIN']},
   ]},
   {label:'Organization',labelAr:'الهيكل التنظيمي',href:'/organization',icon:'Building2',module:'organization',children:[
     {label:'Companies',labelAr:'الشركات',href:'/organization/companies',icon:'Building',module:'organization'},
@@ -90,13 +97,13 @@ export const navigation: NavItem[] = [
   ]},
   {label:'SaaS Platform',labelAr:'منصة SaaS',href:'/saas',icon:'CreditCard',module:'saas'},
   {label:'Onboarding',labelAr:'الإعداد',href:'/onboarding',icon:'Zap',module:'onboarding'},
-  {label:'Administration',labelAr:'الإدارة',href:'/admin',icon:'Settings',module:'admin',children:[
-    {label:'User Management',labelAr:'إدارة المستخدمين',href:'/admin/users',icon:'Users',module:'admin'},
-    {label:'Role Management',labelAr:'إدارة الأدوار',href:'/admin/roles',icon:'Shield',module:'admin'},
-    {label:'Audit Logs',labelAr:'سجلات التدقيق',href:'/admin/audit',icon:'ScrollText',module:'admin'},
-    {label:'System Settings',labelAr:'إعدادات النظام',href:'/admin/settings',icon:'Settings',module:'admin'},
-    {label:'Security',labelAr:'الأمان',href:'/admin/security',icon:'Shield',module:'admin'},
-    {label:'API Keys',labelAr:'مفاتيح API',href:'/api-keys',icon:'Key',module:'api-keys'},
+  {label:'Administration',labelAr:'الإدارة',href:'/admin',icon:'Settings',module:'admin', allowedRoles: ['ADMIN'], children:[
+    {label:'User Management',labelAr:'إدارة المستخدمين',href:'/admin/users',icon:'Users',module:'admin', allowedRoles: ['ADMIN']},
+    {label:'Role Management',labelAr:'إدارة الأدوار',href:'/admin/roles',icon:'Shield',module:'admin', allowedRoles: ['ADMIN']},
+    {label:'Audit Logs',labelAr:'سجلات التدقيق',href:'/admin/audit',icon:'ScrollText',module:'admin', allowedRoles: ['ADMIN']},
+    {label:'System Settings',labelAr:'إعدادات النظام',href:'/admin/settings',icon:'Settings',module:'admin', allowedRoles: ['ADMIN']},
+    {label:'Security',labelAr:'الأمان',href:'/admin/security',icon:'Shield',module:'admin', allowedRoles: ['ADMIN']},
+    {label:'API Keys',labelAr:'مفاتيح API',href:'/api-keys',icon:'Key',module:'api-keys', allowedRoles: ['ADMIN']},
   ]},
   {label:'Advanced',labelAr:'متقدم',href:'/advanced',icon:'Cpu',module:'advanced',children:[
     {label:'Rules Engine',labelAr:'محرك القواعد',href:'/rules-engine',icon:'Settings',module:'rules-engine'},
