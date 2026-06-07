@@ -1,123 +1,109 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Plus, Camera, TrendingUp, TrendingDown, Minus } from "lucide-react";
-export const Route = createFileRoute("/_authenticated/snapshots/")({ component: SnapshotsPage });
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useSnapshots } from "@/hooks/useKpis";
+import { Plus, Camera } from "lucide-react";
+
+export const Route = createFileRoute("/_authenticated/snapshots/")({
+  component: SnapshotsPage,
+});
+
 function SnapshotsPage() {
-  const data = [
-    {
-      id: "1",
-      employee: "Ahmad Khalid",
-      kpi: "Production Efficiency",
-      target: 90,
-      actual: 78,
-      gap: -12,
-      gapPct: -13.3,
-      status: "red" as const,
-      period: "2026-05",
-      trend: "declining",
-    },
-    {
-      id: "2",
-      employee: "Layla Ibrahim",
-      kpi: "Customer Satisfaction",
-      target: 95,
-      actual: 88,
-      gap: -7,
-      gapPct: -7.4,
-      status: "yellow" as const,
-      period: "2026-05",
-      trend: "stable",
-    },
-    {
-      id: "3",
-      employee: "Ahmad Khalid",
-      kpi: "Quality Score",
-      target: 98,
-      actual: 96,
-      gap: -2,
-      gapPct: -2.0,
-      status: "green" as const,
-      period: "2026-05",
-      trend: "improving",
-    },
-    {
-      id: "4",
-      employee: "Omar Hassan",
-      kpi: "Attendance Rate",
-      target: 97,
-      actual: 95,
-      gap: -2,
-      gapPct: -2.1,
-      status: "green" as const,
-      period: "2026-05",
-      trend: "stable",
-    },
-  ];
-  const trendIcon = (t: string) =>
-    t === "improving" ? (
-      <TrendingUp className="w-4 h-4 text-green-500" />
-    ) : t === "declining" ? (
-      <TrendingDown className="w-4 h-4 text-red-500" />
-    ) : (
-      <Minus className="w-4 h-4 text-gray-400" />
-    );
+  const { t, lang: l } = useLanguage();
+  const { data: snapshots, isLoading } = useSnapshots();
+
+  const tableData = (snapshots ?? []).map((s) => {
+    const emp = (s as Record<string, unknown>).employees as Record<string, unknown> | null;
+    const kpi = (s as Record<string, unknown>).kpis as Record<string, unknown> | null;
+    return {
+      id: s.id,
+      employee: emp ? `${emp.first_name} ${emp.last_name}` : "-",
+      kpi: kpi ? `${kpi.name} (${kpi.code})` : "-",
+      period: s.period ?? "-",
+      target: s.target_value != null ? String(s.target_value) : "-",
+      actual: s.actual_value != null ? String(s.actual_value) : "-",
+      gap: s.gap_value != null ? String(s.gap_value) : "-",
+      gapPct: s.gap_percentage != null ? `${Number(s.gap_percentage).toFixed(1)}%` : "-",
+      status: s.status ?? "green",
+    };
+  });
+
   return (
     <div>
       <PageHeader
         title="Performance Snapshots"
-        description="Record and view actual performance"
+        titleAr="لقطات الأداء"
+        description="KPI measurements and gap tracking"
+        descriptionAr="قياسات مؤشرات الأداء وتتبع الفجوات"
+        currentLang={l}
         actions={
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+          <Link
+            to="/snapshots/new"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 no-underline"
+          >
             <Plus className="w-4 h-4" />
-            Record Snapshot
-          </button>
+            {t("Record Snapshot", "تسجيل لقطة")}
+          </Link>
         }
       />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: "Total", count: 24 },
-          { label: "Good", count: 12, color: "text-green-600" },
-          { label: "Warning", count: 8, color: "text-yellow-600" },
-          { label: "Critical", count: 4, color: "text-red-600" },
-        ].map((s) => (
-          <div key={s.label} className="p-4 bg-white dark:bg-gray-900 rounded-xl border">
-            <div className="flex items-center gap-3">
-              <Camera className="w-5 h-5 text-blue-600" />
-              <div>
-                <p className="text-xs text-gray-500">{s.label}</p>
-                <p className={`text-xl font-bold ${s.color || "text-gray-900"}`}>{s.count}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
       <DataTable
         columns={[
-          {
-            key: "employee",
-            label: "Employee",
-            sortable: true,
-            render: (i) => <span className="font-medium">{i.employee}</span>,
-          },
-          { key: "kpi", label: "KPI" },
-          { key: "target", label: "Target" },
-          { key: "actual", label: "Actual" },
+          { key: "employee", label: t("Employee", "الموظف"), sortable: true },
+          { key: "kpi", label: t("KPI", "المؤشر"), sortable: true },
+          { key: "period", label: t("Period", "الفترة"), sortable: true },
+          { key: "target", label: t("Target", "الهدف") },
+          { key: "actual", label: t("Actual", "الفعلي") },
           {
             key: "gap",
-            label: "Gap",
-            render: (i) => (
-              <span className={i.gap < 0 ? "text-red-600" : "text-green-600"}>{i.gap}</span>
+            label: t("Gap", "الفجوة"),
+            render: (row) => (
+              <span
+                className={`font-medium ${Number(row.gap) >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
+                {row.gap}
+              </span>
             ),
           },
-          { key: "gapPct", label: "Gap %" },
-          { key: "status", label: "Status", render: (i) => <StatusBadge status={i.status} /> },
-          { key: "trend", label: "Trend", render: (i) => trendIcon(i.trend) },
-          { key: "period", label: "Period" },
+          {
+            key: "gapPct",
+            label: t("Gap %", "% الفجوة"),
+            render: (row) => (
+              <span
+                className={`font-medium ${parseFloat(row.gapPct) >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
+                {row.gapPct}
+              </span>
+            ),
+          },
+          {
+            key: "status",
+            label: t("Status", "الحالة"),
+            render: (row) => <StatusBadge status={row.status} label={row.status} />,
+          },
         ]}
-        data={data}
+        data={tableData}
+        isLoading={isLoading}
+        searchable
       />
+      {!isLoading && tableData.length === 0 && (
+        <div className="text-center py-12 text-gray-400">
+          <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
+          <p className="text-sm">
+            {t(
+              "No snapshots yet. Record your first performance measurement.",
+              "لا توجد لقطات بعد. سجّل أول قياس أداء.",
+            )}
+          </p>
+          <Link
+            to="/snapshots/new"
+            className="mt-3 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm no-underline"
+          >
+            {t("Record Snapshot", "تسجيل لقطة")}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

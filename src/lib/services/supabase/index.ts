@@ -3,3 +3,8 @@ export { branchesService } from "./branches.service";
 export { departmentsService } from "./departments.service";
 export { teamsService } from "./teams.service";
 export { employeesService } from "./employees.service";
+export { kpiCategoriesService } from "./kpi-categories.service";
+export { kpisService } from "./kpis.service";
+export { snapshotsService } from "./snapshots.service";
+export { evidenceService } from "./evidence.service";
+export { diagnosticsService } from "./diagnostics.service";
