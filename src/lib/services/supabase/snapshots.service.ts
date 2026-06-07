@@ -34,8 +34,8 @@ export const snapshotsService = {
       .from("performance_snapshots")
       .insert({
         ...input,
-      gap_value: gapValue,
-      gap_percentage: gapPercentage,
+        gap_value: gapValue,
+        gap_percentage: gapPercentage,
         status,
       })
       .select()

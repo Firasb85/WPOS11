@@ -99,7 +99,8 @@ function DiagnosticsListPage() {
             render: (row) => (
               <div className="flex items-center gap-1">
                 <Link
-                  to="/diagnostics/report/$id" params={{ id: row.id }}
+                  to="/diagnostics/report/$id"
+                  params={{ id: row.id }}
                   className="p-1 text-blue-400 hover:text-blue-600"
                 >
                   <Eye className="w-4 h-4" />

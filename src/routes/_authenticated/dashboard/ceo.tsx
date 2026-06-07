@@ -2,143 +2,202 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
-import { DataTable } from "~/components/wpos/DataTable";
-import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Users, Building2, TrendingUp, AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useCeoDashboard } from "@/hooks/useDashboard";
+import {
+  Users,
+  Building2,
+  TrendingUp,
+  Gauge,
+  Stethoscope,
+  FileText,
+  AlertTriangle,
+} from "lucide-react";
+
 export const Route = createFileRoute("/_authenticated/dashboard/ceo")({
   component: CEODashboardPage,
 });
+
 function CEODashboardPage() {
-  const statsCards = [
-    {
-      title: "Total Employees",
-      value: "1,247",
-      change: 3.2,
-      icon: <Users />,
-      status: "good" as const,
-    },
-    { title: "Departments", value: "12", change: 0, icon: <Building2 />, status: "good" as const },
-    {
-      title: "Performance Index",
-      value: "87.5%",
-      change: -2.1,
-      icon: <TrendingUp />,
-      status: "warning" as const,
-    },
-    {
-      title: "Critical KPIs",
-      value: "4",
-      change: 33.3,
-      icon: <AlertTriangle />,
-      status: "critical" as const,
-    },
-  ];
-  const criticalKPIs = [
-    {
-      id: "1",
-      kpi: "Customer Satisfaction",
-      target: 95,
-      actual: 82,
-      gap: -13,
-      status: "red" as const,
-      trend: "declining",
-    },
-    {
-      id: "2",
-      kpi: "Production Efficiency",
-      target: 90,
-      actual: 78,
-      gap: -12,
-      status: "red" as const,
-      trend: "declining",
-    },
-    {
-      id: "3",
-      kpi: "On-Time Delivery",
-      target: 98,
-      actual: 91,
-      gap: -7,
-      status: "yellow" as const,
-      trend: "stable",
-    },
-    {
-      id: "4",
-      kpi: "Quality Score",
-      target: 99,
-      actual: 96,
-      gap: -3,
-      status: "yellow" as const,
-      trend: "improving",
-    },
-  ];
+  const { t, lang: l } = useLanguage();
+  const { data: metrics, isLoading } = useCeoDashboard();
+
+  if (isLoading) {
+    return (
+      <div>
+        <PageHeader
+          title="CEO Dashboard"
+          titleAr="لوحة الرئيس التنفيذي"
+          description="Organization-wide performance overview"
+          descriptionAr="نظرة عامة على أداء المؤسسة"
+          currentLang={l}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="h-28 bg-white rounded-xl border border-gray-200 animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const m = metrics ?? {
+    totalEmployees: 0,
+    totalDepartments: 0,
+    totalKpis: 0,
+    totalEvidence: 0,
+    performanceIndex: 0,
+    kpiStatus: { green: 0, yellow: 0, red: 0 },
+    totalDiagnostics: 0,
+    avgMaturity: 0,
+    diagnosticsByStatus: { draft: 0, under_review: 0, approved: 0 },
+  };
+
   return (
     <div>
-      <PageHeader title="CEO Dashboard" description="Organization-wide performance overview" />
+      <PageHeader
+        title="CEO Dashboard"
+        titleAr="لوحة الرئيس التنفيذي"
+        description="Organization-wide performance overview — live data"
+        descriptionAr="نظرة عامة على أداء المؤسسة — بيانات حية"
+        currentLang={l}
+      />
+
+      {/* Top Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {statsCards.map((s, i) => (
-          <StatsCard key={i} {...s} />
-        ))}
+        <StatsCard
+          title={t("Total Employees", "إجمالي الموظفين")}
+          value={String(m.totalEmployees)}
+          icon={<Users />}
+          status="good"
+        />
+        <StatsCard
+          title={t("Departments", "الإدارات")}
+          value={String(m.totalDepartments)}
+          icon={<Building2 />}
+          status="good"
+        />
+        <StatsCard
+          title={t("Performance Index", "مؤشر الأداء")}
+          value={`${m.performanceIndex}%`}
+          icon={<TrendingUp />}
+          status={
+            m.performanceIndex >= 80 ? "good" : m.performanceIndex >= 60 ? "warning" : "critical"
+          }
+        />
+        <StatsCard
+          title={t("Critical KPIs", "مؤشرات حرجة")}
+          value={String(m.kpiStatus.red)}
+          icon={<AlertTriangle />}
+          status={m.kpiStatus.red === 0 ? "good" : "critical"}
+        />
       </div>
+
+      {/* Second Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <Card className="lg:col-span-1">
+        {/* KPI Status */}
+        <Card>
           <CardHeader>
-            <CardTitle>Top Risks</CardTitle>
-          </CardHeader>
-          <div className="space-y-4">
-            {[
-              { risk: "Customer Satisfaction Drop", level: "High", dept: "Operations" },
-              { risk: "Production Bottleneck", level: "Critical", dept: "Manufacturing" },
-              { risk: "Staff Turnover", level: "Medium", dept: "HR" },
-            ].map((r, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
-              >
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{r.risk}</p>
-                  <p className="text-xs text-gray-500">{r.dept}</p>
-                </div>
-                <StatusBadge
-                  status={r.level === "Critical" ? "red" : r.level === "High" ? "yellow" : "green"}
-                  label={r.level}
-                />
-              </div>
-            ))}
-          </div>
-        </Card>
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>KPI Status Overview</CardTitle>
+            <CardTitle>
+              <Gauge className="w-4 h-4 inline mr-2" />
+              {t("KPI Status Overview", "نظرة عامة على حالة المؤشرات")}
+            </CardTitle>
           </CardHeader>
           <div className="grid grid-cols-3 gap-4">
-            {[
-              { label: "Good", count: 42, color: "green" },
-              { label: "Warning", count: 18, color: "yellow" },
-              { label: "Critical", count: 4, color: "red" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className={`text-center p-4 bg-${s.color}-50 dark:bg-${s.color}-900/20 rounded-lg`}
-              >
-                <p className={`text-2xl font-bold text-${s.color}-600`}>{s.count}</p>
-                <p className="text-xs mt-1">{s.label}</p>
-              </div>
-            ))}
+            <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <p className="text-2xl font-bold text-green-600">{m.kpiStatus.green}</p>
+              <p className="text-xs mt-1">{t("Good", "جيد")}</p>
+            </div>
+            <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+              <p className="text-2xl font-bold text-yellow-600">{m.kpiStatus.yellow}</p>
+              <p className="text-xs mt-1">{t("Warning", "تحذير")}</p>
+            </div>
+            <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              <p className="text-2xl font-bold text-red-600">{m.kpiStatus.red}</p>
+              <p className="text-xs mt-1">{t("Critical", "حرج")}</p>
+            </div>
+          </div>
+          <p className="text-xs text-gray-400 mt-3 text-center">
+            {t("Total KPIs defined", "إجمالي المؤشرات المعرفة")}: {m.totalKpis}
+          </p>
+        </Card>
+
+        {/* Diagnostic Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Stethoscope className="w-4 h-4 inline mr-2" />
+              {t("Diagnostics Overview", "نظرة عامة على التشخيصات")}
+            </CardTitle>
+          </CardHeader>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">{t("Total Reports", "إجمالي التقارير")}</span>
+              <span className="text-lg font-bold">{m.totalDiagnostics}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">{t("Draft", "مسودة")}</span>
+              <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
+                {m.diagnosticsByStatus.draft}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">{t("Under Review", "قيد المراجعة")}</span>
+              <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded text-xs font-medium">
+                {m.diagnosticsByStatus.under_review}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">{t("Approved", "معتمدة")}</span>
+              <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
+                {m.diagnosticsByStatus.approved}
+              </span>
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t">
+              <span className="text-sm text-gray-500">{t("Avg Maturity", "متوسط النضج")}</span>
+              <span className="text-lg font-bold text-blue-600">{m.avgMaturity}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Quick Stats */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <FileText className="w-4 h-4 inline mr-2" />
+              {t("System Summary", "ملخص النظام")}
+            </CardTitle>
+          </CardHeader>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <span className="text-sm text-gray-500">{t("Total Evidence", "إجمالي الأدلة")}</span>
+              <span className="font-semibold">{m.totalEvidence}</span>
+            </div>
+            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <span className="text-sm text-gray-500">{t("Active KPIs", "المؤشرات النشطة")}</span>
+              <span className="font-semibold">{m.totalKpis}</span>
+            </div>
+            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <span className="text-sm text-gray-500">
+                {t("Snapshots Recorded", "اللقطات المسجلة")}
+              </span>
+              <span className="font-semibold">
+                {m.kpiStatus.green + m.kpiStatus.yellow + m.kpiStatus.red}
+              </span>
+            </div>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-sm text-gray-500">{t("System Health", "صحة النظام")}</span>
+              <span className="font-semibold text-green-600">
+                {m.performanceIndex >= 80 ? "✅" : m.performanceIndex >= 60 ? "⚠️" : "🔴"}{" "}
+                {m.performanceIndex}%
+              </span>
+            </div>
           </div>
         </Card>
       </div>
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Critical KPIs</h2>
-      <DataTable
-        columns={[
-          { key: "kpi", label: "KPI", sortable: true },
-          { key: "target", label: "Target" },
-          { key: "actual", label: "Actual" },
-          { key: "gap", label: "Gap" },
-          { key: "status", label: "Status", render: (i) => <StatusBadge status={i.status} /> },
-          { key: "trend", label: "Trend" },
-        ]}
-        data={criticalKPIs}
-      />
     </div>
   );
 }

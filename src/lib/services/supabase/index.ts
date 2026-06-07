@@ -8,3 +8,7 @@ export { kpisService } from "./kpis.service";
 export { snapshotsService } from "./snapshots.service";
 export { evidenceService } from "./evidence.service";
 export { diagnosticsService } from "./diagnostics.service";
+export { jobsService } from "./jobs.service";
+export { processesService } from "./processes.service";
+export { competenciesService } from "./competencies.service";
+export { dashboardService } from "./dashboard.service";
