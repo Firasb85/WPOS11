@@ -1,78 +1,117 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import type { User, Session } from '@supabase/supabase-js';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User, Session } from "@supabase/supabase-js";
+import {
+  type AppRole,
+  type PermissionCode,
+  ROLE_PERMISSIONS,
+  hasPermission,
+  hasAllPermissions,
+  hasAnyPermission,
+} from "@/lib/rbac";
 
-export type Role = 'ADMIN' | 'MANAGER' | 'USER' | 'CEO';
+/** @deprecated Use AppRole from @/lib/rbac instead */
+export type Role = AppRole;
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  role: Role;
-  permissions: string[];
+  role: AppRole;
+  permissions: PermissionCode[];
   isLoading: boolean;
   signOut: () => Promise<void>;
+  /** Check if the current user has a specific permission */
+  can: (permission: PermissionCode) => boolean;
+  /** Check if the current user has ALL specified permissions */
+  canAll: (permissions: PermissionCode[]) => boolean;
+  /** Check if the current user has ANY of the specified permissions */
+  canAny: (permissions: PermissionCode[]) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [role, setRole] = useState<Role>('USER'); // Default fallback
-  const [permissions, setPermissions] = useState<string[]>([]);
+  const [role, setRole] = useState<AppRole>("USER");
+  const [permissions, setPermissions] = useState<PermissionCode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 1. Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      extractRbac(session?.user);
-      setIsLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: s } }) => {
+        setSession(s);
+        setUser(s?.user ?? null);
+        extractRbac(s?.user);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
 
     // 2. Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      extractRbac(session?.user);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      setUser(s?.user ?? null);
+      extractRbac(s?.user);
       setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const extractRbac = (user: User | undefined | null) => {
-    if (!user) {
-      setRole('USER');
+  const extractRbac = (authUser: User | undefined | null) => {
+    if (!authUser) {
+      setRole("USER");
       setPermissions([]);
       return;
     }
     // Extract role from Supabase user metadata or JWT claims
-    const userRole = (user.user_metadata?.role || 'USER') as Role;
+    const userRole = (authUser.user_metadata?.role || "USER") as AppRole;
     setRole(userRole);
-    
-    // Assign base permissions dynamically
-    const basePermissions = ['read:dashboard'];
-    if (userRole === 'ADMIN' || userRole === 'CEO') basePermissions.push('manage:users', 'read:executive');
-    setPermissions(basePermissions);
+
+    // Assign permissions from centralized RBAC config
+    const rolePerms = ROLE_PERMISSIONS[userRole] ?? ROLE_PERMISSIONS.USER;
+    setPermissions([...rolePerms]);
   };
 
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
+  const can = (permission: PermissionCode) => hasPermission(role, permission);
+  const canAll = (perms: PermissionCode[]) => hasAllPermissions(role, perms);
+  const canAny = (perms: PermissionCode[]) => hasAnyPermission(role, perms);
+
   return (
-    <AuthContext.Provider value={{ user, session, role, permissions, isLoading, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        role,
+        permissions,
+        isLoading,
+        signOut,
+        can,
+        canAll,
+        canAny,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider. Ensure your app tree is wrapped.');
+    throw new Error(
+      "useAuth must be used within an AuthProvider. Ensure your app tree is wrapped.",
+    );
   }
   return context;
-};
+}
