@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '../../../components/wpos/PageHeader';
-import { Card, CardHeader, CardTitle } from '../../../components/wpos/Card';
+import { PageHeader } from '~/components/wpos/PageHeader';
+import { Card, CardHeader, CardTitle } from '~/components/wpos/Card';
 import { Download, FileText, FileSpreadsheet, Printer } from 'lucide-react';
 export const Route = createFileRoute('/_authenticated/reports/export')({ component: ExportPage });
 function ExportPage() {
