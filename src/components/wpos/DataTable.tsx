@@ -12,21 +12,25 @@ import {
   TableRow,
 } from '~/components/ui/table';
 
-export interface Column<T> {
-  key: keyof T;
+export interface Column<T = any> {
+  key: string;
   label: string;
+  labelAr?: string;
   sortable?: boolean;
   searchable?: boolean;
   render?: (value: any, row: T) => React.ReactNode;
   width?: string;
 }
 
-interface DataTableProps<T extends { id: string }> {
+interface DataTableProps<T extends { id: string } = any> {
   columns: Column<T>[];
   data: T[];
   isLoading?: boolean;
   searchable?: boolean;
   selectable?: boolean;
+  pageSize?: number;
+  currentLang?: string;
+  onRowClick?: (row: T) => void;
   onSort?: (key: string, direction: 'asc' | 'desc') => void;
   onSearch?: (query: string) => void;
   onSelectionChange?: (selectedIds: string[]) => void;
