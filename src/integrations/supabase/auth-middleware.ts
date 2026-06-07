@@ -2,26 +2,28 @@
 import { createMiddleware } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import { createClient } from '@supabase/supabase-js'
+import { z } from 'zod'
 import type { Database } from './types'
 
-
+const supabaseEnvSchema = z.object({
+  SUPABASE_URL: z.string().url("Must be a valid URL"),
+  SUPABASE_PUBLISHABLE_KEY: z.string().min(1, "Publishable key is required")
+});
 
 export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server(
   async ({ next }) => {
     
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
+    const envValidation = supabaseEnvSchema.safeParse({
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY
+    });
 
-    if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-      const missing = [
-        ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
-        ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
-      ];
-      const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
-      console.error(`[Supabase] ${message}`);
-      throw new Error(message);
+    if (!envValidation.success) {
+      console.error('[Supabase] ❌ Environment validation failed:', envValidation.error.format());
+      throw new Error('Missing or invalid Supabase environment variables. Build aborted.');
     }
     
+    const { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } = envValidation.data;
     const request = getRequest();
 
     if (!request?.headers) {
