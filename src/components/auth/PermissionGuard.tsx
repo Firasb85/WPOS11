@@ -1,13 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useRouter } from '@tanstack/react-router';
-
-// Placeholder for auth context hook. Replace with actual useAuth implementation
-const useAuth = () => ({ 
-  user: { roleName: 'USER', permissions: ['read'] }, 
-  isLoading: false 
-});
-
-export type Role = 'ADMIN' | 'MANAGER' | 'USER' | 'CEO';
+import { useAuth, Role } from '@/hooks/useAuth';
 
 interface PermissionGuardProps {
   children: ReactNode;
@@ -24,13 +17,15 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   fallback = null,
   redirectRoute
 }) => {
-  const { user, isLoading } = useAuth();
+  const { user, role, permissions, isLoading } = useAuth();
   const router = useRouter();
 
-  if (isLoading) return <div className="animate-pulse bg-gray-200 h-full w-full rounded"></div>;
+  if (isLoading) {
+    return <div className="animate-pulse bg-muted h-full w-full rounded-md min-h-[100px]" aria-label="Loading content..."></div>;
+  }
 
-  const hasRole = !allowedRoles.length || (user && allowedRoles.includes(user.roleName as Role));
-  const hasPermission = !requiredPermissions.length || (user && requiredPermissions.every(p => user.permissions.includes(p)));
+  const hasRole = allowedRoles.length === 0 || allowedRoles.includes(role);
+  const hasPermission = requiredPermissions.length === 0 || requiredPermissions.every(p => permissions.includes(p));
 
   if (!user || !hasRole || !hasPermission) {
     if (redirectRoute) {
