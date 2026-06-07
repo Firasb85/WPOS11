@@ -1,40 +1,32 @@
 /**
- * Environment variable validation for WPOS.
- * Import this module early in your server entry point to catch
- * missing configuration at startup instead of at runtime.
+ * Environment variable validation for WPOS using Zod.
+ * Fails fast and strictly enforces schema compliance.
  */
+import { z } from 'zod';
 
-interface EnvConfig {
-  DATABASE_URL: string;
-  NODE_ENV: 'development' | 'production' | 'test';
-  SESSION_SECRET?: string;
-  // Supabase
-  SUPABASE_URL?: string;
-  SUPABASE_SERVICE_ROLE_KEY?: string;
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  DATABASE_URL: z.string().url().optional(),
+  SESSION_SECRET: z.string().min(16).optional(),
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+}).superRefine((data, ctx) => {
+  if (data.NODE_ENV === 'production' && !data.DATABASE_URL) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "DATABASE_URL is required in production environments.",
+      path: ["DATABASE_URL"]
+    });
+  }
+});
+
+const _env = envSchema.safeParse(process.env);
+
+if (!_env.success) {
+  console.error('\n❌ Environment validation failed:');
+  console.error(_env.error.format());
+  throw new Error('Invalid environment variables. Check your .env file.');
 }
 
-function validateEnv(): EnvConfig {
-  const errors: string[] = [];
-
-  // Required in production
-  if (process.env.NODE_ENV !== 'development' && !process.env.DATABASE_URL) {
-    errors.push('DATABASE_URL is required in production. Set it in your .env file.');
-  }
-
-  if (errors.length > 0) {
-    console.error('\n❌ Environment validation failed:\n');
-    errors.forEach(e => console.error(`  • ${e}`));
-    console.error('\nCheck your .env file against .env.example\n');
-    throw new Error(`Missing required environment variables:\n${errors.join('\n')}`);
-  }
-
-  return {
-    DATABASE_URL: process.env.DATABASE_URL || '',
-    NODE_ENV: (process.env.NODE_ENV as EnvConfig['NODE_ENV']) || 'development',
-    SESSION_SECRET: process.env.SESSION_SECRET,
-    SUPABASE_URL: process.env.SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  };
-}
-
-export const env = validateEnv();
+export const env = _env.data;
+export type EnvConfig = z.infer<typeof envSchema>;
