@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "../../../components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "../../../components/wpos/Card";
-import { StatusBadge } from "../../../components/wpos/StatusBadge";
+import { PageHeader } from "~/components/wpos/PageHeader";
+import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, GitMerge, AlertTriangle, UserCircle } from "lucide-react";
 import { useState } from "react";
 export const Route = createFileRoute("/_authenticated/processes/library")({
