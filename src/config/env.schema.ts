@@ -10,12 +10,8 @@ import { z } from "zod";
  */
 export const clientEnvSchema = z.object({
   VITE_SUPABASE_URL: z.string().url("VITE_SUPABASE_URL must be a valid URL"),
-  VITE_SUPABASE_PUBLISHABLE_KEY: z
-    .string()
-    .min(1, "VITE_SUPABASE_PUBLISHABLE_KEY is required"),
-  VITE_SUPABASE_PROJECT_ID: z
-    .string()
-    .min(1, "VITE_SUPABASE_PROJECT_ID is required"),
+  VITE_SUPABASE_PUBLISHABLE_KEY: z.string().min(1, "VITE_SUPABASE_PUBLISHABLE_KEY is required"),
+  VITE_SUPABASE_PROJECT_ID: z.string().min(1, "VITE_SUPABASE_PROJECT_ID is required"),
 });
 
 /**
@@ -24,9 +20,7 @@ export const clientEnvSchema = z.object({
  */
 export const serverEnvSchema = z
   .object({
-    NODE_ENV: z
-      .enum(["development", "production", "test"])
-      .default("development"),
+    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
     DATABASE_URL: z.string().url().optional(),
     SESSION_SECRET: z.string().min(16).optional(),
     SUPABASE_URL: z.string().url().optional(),

@@ -18,7 +18,8 @@ export interface Column<T = Record<string, unknown>> {
   labelAr?: string;
   sortable?: boolean;
   searchable?: boolean;
-  render?: (value: T[keyof T], row: T) => React.ReactNode;
+  /** Render callback receives the full row object */
+  render?: (row: T) => React.ReactNode;
   width?: string;
 }
 
@@ -96,10 +97,7 @@ export function DataTable<T extends { id: string }>({
     <div className="space-y-4">
       {searchable && (
         <div className="relative">
-          <Search
-            className="absolute left-3 top-3 h-4 w-4 text-gray-400"
-            aria-hidden="true"
-          />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
           <label htmlFor="datatable-search" className="sr-only">
             Search
           </label>
@@ -120,9 +118,7 @@ export function DataTable<T extends { id: string }>({
               {selectable && (
                 <TableHead className="w-12">
                   <Checkbox
-                    checked={
-                      selectedIds.length === data.length && data.length > 0
-                    }
+                    checked={selectedIds.length === data.length && data.length > 0}
                     onCheckedChange={toggleSelectAll}
                     aria-label="Select all rows"
                   />
@@ -131,19 +127,12 @@ export function DataTable<T extends { id: string }>({
               {columns.map((col) => (
                 <TableHead key={String(col.key)} className={col.width}>
                   <div
-                    className={
-                      col.sortable
-                        ? "cursor-pointer flex items-center gap-2"
-                        : ""
-                    }
+                    className={col.sortable ? "cursor-pointer flex items-center gap-2" : ""}
                     onClick={() => col.sortable && handleSort(String(col.key))}
                     role={col.sortable ? "button" : undefined}
                     tabIndex={col.sortable ? 0 : undefined}
                     onKeyDown={(e) => {
-                      if (
-                        col.sortable &&
-                        (e.key === "Enter" || e.key === " ")
-                      ) {
+                      if (col.sortable && (e.key === "Enter" || e.key === " ")) {
                         handleSort(String(col.key));
                       }
                     }}
@@ -197,15 +186,8 @@ export function DataTable<T extends { id: string }>({
                   {columns.map((col) => (
                     <TableCell key={String(col.key)}>
                       {col.render
-                        ? col.render(
-                            (row as Record<string, unknown>)[
-                              col.key
-                            ] as T[keyof T],
-                            row,
-                          )
-                        : String(
-                            (row as Record<string, unknown>)[col.key] ?? "",
-                          )}
+                        ? col.render(row)
+                        : String((row as Record<string, unknown>)[col.key] ?? "")}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -219,11 +201,8 @@ export function DataTable<T extends { id: string }>({
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">
             Showing {(pagination.page - 1) * pagination.pageSize + 1} to{" "}
-            {Math.min(
-              pagination.page * pagination.pageSize,
-              pagination.total,
-            )}{" "}
-            of {pagination.total}
+            {Math.min(pagination.page * pagination.pageSize, pagination.total)} of{" "}
+            {pagination.total}
           </span>
           <div className="space-x-2">
             <Button
@@ -233,10 +212,7 @@ export function DataTable<T extends { id: string }>({
               Previous
             </Button>
             <Button
-              disabled={
-                pagination.page >=
-                Math.ceil(pagination.total / pagination.pageSize)
-              }
+              disabled={pagination.page >= Math.ceil(pagination.total / pagination.pageSize)}
               onClick={() => pagination.onPageChange(pagination.page + 1)}
             >
               Next

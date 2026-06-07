@@ -55,9 +55,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         </button>
         <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-gray-700">
           <div className="hidden md:block text-right">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
-              Ahmad Ali
-            </p>
+            <p className="text-sm font-medium text-gray-900 dark:text-white">Ahmad Ali</p>
             <p className="text-xs text-gray-500">Super Admin</p>
           </div>
           <button

@@ -19,9 +19,7 @@ export function getServerEnv(): ServerEnv {
       .map((i) => `  • ${i.path.join(".")}: ${i.message}`)
       .join("\n");
     console.error(`\n❌ Server environment validation failed:\n${formatted}\n`);
-    throw new Error(
-      "Missing or invalid server environment variables. Check your .env file.",
-    );
+    throw new Error("Missing or invalid server environment variables. Check your .env file.");
   }
 
   _cachedEnv = result.data;

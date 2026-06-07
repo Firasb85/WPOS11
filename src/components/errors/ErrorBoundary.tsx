@@ -23,10 +23,7 @@ interface ErrorBoundaryState {
  *     <MyComponent />
  *   </ErrorBoundary>
  */
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -66,13 +63,7 @@ export class ErrorBoundary extends Component<
 /**
  * Default fallback UI for unhandled errors.
  */
-function GlobalErrorFallback({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
+function GlobalErrorFallback({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
       <div className="max-w-md text-center">
@@ -92,9 +83,7 @@ function GlobalErrorFallback({
             />
           </svg>
         </div>
-        <h2 className="text-lg font-semibold text-foreground">
-          Something went wrong
-        </h2>
+        <h2 className="text-lg font-semibold text-foreground">Something went wrong</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           An unexpected error occurred. Please try again.
         </p>

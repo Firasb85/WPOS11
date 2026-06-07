@@ -19,9 +19,7 @@ export function DashboardLayout() {
         isDark={isDark}
         onThemeToggle={() => setIsDark(!isDark)}
       />
-      <div
-        className={`transition-all duration-300 ${sidebarOpen ? "lg:ml-64" : "lg:ml-16"}`}
-      >
+      <div className={`transition-all duration-300 ${sidebarOpen ? "lg:ml-64" : "lg:ml-16"}`}>
         <Header onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
         <main className="p-4 lg:p-6">
           <Outlet />

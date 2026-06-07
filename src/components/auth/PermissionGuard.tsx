@@ -45,8 +45,7 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   }
 
   const hasRole = allowedRoles.length === 0 || allowedRoles.includes(role);
-  const hasPermission =
-    requiredPermissions.length === 0 || canAll(requiredPermissions);
+  const hasPermission = requiredPermissions.length === 0 || canAll(requiredPermissions);
 
   if (!user || !hasRole || !hasPermission) {
     if (redirectRoute) {

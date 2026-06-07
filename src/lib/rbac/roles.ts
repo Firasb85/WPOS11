@@ -100,39 +100,26 @@ export const ROLE_PERMISSIONS: Record<AppRole, PermissionCode[]> = {
     PERMISSIONS.READ_ANALYTICS,
     PERMISSIONS.READ_PROCESSES,
   ],
-  USER: [
-    PERMISSIONS.READ_DASHBOARD,
-    PERMISSIONS.READ_KPIS,
-    PERMISSIONS.READ_EVIDENCE,
-  ],
+  USER: [PERMISSIONS.READ_DASHBOARD, PERMISSIONS.READ_KPIS, PERMISSIONS.READ_EVIDENCE],
 };
 
 /**
  * Check if a role has a specific permission.
  */
-export function hasPermission(
-  role: AppRole,
-  permission: PermissionCode,
-): boolean {
+export function hasPermission(role: AppRole, permission: PermissionCode): boolean {
   return ROLE_PERMISSIONS[role]?.includes(permission) ?? false;
 }
 
 /**
  * Check if a role has ALL of the specified permissions.
  */
-export function hasAllPermissions(
-  role: AppRole,
-  permissions: PermissionCode[],
-): boolean {
+export function hasAllPermissions(role: AppRole, permissions: PermissionCode[]): boolean {
   return permissions.every((p) => hasPermission(role, p));
 }
 
 /**
  * Check if a role has ANY of the specified permissions.
  */
-export function hasAnyPermission(
-  role: AppRole,
-  permissions: PermissionCode[],
-): boolean {
+export function hasAnyPermission(role: AppRole, permissions: PermissionCode[]): boolean {
   return permissions.some((p) => hasPermission(role, p));
 }

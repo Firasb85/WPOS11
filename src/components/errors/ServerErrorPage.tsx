@@ -7,12 +7,9 @@ export function ServerErrorPage() {
     <div className="flex min-h-[60vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="text-5xl font-bold text-foreground">500</h1>
-        <h2 className="mt-2 text-xl font-semibold text-foreground">
-          Internal Server Error
-        </h2>
+        <h2 className="mt-2 text-xl font-semibold text-foreground">Internal Server Error</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. Our team has been notified and is
-          working on a fix.
+          Something went wrong on our end. Our team has been notified and is working on a fix.
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <button

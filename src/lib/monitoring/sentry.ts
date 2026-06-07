@@ -17,7 +17,6 @@ export interface SentryConfig {
   tracesSampleRate?: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function initSentry(_config?: SentryConfig): void {
   const dsn = import.meta.env.VITE_SENTRY_DSN;
   if (!dsn) {
@@ -41,10 +40,7 @@ export function initSentry(_config?: SentryConfig): void {
  * Capture an exception for error tracking.
  * No-op when Sentry is not initialized.
  */
-export function captureException(
-  error: unknown,
-  context?: Record<string, unknown>,
-): void {
+export function captureException(error: unknown, context?: Record<string, unknown>): void {
   console.error("[Monitoring]", error, context);
 
   // Uncomment when @sentry/react is installed:
@@ -56,11 +52,13 @@ export function captureException(
 /**
  * Set user context for error tracking.
  */
-export function setUser(user: {
-  id: string;
-  email?: string;
-  role?: string;
-} | null): void {
+export function setUser(
+  user: {
+    id: string;
+    email?: string;
+    role?: string;
+  } | null,
+): void {
   if (!user) return;
 
   // Uncomment when @sentry/react is installed:

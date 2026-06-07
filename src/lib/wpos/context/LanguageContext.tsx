@@ -5,13 +5,7 @@
  * Usage:
  *   const { lang, setLang, isRTL, t } = useLanguage();
  */
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
 type Lang = "ar" | "en";
 
@@ -34,9 +28,10 @@ function getInitialLanguage(): Lang {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "en" || stored === "ar") return stored;
 
-    const user = JSON.parse(
-      window.localStorage.getItem("wpos_user") || "{}",
-    ) as Record<string, unknown>;
+    const user = JSON.parse(window.localStorage.getItem("wpos_user") || "{}") as Record<
+      string,
+      unknown
+    >;
     if (user.language === "en") return "en";
   } catch {
     // localStorage may be unavailable (SSR, private browsing)
@@ -66,10 +61,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
 
     if (typeof document !== "undefined") {
-      document.documentElement.setAttribute(
-        "dir",
-        next === "ar" ? "rtl" : "ltr",
-      );
+      document.documentElement.setAttribute("dir", next === "ar" ? "rtl" : "ltr");
       document.documentElement.setAttribute("lang", next);
     }
   };
@@ -77,10 +69,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof document === "undefined") return;
 
-    document.documentElement.setAttribute(
-      "dir",
-      lang === "ar" ? "rtl" : "ltr",
-    );
+    document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
     document.documentElement.setAttribute("lang", lang);
   }, [lang]);
 
@@ -100,7 +89,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage(): LanguageContextValue {
   const ctx = useContext(LanguageContext);
-  if (!ctx)
-    throw new Error("useLanguage must be used within <LanguageProvider>");
+  if (!ctx) throw new Error("useLanguage must be used within <LanguageProvider>");
   return ctx;
 }

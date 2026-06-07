@@ -1,38 +1,45 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute } from '@tanstack/react-router';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
-import { Textarea } from '~/components/ui/textarea';
-import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
-import { useCreateDiagnostic } from '~/lib/hooks/useDiagnostics';
-import { createDiagnosticSchema, CreateDiagnosticInput } from '~/lib/schemas/diagnostic.schema';
-import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute } from "@tanstack/react-router";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { useCreateDiagnostic } from "~/lib/hooks/useDiagnostics";
+import { createDiagnosticSchema, CreateDiagnosticInput } from "~/lib/schemas/diagnostic.schema";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/_authenticated/diagnostics/new')({
-  component: NewDiagnosticPage
+export const Route = createFileRoute("/_authenticated/diagnostics/new")({
+  component: NewDiagnosticPage,
 });
 
 function NewDiagnosticPage() {
   const form = useForm<CreateDiagnosticInput>({
     resolver: zodResolver(createDiagnosticSchema),
     defaultValues: {
-      title: '',
+      title: "",
       symptoms: [],
       hypotheses: [],
-    }
+    },
   });
 
   const createDiagnostic = useCreateDiagnostic();
 
   async function onSubmit(values: CreateDiagnosticInput) {
     const promise = createDiagnostic.mutateAsync(values);
-    
+
     toast.promise(promise, {
-      loading: 'Creating diagnostic report...',
-      success: 'Diagnostic created successfully',
-      error: (err) => `Failed: ${err.message}`
+      loading: "Creating diagnostic report...",
+      success: "Diagnostic created successfully",
+      error: (err) => `Failed: ${err.message}`,
     });
   }
 
@@ -46,7 +53,6 @@ function NewDiagnosticPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              
               <FormField
                 control={form.control}
                 name="title"
@@ -104,7 +110,7 @@ function NewDiagnosticPage() {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => onChange([...(value || []), ''])}
+                          onClick={() => onChange([...(value || []), ""])}
                         >
                           Add Symptom
                         </Button>
@@ -116,7 +122,7 @@ function NewDiagnosticPage() {
               />
 
               <Button type="submit" disabled={createDiagnostic.isPending}>
-                {createDiagnostic.isPending ? 'Creating...' : 'Create Report'}
+                {createDiagnostic.isPending ? "Creating..." : "Create Report"}
               </Button>
             </form>
           </Form>

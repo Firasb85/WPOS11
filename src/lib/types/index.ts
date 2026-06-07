@@ -196,12 +196,18 @@ export interface PerformanceSnapshot {
   actualValue?: number;
   gapValue?: number;
   gapPercentage?: number;
-  status: 'green' | 'yellow' | 'red';
+  status: "green" | "yellow" | "red";
   trend?: string;
   createdAt: string;
 }
 
-export type EvidenceType = 'quantitative' | 'qualitative' | 'behavioral' | 'system_generated' | 'contextual' | 'temporal';
+export type EvidenceType =
+  | "quantitative"
+  | "qualitative"
+  | "behavioral"
+  | "system_generated"
+  | "contextual"
+  | "temporal";
 
 export interface Evidence {
   id: string;
@@ -209,14 +215,24 @@ export interface Evidence {
   evidenceType: EvidenceType;
   source: string;
   sourceDate?: string;
-  reliability: 'high' | 'medium' | 'low';
+  reliability: "high" | "medium" | "low";
   description: string;
   createdAt: string;
 }
 
-export type DiagnosticCategory = 'skill_gap' | 'knowledge_gap' | 'process_issue' | 'tool_issue' | 'environmental_issue' | 'resource_issue' | 'management_issue' | 'motivation_issue' | 'workload_issue' | 'policy_issue';
+export type DiagnosticCategory =
+  | "skill_gap"
+  | "knowledge_gap"
+  | "process_issue"
+  | "tool_issue"
+  | "environmental_issue"
+  | "resource_issue"
+  | "management_issue"
+  | "motivation_issue"
+  | "workload_issue"
+  | "policy_issue";
 
-export type DiagnosticStatus = 'draft' | 'under_review' | 'reviewed' | 'final';
+export type DiagnosticStatus = "draft" | "under_review" | "reviewed" | "final";
 
 export interface DiagnosticHypothesis {
   id: string;
@@ -224,9 +240,9 @@ export interface DiagnosticHypothesis {
   category: DiagnosticCategory;
   hypothesis: string;
   confidenceScore?: number;
-  supportingEvidence: any;
-  contradictingEvidence: any;
-  validationActions: any;
+  supportingEvidence: unknown;
+  contradictingEvidence: unknown;
+  validationActions: unknown;
   rankOrder: number;
   reasoning: string;
   createdAt: string;

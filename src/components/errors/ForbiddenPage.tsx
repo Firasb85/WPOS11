@@ -13,12 +13,10 @@ export function ForbiddenPage() {
           <ShieldX className="h-8 w-8 text-orange-600 dark:text-orange-400" />
         </div>
         <h1 className="text-5xl font-bold text-foreground">403</h1>
-        <h2 className="mt-2 text-xl font-semibold text-foreground">
-          Access Denied
-        </h2>
+        <h2 className="mt-2 text-xl font-semibold text-foreground">Access Denied</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          You don&apos;t have permission to access this page. Contact your
-          administrator if you believe this is an error.
+          You don&apos;t have permission to access this page. Contact your administrator if you
+          believe this is an error.
         </p>
         <div className="mt-6">
           <Link

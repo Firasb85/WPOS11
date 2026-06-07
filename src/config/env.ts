@@ -8,8 +8,7 @@ import { clientEnvSchema, type ClientEnv } from "./env.schema";
 function validateClientEnv(): ClientEnv {
   const raw = {
     VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    VITE_SUPABASE_PUBLISHABLE_KEY: import.meta.env
-      .VITE_SUPABASE_PUBLISHABLE_KEY,
+    VITE_SUPABASE_PUBLISHABLE_KEY: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
     VITE_SUPABASE_PROJECT_ID: import.meta.env.VITE_SUPABASE_PROJECT_ID,
   };
 
@@ -20,9 +19,7 @@ function validateClientEnv(): ClientEnv {
       .map((i) => `  • ${i.path.join(".")}: ${i.message}`)
       .join("\n");
     console.error(`\n❌ Client environment validation failed:\n${formatted}\n`);
-    throw new Error(
-      "Missing or invalid client environment variables. Check your .env file.",
-    );
+    throw new Error("Missing or invalid client environment variables. Check your .env file.");
   }
 
   return result.data;

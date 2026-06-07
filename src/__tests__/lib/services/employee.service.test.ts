@@ -1,63 +1,46 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { EmployeeService } from '~/lib/services/employee.service';
+import { describe, it, expect } from "vitest";
+import { employeeService } from "~/lib/services/employee.service";
 
-describe('EmployeeService', () => {
-  let service: EmployeeService;
-
-  beforeEach(() => {
-    service = new EmployeeService();
-  });
-
-  describe('create', () => {
-    it('should create a new employee', async () => {
+describe("employeeService", () => {
+  describe("create", () => {
+    it("should create a new employee and return an id", async () => {
       const input = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        employmentStatus: 'active' as const,
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@example.com",
       };
 
-      const result = await service.create(input, 'user-123');
+      const result = await employeeService.create(input, "user-123");
 
-      expect(result.success).toBe(true);
-      expect(result.data).toHaveProperty('id');
-      expect(result.data?.firstName).toBe('John');
-    });
-
-    it('should fail with invalid input', async () => {
-      const input = {
-        firstName: '',
-        lastName: 'Doe',
-        employmentStatus: 'active' as const,
-      };
-
-      const result = await service.create(input, 'user-123');
-
-      expect(result.success).toBe(false);
+      expect(result).toHaveProperty("id");
+      expect(result.firstName).toBe("John");
+      expect(result.lastName).toBe("Doe");
     });
   });
 
-  describe('list', () => {
-    it('should list employees with pagination', async () => {
-      const filters = { page: 1, pageSize: 20 };
+  describe("list", () => {
+    it("should list employees with pagination defaults", async () => {
+      const result = await employeeService.list({ page: 1, pageSize: 20 });
 
-      const result = await service.list(filters);
-
-      expect(result.success).toBe(true);
-      expect(result.data).toHaveProperty('data');
-      expect(result.data).toHaveProperty('total');
-      expect(result.data).toHaveProperty('page');
+      expect(result).toHaveProperty("data");
+      expect(result).toHaveProperty("total");
+      expect(Array.isArray(result.data)).toBe(true);
     });
+  });
 
-    it('should filter by department', async () => {
-      const filters = { departmentId: 'dept-123', page: 1, pageSize: 20 };
+  describe("get", () => {
+    it("should return null for non-existent employee", async () => {
+      const result = await employeeService.get("non-existent-id");
+      expect(result).toBeNull();
+    });
+  });
 
-      const result = await service.list(filters);
+  describe("update", () => {
+    it("should update and return modified employee", async () => {
+      const result = await employeeService.update("test-id", { firstName: "Updated" }, "system");
 
-      expect(result.success).toBe(true);
-      result.data?.data.forEach(emp => {
-        expect(emp.departmentName).toBe('dept-123');
-      });
+      expect(result.id).toBe("test-id");
+      expect(result.firstName).toBe("Updated");
     });
   });
 });

@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import type { CreateDiagnosticInput } from '~/lib/schemas/diagnostic.schema';
+import { useMutation } from "@tanstack/react-query";
+import type { CreateDiagnosticInput } from "~/lib/schemas/diagnostic.schema";
 
 export function useCreateDiagnostic() {
   return useMutation({

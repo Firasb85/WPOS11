@@ -2,19 +2,19 @@
 // Re-exports all WPOS modules for easy importing
 
 // Types
-export * from './types';
+export * from "./types";
 
 // Constants
-export { navigation } from './constants/navigation';
+export { navigation } from "./constants/navigation";
 
 // Context
-export { LanguageProvider, useLanguage } from './context/LanguageContext';
+export { LanguageProvider, useLanguage } from "./context/LanguageContext";
 
 // Auth
-export * from './auth';
+export * from "./auth";
 
 // Database
-export * from './db/client';
+export * from "./db/client";
 export {
   roles,
   permissions,
@@ -42,13 +42,6 @@ export {
   tenants,
   apiKeys,
   notificationTemplates,
-} from './db/schema';
+} from "./db/schema";
 
-export type {
-  Session,
-  Case,
-  RootCause,
-  Tenant,
-  ApiKey,
-  RiskRegister,
-} from './db/schema';
+export type { Session, Case, RootCause, Tenant, ApiKey, RiskRegister } from "./db/schema";

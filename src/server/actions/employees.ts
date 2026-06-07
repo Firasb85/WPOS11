@@ -3,10 +3,10 @@ import {
   employeeService,
   CreateEmployeeInput,
   EmployeeFilter,
-} from '~/lib/services/employee.service';
+} from "~/lib/services/employee.service";
 
 export async function createEmployeeAction(input: CreateEmployeeInput) {
-  return employeeService.create(input, 'system');
+  return employeeService.create(input, "system");
 }
 
 export async function listEmployeesAction(filters: EmployeeFilter) {
@@ -17,11 +17,8 @@ export async function getEmployeeAction(id: string) {
   return employeeService.get(id);
 }
 
-export async function updateEmployeeAction(
-  id: string,
-  input: Partial<CreateEmployeeInput>,
-) {
-  return employeeService.update(id, input, 'system');
+export async function updateEmployeeAction(id: string, input: Partial<CreateEmployeeInput>) {
+  return employeeService.update(id, input, "system");
 }
 
 export async function deleteEmployeeAction(_id: string) {

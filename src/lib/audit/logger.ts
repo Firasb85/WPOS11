@@ -22,8 +22,7 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
 };
 
 function getMinLevel(): LogLevel {
-  if (typeof process !== "undefined" && process.env?.NODE_ENV === "production")
-    return "info";
+  if (typeof process !== "undefined" && process.env?.NODE_ENV === "production") return "info";
   return "debug";
 }
 

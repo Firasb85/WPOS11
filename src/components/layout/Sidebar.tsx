@@ -125,19 +125,12 @@ interface SidebarProps {
   onThemeToggle?: () => void;
 }
 
-export function Sidebar({
-  isOpen,
-  onToggle,
-  isDark,
-  onThemeToggle,
-}: SidebarProps) {
+export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProps) {
   const location = useLocation();
   const { lang, t } = useLanguage();
   const [expanded, setExpanded] = useState<string[]>(["/dashboard"]);
   const toggle = (href: string) =>
-    setExpanded((p) =>
-      p.includes(href) ? p.filter((i) => i !== href) : [...p, href],
-    );
+    setExpanded((p) => (p.includes(href) ? p.filter((i) => i !== href) : [...p, href]));
 
   const renderItem = (item: NavItem, depth = 0) => {
     const Icon = iconMap[item.icon] || LayoutDashboard;
@@ -200,9 +193,7 @@ export function Sidebar({
             <span className="text-white font-bold text-sm">WP</span>
           </div>
           {isOpen && (
-            <span className="font-bold text-gray-900 dark:text-white text-lg">
-              {APP_NAME}
-            </span>
+            <span className="font-bold text-gray-900 dark:text-white text-lg">{APP_NAME}</span>
           )}
           {isOpen && (
             <button
@@ -234,14 +225,8 @@ export function Sidebar({
               onClick={onThemeToggle}
               className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-gray-600 dark:text-gray-400"
             >
-              {isDark ? (
-                <Sun className="w-4 h-4" />
-              ) : (
-                <Moon className="w-4 h-4" />
-              )}
-              {isDark
-                ? t("Light Mode", "الوضع الفاتح")
-                : t("Dark Mode", "الوضع الداكن")}
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {isDark ? t("Light Mode", "الوضع الفاتح") : t("Dark Mode", "الوضع الداكن")}
             </button>
             <button className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-gray-600 dark:text-gray-400">
               <LogOut className="w-4 h-4" />

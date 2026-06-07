@@ -34,10 +34,7 @@ export function createTrace(): TraceContext {
 /**
  * Wrap an async operation with timing and error tracking.
  */
-export async function withSpan<T>(
-  name: string,
-  fn: () => Promise<T>,
-): Promise<T> {
+export async function withSpan<T>(name: string, fn: () => Promise<T>): Promise<T> {
   const start = performance.now();
   try {
     const result = await fn();

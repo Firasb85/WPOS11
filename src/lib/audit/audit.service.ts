@@ -135,11 +135,7 @@ export const audit = {
       description,
     }),
 
-  apiKeyEvent: (
-    action: "api_key.create" | "api_key.revoke",
-    userId: string,
-    keyId: string,
-  ) =>
+  apiKeyEvent: (action: "api_key.create" | "api_key.revoke", userId: string, keyId: string) =>
     recordAuditEvent({
       action,
       userId,

@@ -1,6 +1,7 @@
-import { db } from '~/lib/wpos/db/client';
-import { diagnosticReports, diagnosticHypotheses } from '~/lib/wpos/db/schema';
-import { BaseService } from './base.service';
+import { db } from "~/lib/wpos/db/client";
+import { diagnosticReports, diagnosticHypotheses } from "~/lib/wpos/db/schema";
+import { eq } from "drizzle-orm";
+import { BaseService } from "./base.service";
 
 export interface DiagnosticInput {
   title: string;
@@ -14,62 +15,57 @@ export interface Hypothesis {
   category: string;
   hypothesis: string;
   confidenceScore: number;
-  supportingEvidence: any[];
-  contradictingEvidence: any[];
+  supportingEvidence: string[];
+  contradictingEvidence: string[];
   rankOrder: number;
 }
 
 export class DiagnosticService extends BaseService {
   async createReport(input: DiagnosticInput, userId: string) {
     return this.executeQuery(async () => {
-      const [report] = await db.insert(diagnosticReports).values({
-        title: input.title,
-        employeeId: input.employeeId,
-        status: 'draft',
-        generatedBy: userId,
-        createdAt: new Date(),
-      }).returning();
+      const [report] = await db
+        .insert(diagnosticReports)
+        .values({
+          title: input.title,
+          employeeId: input.employeeId,
+          status: "draft",
+          generatedBy: userId,
+          createdAt: new Date(),
+        })
+        .returning();
 
       return report;
     });
   }
 
   async generateHypotheses(reportId: string): Promise<Hypothesis[]> {
-    // This is where the AI magic happens
-    // 1. Collect all evidence for the employee
-    // 2. Analyze patterns
-    // 3. Generate hypotheses using algorithms
-    // 4. Score confidence levels
-    // 5. Rank by likelihood
-
     const hypotheses: Hypothesis[] = [
       {
-        category: 'skill_gap',
-        hypothesis: 'Employee lacks advanced Excel skills required for role',
+        category: "skill_gap",
+        hypothesis: "Employee lacks advanced Excel skills required for role",
         confidenceScore: 78,
-        supportingEvidence: ['Failed training assessment', 'Low QA scores on reports'],
-        contradictingEvidence: ['Completed basic Excel course 6 months ago'],
+        supportingEvidence: ["Failed training assessment", "Low QA scores on reports"],
+        contradictingEvidence: ["Completed basic Excel course 6 months ago"],
         rankOrder: 1,
       },
       {
-        category: 'knowledge_gap',
-        hypothesis: 'Insufficient product knowledge for account management',
+        category: "knowledge_gap",
+        hypothesis: "Insufficient product knowledge for account management",
         confidenceScore: 65,
-        supportingEvidence: ['Customer complaints about technical details'],
+        supportingEvidence: ["Customer complaints about technical details"],
         contradictingEvidence: [],
         rankOrder: 2,
       },
       {
-        category: 'management_issue',
-        hypothesis: 'Unclear performance expectations from manager',
+        category: "management_issue",
+        hypothesis: "Unclear performance expectations from manager",
         confidenceScore: 52,
-        supportingEvidence: ['No documented goals for Q2'],
-        contradictingEvidence: ['Regular 1-on-1 meetings noted'],
+        supportingEvidence: ["No documented goals for Q2"],
+        contradictingEvidence: ["Regular 1-on-1 meetings noted"],
         rankOrder: 3,
-      }
+      },
     ];
 
-    // Save hypotheses to database
     for (const hyp of hypotheses) {
       await db.insert(diagnosticHypotheses).values({
         reportId,
@@ -88,15 +84,15 @@ export class DiagnosticService extends BaseService {
 
   async submitForReview(reportId: string, managerId: string) {
     return this.executeQuery(async () => {
-      const [updated] = await db.update(diagnosticReports)
+      const [updated] = await db
+        .update(diagnosticReports)
         .set({
-          status: 'under_review',
+          status: "under_review",
           updatedAt: new Date(),
         })
         .where(eq(diagnosticReports.id, reportId))
         .returning();
 
-      // Notify manager
       await this.notifyManager(managerId, reportId);
 
       return updated;
@@ -104,7 +100,6 @@ export class DiagnosticService extends BaseService {
   }
 
   private async notifyManager(managerId: string, reportId: string) {
-    // Send notification to manager
     console.log(`Manager ${managerId} notified of diagnostic ${reportId}`);
   }
 }

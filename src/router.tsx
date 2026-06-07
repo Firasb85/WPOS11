@@ -22,7 +22,7 @@ export const getRouter = () => {
   });
 
   // Observability Integration Hook (Sentry/Datadog)
-  router.subscribe('onResolved', (state) => {
+  router.subscribe("onResolved", (state) => {
     // window.Sentry?.addBreadcrumb({ category: 'navigation', message: `Mapsd to ${state.location.pathname}` });
     // console.debug(`[Router] Navigated to: ${state.location.pathname}`);
   });
@@ -31,7 +31,7 @@ export const getRouter = () => {
 };
 
 // Strongly type the router for strict mode compliance across the app
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
     router: ReturnType<typeof getRouter>;
   }
