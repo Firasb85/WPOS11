@@ -81,9 +81,9 @@ import { Route as AuthenticatedCompetencyFrameworkRouteImport } from './routes/_
 import { Route as AuthenticatedCasesRootCausesRouteImport } from './routes/_authenticated/cases/root-causes'
 import { Route as AuthenticatedCasesDashboardRouteImport } from './routes/_authenticated/cases/dashboard'
 import { Route as AuthenticatedCasesIdRouteImport } from './routes/_authenticated/cases/$id'
-import { Route as AuthenticatedAnalyticsRootCauseRouteImport } from './routes/_authenticated/analytics/root-cause'
-import { Route as AuthenticatedAnalyticsEvidenceQualityRouteImport } from './routes/_authenticated/analytics/evidence-quality'
-import { Route as AuthenticatedAnalyticsCompetencyTrendsRouteImport } from './routes/_authenticated/analytics/competency-trends'
+import { Route as AuthenticatedAnalyricsRootCauseRouteImport } from './routes/_authenticated/analyrics/root-cause'
+import { Route as AuthenticatedAnalyricsEvidenceQualityRouteImport } from './routes/_authenticated/analyrics/evidence-quality'
+import { Route as AuthenticatedAnalyricsCompetencyTrendsRouteImport } from './routes/_authenticated/analyrics/competency-trends'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminSecurityRouteImport } from './routes/_authenticated/admin/security'
@@ -514,22 +514,22 @@ const AuthenticatedCasesIdRoute = AuthenticatedCasesIdRouteImport.update({
   path: '/cases/$id',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedAnalyticsRootCauseRoute =
-  AuthenticatedAnalyticsRootCauseRouteImport.update({
-    id: '/analytics/root-cause',
-    path: '/analytics/root-cause',
+const AuthenticatedAnalyricsRootCauseRoute =
+  AuthenticatedAnalyricsRootCauseRouteImport.update({
+    id: '/analyrics/root-cause',
+    path: '/analyrics/root-cause',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedAnalyticsEvidenceQualityRoute =
-  AuthenticatedAnalyticsEvidenceQualityRouteImport.update({
-    id: '/analytics/evidence-quality',
-    path: '/analytics/evidence-quality',
+const AuthenticatedAnalyricsEvidenceQualityRoute =
+  AuthenticatedAnalyricsEvidenceQualityRouteImport.update({
+    id: '/analyrics/evidence-quality',
+    path: '/analyrics/evidence-quality',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedAnalyticsCompetencyTrendsRoute =
-  AuthenticatedAnalyticsCompetencyTrendsRouteImport.update({
-    id: '/analytics/competency-trends',
-    path: '/analytics/competency-trends',
+const AuthenticatedAnalyricsCompetencyTrendsRoute =
+  AuthenticatedAnalyricsCompetencyTrendsRouteImport.update({
+    id: '/analyrics/competency-trends',
+    path: '/analyrics/competency-trends',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
@@ -585,9 +585,9 @@ export interface FileRoutesByFullPath {
   '/admin/security': typeof AuthenticatedAdminSecurityRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
-  '/analytics/competency-trends': typeof AuthenticatedAnalyticsCompetencyTrendsRoute
-  '/analytics/evidence-quality': typeof AuthenticatedAnalyticsEvidenceQualityRoute
-  '/analytics/root-cause': typeof AuthenticatedAnalyticsRootCauseRoute
+  '/analyrics/competency-trends': typeof AuthenticatedAnalyricsCompetencyTrendsRoute
+  '/analyrics/evidence-quality': typeof AuthenticatedAnalyricsEvidenceQualityRoute
+  '/analyrics/root-cause': typeof AuthenticatedAnalyricsRootCauseRoute
   '/cases/$id': typeof AuthenticatedCasesIdRoute
   '/cases/dashboard': typeof AuthenticatedCasesDashboardRoute
   '/cases/root-causes': typeof AuthenticatedCasesRootCausesRoute
@@ -669,9 +669,9 @@ export interface FileRoutesByTo {
   '/admin/security': typeof AuthenticatedAdminSecurityRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
-  '/analytics/competency-trends': typeof AuthenticatedAnalyticsCompetencyTrendsRoute
-  '/analytics/evidence-quality': typeof AuthenticatedAnalyticsEvidenceQualityRoute
-  '/analytics/root-cause': typeof AuthenticatedAnalyticsRootCauseRoute
+  '/analyrics/competency-trends': typeof AuthenticatedAnalyricsCompetencyTrendsRoute
+  '/analyrics/evidence-quality': typeof AuthenticatedAnalyricsEvidenceQualityRoute
+  '/analyrics/root-cause': typeof AuthenticatedAnalyricsRootCauseRoute
   '/cases/$id': typeof AuthenticatedCasesIdRoute
   '/cases/dashboard': typeof AuthenticatedCasesDashboardRoute
   '/cases/root-causes': typeof AuthenticatedCasesRootCausesRoute
@@ -755,9 +755,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/security': typeof AuthenticatedAdminSecurityRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
-  '/_authenticated/analytics/competency-trends': typeof AuthenticatedAnalyticsCompetencyTrendsRoute
-  '/_authenticated/analytics/evidence-quality': typeof AuthenticatedAnalyticsEvidenceQualityRoute
-  '/_authenticated/analytics/root-cause': typeof AuthenticatedAnalyticsRootCauseRoute
+  '/_authenticated/analyrics/competency-trends': typeof AuthenticatedAnalyricsCompetencyTrendsRoute
+  '/_authenticated/analyrics/evidence-quality': typeof AuthenticatedAnalyricsEvidenceQualityRoute
+  '/_authenticated/analyrics/root-cause': typeof AuthenticatedAnalyricsRootCauseRoute
   '/_authenticated/cases/$id': typeof AuthenticatedCasesIdRoute
   '/_authenticated/cases/dashboard': typeof AuthenticatedCasesDashboardRoute
   '/_authenticated/cases/root-causes': typeof AuthenticatedCasesRootCausesRoute
@@ -841,9 +841,9 @@ export interface FileRouteTypes {
     | '/admin/security'
     | '/admin/settings'
     | '/admin/users'
-    | '/analytics/competency-trends'
-    | '/analytics/evidence-quality'
-    | '/analytics/root-cause'
+    | '/analyrics/competency-trends'
+    | '/analyrics/evidence-quality'
+    | '/analyrics/root-cause'
     | '/cases/$id'
     | '/cases/dashboard'
     | '/cases/root-causes'
@@ -925,9 +925,9 @@ export interface FileRouteTypes {
     | '/admin/security'
     | '/admin/settings'
     | '/admin/users'
-    | '/analytics/competency-trends'
-    | '/analytics/evidence-quality'
-    | '/analytics/root-cause'
+    | '/analyrics/competency-trends'
+    | '/analyrics/evidence-quality'
+    | '/analyrics/root-cause'
     | '/cases/$id'
     | '/cases/dashboard'
     | '/cases/root-causes'
@@ -1010,9 +1010,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/security'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/users'
-    | '/_authenticated/analytics/competency-trends'
-    | '/_authenticated/analytics/evidence-quality'
-    | '/_authenticated/analytics/root-cause'
+    | '/_authenticated/analyrics/competency-trends'
+    | '/_authenticated/analyrics/evidence-quality'
+    | '/_authenticated/analyrics/root-cause'
     | '/_authenticated/cases/$id'
     | '/_authenticated/cases/dashboard'
     | '/_authenticated/cases/root-causes'
@@ -1599,25 +1599,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCasesIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/analytics/root-cause': {
-      id: '/_authenticated/analytics/root-cause'
-      path: '/analytics/root-cause'
-      fullPath: '/analytics/root-cause'
-      preLoaderRoute: typeof AuthenticatedAnalyticsRootCauseRouteImport
+    '/_authenticated/analyrics/root-cause': {
+      id: '/_authenticated/analyrics/root-cause'
+      path: '/analyrics/root-cause'
+      fullPath: '/analyrics/root-cause'
+      preLoaderRoute: typeof AuthenticatedAnalyricsRootCauseRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/analytics/evidence-quality': {
-      id: '/_authenticated/analytics/evidence-quality'
-      path: '/analytics/evidence-quality'
-      fullPath: '/analytics/evidence-quality'
-      preLoaderRoute: typeof AuthenticatedAnalyticsEvidenceQualityRouteImport
+    '/_authenticated/analyrics/evidence-quality': {
+      id: '/_authenticated/analyrics/evidence-quality'
+      path: '/analyrics/evidence-quality'
+      fullPath: '/analyrics/evidence-quality'
+      preLoaderRoute: typeof AuthenticatedAnalyricsEvidenceQualityRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/analytics/competency-trends': {
-      id: '/_authenticated/analytics/competency-trends'
-      path: '/analytics/competency-trends'
-      fullPath: '/analytics/competency-trends'
-      preLoaderRoute: typeof AuthenticatedAnalyticsCompetencyTrendsRouteImport
+    '/_authenticated/analyrics/competency-trends': {
+      id: '/_authenticated/analyrics/competency-trends'
+      path: '/analyrics/competency-trends'
+      fullPath: '/analyrics/competency-trends'
+      preLoaderRoute: typeof AuthenticatedAnalyricsCompetencyTrendsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/admin/users': {
@@ -1685,9 +1685,9 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminSecurityRoute: typeof AuthenticatedAdminSecurityRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
-  AuthenticatedAnalyticsCompetencyTrendsRoute: typeof AuthenticatedAnalyticsCompetencyTrendsRoute
-  AuthenticatedAnalyticsEvidenceQualityRoute: typeof AuthenticatedAnalyticsEvidenceQualityRoute
-  AuthenticatedAnalyticsRootCauseRoute: typeof AuthenticatedAnalyticsRootCauseRoute
+  AuthenticatedAnalyricsCompetencyTrendsRoute: typeof AuthenticatedAnalyricsCompetencyTrendsRoute
+  AuthenticatedAnalyricsEvidenceQualityRoute: typeof AuthenticatedAnalyricsEvidenceQualityRoute
+  AuthenticatedAnalyricsRootCauseRoute: typeof AuthenticatedAnalyricsRootCauseRoute
   AuthenticatedCasesIdRoute: typeof AuthenticatedCasesIdRoute
   AuthenticatedCasesDashboardRoute: typeof AuthenticatedCasesDashboardRoute
   AuthenticatedCasesRootCausesRoute: typeof AuthenticatedCasesRootCausesRoute
@@ -1769,11 +1769,11 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminSecurityRoute: AuthenticatedAdminSecurityRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
-  AuthenticatedAnalyticsCompetencyTrendsRoute:
-    AuthenticatedAnalyticsCompetencyTrendsRoute,
-  AuthenticatedAnalyticsEvidenceQualityRoute:
-    AuthenticatedAnalyticsEvidenceQualityRoute,
-  AuthenticatedAnalyticsRootCauseRoute: AuthenticatedAnalyticsRootCauseRoute,
+  AuthenticatedAnalyricsCompetencyTrendsRoute:
+    AuthenticatedAnalyricsCompetencyTrendsRoute,
+  AuthenticatedAnalyricsEvidenceQualityRoute:
+    AuthenticatedAnalyricsEvidenceQualityRoute,
+  AuthenticatedAnalyricsRootCauseRoute: AuthenticatedAnalyricsRootCauseRoute,
   AuthenticatedCasesIdRoute: AuthenticatedCasesIdRoute,
   AuthenticatedCasesDashboardRoute: AuthenticatedCasesDashboardRoute,
   AuthenticatedCasesRootCausesRoute: AuthenticatedCasesRootCausesRoute,
