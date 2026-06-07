@@ -37,7 +37,13 @@ function getInitialLanguage(): Lang {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(getInitialLanguage);
+  // Always start with 'ar' to match SSR; hydrate from localStorage after mount
+  const [lang, setLangState] = useState<Lang>('ar');
+
+  useEffect(() => {
+    const initial = getInitialLanguage();
+    if (initial !== 'ar') setLangState(initial);
+  }, []);
 
   const setLang = (next: Lang) => {
     setLangState(next);
