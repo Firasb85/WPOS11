@@ -16,7 +16,10 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "tsx migrations/run.ts"
+    "db:migrate": "tsx migrations/run.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:all": "vitest run && playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -78,6 +81,7 @@
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "^2.1.1",
+    "@playwright/test": "^1.60.0",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.40",
     "@testing-library/jest-dom": "^6.9.1",

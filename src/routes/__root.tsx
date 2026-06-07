@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider } from "@/lib/wpos/context/LanguageContext";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ErrorBoundary } from "@/components/errors/ErrorBoundary";
+import { initMonitoring } from "@/lib/monitoring/init";
 
 function NotFoundComponent() {
   return (
@@ -123,6 +124,10 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  // Initialize monitoring on first render
+  useEffect(() => {
+    initMonitoring();
+  }, []);
   const { queryClient } = Route.useRouteContext();
 
   return (
