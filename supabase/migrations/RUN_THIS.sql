@@ -1,10 +1,10 @@
 -- =====================================================
--- WPOS Migration 002: Cases, Interventions, Follow-ups
--- Run this in Supabase SQL Editor
--- Safe to re-run (uses IF NOT EXISTS / DROP IF EXISTS)
+-- WPOS — SINGLE FILE TO RUN IN SUPABASE SQL EDITOR
+-- This combines all migrations. Safe to re-run.
 -- =====================================================
 
--- Cases table
+-- ─── 1. Create Cases & Interventions Tables ────────────
+
 CREATE TABLE IF NOT EXISTS cases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   case_number VARCHAR(50) NOT NULL UNIQUE,
@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS cases (
   deleted_at TIMESTAMPTZ
 );
 
--- Interventions library
 CREATE TABLE IF NOT EXISTS interventions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code VARCHAR(50),
@@ -42,7 +41,6 @@ CREATE TABLE IF NOT EXISTS interventions (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Case-Intervention junction
 CREATE TABLE IF NOT EXISTS case_interventions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   case_id UUID NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
@@ -60,7 +58,6 @@ CREATE TABLE IF NOT EXISTS case_interventions (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Action Plans
 CREATE TABLE IF NOT EXISTS action_plans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   case_id UUID NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
@@ -77,7 +74,6 @@ CREATE TABLE IF NOT EXISTS action_plans (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Follow-ups
 CREATE TABLE IF NOT EXISTS follow_ups (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   case_id UUID NOT NULL REFERENCES cases(id) ON DELETE CASCADE,
@@ -94,29 +90,55 @@ CREATE TABLE IF NOT EXISTS follow_ups (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Enable RLS (safe to re-run)
-ALTER TABLE cases ENABLE ROW LEVEL SECURITY;
-ALTER TABLE interventions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE case_interventions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE action_plans ENABLE ROW LEVEL SECURITY;
-ALTER TABLE follow_ups ENABLE ROW LEVEL SECURITY;
+-- ─── 2. Indexes ────────────────────────────────────────
 
--- Drop existing policies first, then recreate (idempotent)
-DROP POLICY IF EXISTS "Allow all for authenticated" ON cases;
-DROP POLICY IF EXISTS "Allow all for authenticated" ON interventions;
-DROP POLICY IF EXISTS "Allow all for authenticated" ON case_interventions;
-DROP POLICY IF EXISTS "Allow all for authenticated" ON action_plans;
-DROP POLICY IF EXISTS "Allow all for authenticated" ON follow_ups;
-
-CREATE POLICY "Allow all for authenticated" ON cases FOR ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for authenticated" ON interventions FOR ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for authenticated" ON case_interventions FOR ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for authenticated" ON action_plans FOR ALL TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all for authenticated" ON follow_ups FOR ALL TO authenticated USING (true) WITH CHECK (true);
-
--- Indexes (IF NOT EXISTS is supported)
 CREATE INDEX IF NOT EXISTS idx_cases_employee ON cases(employee_id);
 CREATE INDEX IF NOT EXISTS idx_cases_status ON cases(status);
 CREATE INDEX IF NOT EXISTS idx_case_interventions_case ON case_interventions(case_id);
 CREATE INDEX IF NOT EXISTS idx_action_plans_case ON action_plans(case_id);
 CREATE INDEX IF NOT EXISTS idx_follow_ups_case ON follow_ups(case_id);
+
+-- ─── 3. Enable RLS + Policies on ALL tables ────────────
+
+DO $$
+DECLARE
+  t text;
+BEGIN
+  FOR t IN
+    SELECT tablename FROM pg_tables
+    WHERE schemaname = 'public'
+    AND tablename NOT LIKE 'pg_%'
+    AND tablename NOT LIKE 'schema_%'
+  LOOP
+    EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
+
+    -- Drop any existing policy variants
+    BEGIN
+      EXECUTE format('DROP POLICY IF EXISTS "Allow all for authenticated" ON %I', t);
+      EXECUTE format('DROP POLICY IF EXISTS "Authenticated access on %1$I" ON %1$I', t);
+      EXECUTE format('DROP POLICY IF EXISTS "Authenticated full access on %1$I" ON %1$I', t);
+    EXCEPTION WHEN OTHERS THEN NULL;
+    END;
+
+    -- Create policy
+    BEGIN
+      EXECUTE format(
+        'CREATE POLICY "Authenticated access on %1$I" ON %1$I
+         FOR ALL TO authenticated USING (true) WITH CHECK (true)',
+        t
+      );
+    EXCEPTION WHEN duplicate_object THEN NULL;
+    END;
+  END LOOP;
+END
+$$;
+
+-- ─── 4. Grant Permissions ──────────────────────────────
+
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+
+-- =====================================================
+-- ✅ DONE! All tables, indexes, RLS, and policies created.
+-- =====================================================
