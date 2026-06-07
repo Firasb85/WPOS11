@@ -1,6 +1,12 @@
+/**
+ * ARCHITECTURE DEPRECATION NOTICE:
+ * This file has been refactored to eliminate duplicate navigation definitions.
+ * The single source of truth for all enterprise navigation is now located in the WPOS module.
+ */
 import type { NavItem } from '../types';
+import { navigation as wposNavigation } from '../wpos/constants/navigation';
 
-export const navigation: NavItem[] = [
+export const navigation: NavItem[] = wposNavigation;
   {
     label: 'Dashboard', labelAr: 'لوحة القيادة', href: '/dashboard', icon: 'LayoutDashboard', module: 'dashboard',
     children: [
