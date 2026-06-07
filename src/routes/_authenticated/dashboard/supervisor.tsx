@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '../../../components/wpos/PageHeader';
-import { Card, CardHeader, CardTitle } from '../../../components/wpos/Card';
-import { StatsCard } from '../../../components/wpos/StatsCard';
-import { DataTable } from '../../../components/wpos/DataTable';
-import { StatusBadge } from '../../../components/wpos/StatusBadge';
+import { PageHeader } from '~/components/wpos/PageHeader';
+import { Card, CardHeader, CardTitle } from '~/components/wpos/Card';
+import { StatsCard } from '~/components/wpos/StatsCard';
+import { DataTable } from '~/components/wpos/DataTable';
+import { StatusBadge } from '~/components/wpos/StatusBadge';
 import { Users, TrendingUp, AlertTriangle, Clock } from 'lucide-react';
 export const Route = createFileRoute('/_authenticated/dashboard/supervisor')({ component: SupervisorDashboardPage });
 function SupervisorDashboardPage() {
