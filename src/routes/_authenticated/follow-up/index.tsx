@@ -6,7 +6,7 @@ import { Clock, Calendar, CheckCircle, XCircle, Minus } from "lucide-react";
 import { useCases } from "@/hooks/useCases";
 export const Route = createFileRoute("/_authenticated/follow-up/")({ component: FollowUpPage });
 function FollowUpPage() {
-  const { data: cases } = useCases();
+  const { data: cases, isLoading: _casesLoading } = useCases();
   const l = "ar";
   const items = [
     {

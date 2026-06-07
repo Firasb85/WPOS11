@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/analytics/competency-trend
 });
 
 function CompetencyTrendsPage() {
-  const { data: empComps } = useEmployeeCompetencies();
+  const { data: empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const l = "ar";
   const trends = [
     { comp: "Data Analysis", compAr: "تحليل البيانات", q1: 1.8, q2: 1.7, q3: 1.5, trend: "down" },

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/dashboards/process-intelli
 });
 
 function ProcessIntelligencePage() {
-  const { data: processes } = useProcesses();
+  const { data: processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const graph = {
     nodes: [

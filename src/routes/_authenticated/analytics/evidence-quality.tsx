@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/analytics/evidence-quality
 });
 
 function EvidenceQualityPage() {
-  const { data: evidenceMetrics } = useEvidenceMetrics();
+  const { data: evidenceMetrics, isLoading: _evidenceMetricsLoading } = useEvidenceMetrics();
   const l = "ar";
   const byType = [
     { label: "System Generated", la: "منشأ من النظام", count: 15, rel: 92 },

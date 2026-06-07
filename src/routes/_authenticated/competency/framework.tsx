@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/competency/framework")({
 
 function CompetencyFrameworkPage() {
   const { t, lang: l } = useLanguage();
-  const { data: competencies } = useCompetencies();
+  const { data: competencies, isLoading: _competenciesLoading } = useCompetencies();
 
   const frameworks = [
     {

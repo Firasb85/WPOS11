@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/process-engineering/")({
   component: ProcessEngineeringPage,
 });
 function ProcessEngineeringPage() {
-  const { data: processes } = useProcesses();
+  const { data: processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const executions = [
     {

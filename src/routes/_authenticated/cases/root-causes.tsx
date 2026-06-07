@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/cases/root-causes")({
   component: RootCauseKBPage,
 });
 function RootCauseKBPage() {
-  const { data: rootCauses } = useRootCauseMetrics();
+  const { data: rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const l = "ar";
   const [cat, setCat] = useState("all");
   const causes = [

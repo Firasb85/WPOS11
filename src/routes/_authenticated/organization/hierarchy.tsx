@@ -76,7 +76,7 @@ function Node({ node, depth = 0 }: { node: OrgNode; depth?: number }) {
 }
 
 function HierarchyPage() {
-  const { data: companies } = useCompanies();
+  const { data: companies, isLoading: _companiesLoading } = useCompanies();
   const { data: branches } = useBranches();
   const tree: OrgNode = {
     type: "company",

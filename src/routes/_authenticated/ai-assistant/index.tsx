@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/ai-assistant/")({
   component: AiAssistantPage,
 });
 function AiAssistantPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [mode, setMode] = useState("summarize");
   const interactions = [

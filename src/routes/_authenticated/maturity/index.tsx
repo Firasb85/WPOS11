@@ -8,7 +8,7 @@ import { BarChart3, TrendingUp, Users, GitMerge, Shield, Stethoscope } from "luc
 import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/maturity/")({ component: MaturityPage });
 function MaturityPage() {
-  const { data: diagMetrics } = useDiagnosticMetrics();
+  const { data: diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
   const l = "ar";
   const dimensions = [
     {

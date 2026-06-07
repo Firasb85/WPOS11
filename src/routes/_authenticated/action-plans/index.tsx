@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_authenticated/action-plans/")({
   component: ActionPlansPage,
 });
 function ActionPlansPage() {
-  const { data: cases } = useCases();
+  const { data: cases, isLoading: _casesLoading } = useCases();
   const l = "ar";
   const plans = [
     {

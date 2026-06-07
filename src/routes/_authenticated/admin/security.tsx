@@ -6,7 +6,7 @@ import { Shield, Save, Lock, Key, Globe, Clock } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/security")({ component: SecurityPage });
 function SecurityPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   return (
     <div>

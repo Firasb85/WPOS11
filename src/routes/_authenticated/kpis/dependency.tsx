@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/kpis/dependency")({
   component: KpiDependencyPage,
 });
 function KpiDependencyPage() {
-  const { data: kpis } = useKpis();
+  const { data: kpis, isLoading: _kpisLoading } = useKpis();
   const l = "ar";
   const tree = {
     kpi: {

@@ -67,7 +67,7 @@ function makeHeatmap(
 }
 
 function HeatmapsPage() {
-  const { data: deptMetrics } = useDepartmentMetrics();
+  const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
   const skillGapData = [
     { empAr: "أحمد خالد", data: 3 },

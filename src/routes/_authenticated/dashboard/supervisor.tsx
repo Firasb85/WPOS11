@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/supervisor")({
 
 function SupervisorDashboardPage() {
   const { t, lang: l } = useLanguage();
-  const { data: empData } = useEmployeesList({ pageSize: 100 });
+  const { data: empData, isLoading: _empDataLoading } = useEmployeesList({ pageSize: 100 });
   const { data: snaps } = useSnapshots();
   const employees = empData?.data ?? [];
   const snapshots = snaps ?? [];

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/executive/")({ component: 
 
 function ExecutivePage() {
   const { t, lang: l } = useLanguage();
-  const { data: ceo } = useCeoDashboard();
+  const { data: ceo, isLoading: _ceoLoading } = useCeoDashboard();
   const { data: rootCauses } = useRootCauseMetrics();
   const { data: diagMetrics } = useDiagnosticMetrics();
   const { data: cases } = useCases();

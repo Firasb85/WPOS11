@@ -6,7 +6,7 @@ import { Plus, Layout, Eye, FileText, ClipboardCheck, FileSearch } from "lucide-
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/forms/")({ component: FormsPage });
 function FormsPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const forms = [
     {

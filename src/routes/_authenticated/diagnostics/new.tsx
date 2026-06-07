@@ -17,7 +17,9 @@ function NewDiagnosticPage() {
   const { t, lang: l } = useLanguage();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: employeesData } = useEmployeesList({ pageSize: 500 });
+  const { data: employeesData, isLoading: _employeesDataLoading } = useEmployeesList({
+    pageSize: 500,
+  });
   const { data: departments } = useDepartments();
   const createDiagnostic = useCreateDiagnostic();
   const generateHypotheses = useGenerateHypotheses();

@@ -6,7 +6,7 @@ import { Plus, Target, Eye, TrendingUp, BarChart3, Layers } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/strategy/")({ component: StrategyPage });
 function StrategyPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const strategies = [
     {

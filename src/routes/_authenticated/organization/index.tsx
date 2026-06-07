@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/organization/")({
 });
 
 function OrganizationIndexPage() {
-  const { data: companies } = useCompanies();
+  const { data: companies, isLoading: _companiesLoading } = useCompanies();
   const { data: branches } = useBranches();
   const { data: depts } = useDepartments();
   const { data: teams } = useTeams();

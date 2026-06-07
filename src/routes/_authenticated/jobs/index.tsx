@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/jobs/")({
 });
 
 function JobArchitectureIndexPage() {
-  const { data: families } = useJobFamilies();
+  const { data: families, isLoading: _familiesLoading } = useJobFamilies();
   const { data: grades } = useJobGrades();
   const { data: jobs } = useJobs();
   const sections = [

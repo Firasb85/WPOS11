@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/reports/export")({
 
 function ExportPage() {
   const { t, lang: l } = useLanguage();
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const { data: companies } = useCompanies();
   const { data: employees } = useEmployeesList({ pageSize: 1000 });
   const { data: kpis } = useKpis();

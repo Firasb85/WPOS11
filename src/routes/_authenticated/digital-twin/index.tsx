@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/digital-twin/")({
   component: DigitalTwinPage,
 });
 function DigitalTwinPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const entities = [
     {

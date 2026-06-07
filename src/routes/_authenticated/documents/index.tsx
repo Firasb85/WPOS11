@@ -6,7 +6,7 @@ import { Plus, FileText, Download, Search, Clock, User, Tag } from "lucide-react
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/documents/")({ component: DocumentsPage });
 function DocumentsPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const types = [
     { type: "policy", tA: "سياسة", c: 3 },

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_authenticated/jobs/profiles")({
   component: JobProfilesPage,
 });
 function JobProfilesPage() {
-  const { data: jobs } = useJobs();
+  const { data: jobs, isLoading: _jobsLoading } = useJobs();
   const [selected, setSelected] = useState<string | null>("1");
   const profiles = [
     {

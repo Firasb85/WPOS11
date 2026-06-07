@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/api-keys/")({ component: ApiKeysPage });
 function ApiKeysPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [showKey, setShowKey] = useState<string | null>(null);
   const keys = [

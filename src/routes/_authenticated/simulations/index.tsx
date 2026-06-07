@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/simulations/")({
   component: SimulationsPage,
 });
 function SimulationsPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const scenarios = [
     {

@@ -5,7 +5,7 @@ import { Save } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/settings")({ component: SettingsPage });
 function SettingsPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   return (
     <div>
       <PageHeader title="System Settings" description="Configure system preferences" />

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_authenticated/interventions/effectivenes
   component: EffectivenessPage,
 });
 function EffectivenessPage() {
-  const { data: interventions } = useInterventionLibrary();
+  const { data: interventions, isLoading: _interventionsLoading } = useInterventionLibrary();
   const l = "ar";
   const rankings = [
     { name: "One-on-One Coaching", nA: "تدريب فردي", score: 92, roi: 380, cases: 15, imp: 24.5 },

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/dashboards/diagnostic-inte
 });
 
 function DiagnosticIntelligencePage() {
-  const { data: diagMetrics } = useDiagnosticMetrics();
+  const { data: diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
   const { data: rootCauseData } = useRootCauseMetrics();
   const l = "ar";
   const rootCauses = [

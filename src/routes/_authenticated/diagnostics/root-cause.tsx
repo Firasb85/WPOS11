@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/diagnostics/root-cause")({
   component: RootCauseDashboardPage,
 });
 function RootCauseDashboardPage() {
-  const { data: rootCauses } = useRootCauseMetrics();
+  const { data: rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
   const causes = [

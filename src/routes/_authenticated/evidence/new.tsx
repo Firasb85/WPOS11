@@ -16,7 +16,9 @@ function NewEvidencePage() {
   const { t, lang: l } = useLanguage();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: employeesData } = useEmployeesList({ pageSize: 500 });
+  const { data: employeesData, isLoading: _employeesDataLoading } = useEmployeesList({
+    pageSize: 500,
+  });
   const createMutation = useCreateEvidence();
   const [formData, setFormData] = useState({
     employee_id: "",

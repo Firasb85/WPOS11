@@ -14,7 +14,9 @@ export const Route = createFileRoute("/_authenticated/snapshots/new")({
 function NewSnapshotPage() {
   const { t, lang: l } = useLanguage();
   const navigate = useNavigate();
-  const { data: employeesData } = useEmployeesList({ pageSize: 500 });
+  const { data: employeesData, isLoading: _employeesDataLoading } = useEmployeesList({
+    pageSize: 500,
+  });
   const { data: kpis } = useKpis();
   const createMutation = useCreateSnapshot();
 

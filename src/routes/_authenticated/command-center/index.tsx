@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/command-center/")({
   component: CommandCenterPage,
 });
 function CommandCenterPage() {
-  const { data: ceoMetrics } = useCeoDashboard();
+  const { data: ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
   const { data: cases } = useCases();
   const l = "ar";
   const criticalKPIs = [

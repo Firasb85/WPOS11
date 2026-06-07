@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/rules-engine/")({
   component: RulesEnginePage,
 });
 function RulesEnginePage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [type, setType] = useState("all");
   const [testResult, setTestResult] = useState<string | null>(null);

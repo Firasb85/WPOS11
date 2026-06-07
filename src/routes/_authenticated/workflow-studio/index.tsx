@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_authenticated/workflow-studio/")({
   component: WorkflowStudioPage,
 });
 function WorkflowStudioPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const workflows = [
     { code: "DIAG_REVIEW", nE: "Diagnostic Review", nA: "مراجعة التشخيص", steps: 3, st: "active" },

@@ -6,7 +6,7 @@ import { Activity, Stethoscope, Briefcase, ClipboardList, CheckCircle, Clock } f
 import { useEmployeesList } from "@/hooks/useOrganization";
 export const Route = createFileRoute("/_authenticated/journey/")({ component: JourneyPage });
 function JourneyPage() {
-  const { data: employees } = useEmployeesList({ pageSize: 50 });
+  const { data: employees, isLoading: _employeesLoading } = useEmployeesList({ pageSize: 50 });
   const l = "ar";
   const entries = [
     {

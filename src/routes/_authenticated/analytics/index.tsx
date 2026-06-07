@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/analytics/")({
 
 function AnalyticsIndexPage() {
   const { t, lang: l } = useLanguage();
-  const { data: ceo } = useCeoDashboard();
+  const { data: ceo, isLoading: _ceoLoading } = useCeoDashboard();
   const { data: evidence } = useEvidenceMetrics();
   const { data: diag } = useDiagnosticMetrics();
   const m = ceo ?? { performanceIndex: 0, totalDiagnostics: 0 };

@@ -5,7 +5,7 @@ import { UserCircle, Download } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/audit")({ component: AuditLogsPage });
 function AuditLogsPage() {
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const logs = [
     {
       id: "1",

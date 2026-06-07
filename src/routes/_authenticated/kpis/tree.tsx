@@ -9,7 +9,7 @@ import { useKpis, useKpiCategories } from "@/hooks/useKpis";
 export const Route = createFileRoute("/_authenticated/kpis/tree")({ component: KpiTreePage });
 
 function KpiTreePage() {
-  const { data: kpis } = useKpis();
+  const { data: kpis, isLoading: _kpisLoading } = useKpis();
   const { data: cats } = useKpiCategories();
   const l = "ar";
   const tree = {

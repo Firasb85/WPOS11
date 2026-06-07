@@ -7,7 +7,7 @@ import { Shield, AlertTriangle, Users, Building2, ArrowUp, ArrowDown } from "luc
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/risk/")({ component: RiskDashboardPage });
 function RiskDashboardPage() {
-  const { data: deptMetrics } = useDepartmentMetrics();
+  const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
   const deptScores = [
     { name: "Operations", nA: "العمليات", s: 72, l: "high", e: 12 },

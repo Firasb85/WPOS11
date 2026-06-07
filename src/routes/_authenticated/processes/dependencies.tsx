@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/processes/dependencies")({
 });
 
 function ProcessDependenciesPage() {
-  const { data: processes } = useProcesses();
+  const { data: processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const graph = {
     nodes: [

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/saas/")({
 
 function SaasPage() {
   const { t, lang: l } = useLanguage();
-  const { data: metrics } = useCeoDashboard();
+  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const plans = [
     {

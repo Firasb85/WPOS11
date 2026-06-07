@@ -8,7 +8,7 @@ import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/reports/")({ component: ReportsIndexPage });
 
 function ReportsIndexPage() {
-  const { data: diagMetrics } = useDiagnosticMetrics();
+  const { data: diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
   const sections = [
     {
       href: "/reports/diagnostics",

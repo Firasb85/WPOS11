@@ -20,7 +20,7 @@ import { useCase } from "@/hooks/useCases";
 export const Route = createFileRoute("/_authenticated/cases/$id")({ component: CaseDetailPage });
 function CaseDetailPage() {
   // Real data hook - needs route param
-  // const { data: caseData } = useCase(id);
+  // const { data: caseData, isLoading: _caseDataLoading } = useCase(id);
   const l = "ar";
   const c = {
     num: "CAS-001",

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/process-engineering/mining
   component: ProcessMiningPage,
 });
 function ProcessMiningPage() {
-  const { data: processes } = useProcesses();
+  const { data: processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const results = [
     {

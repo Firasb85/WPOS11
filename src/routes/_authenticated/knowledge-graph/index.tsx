@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/knowledge-graph/")({
   component: KnowledgeGraphPage,
 });
 function KnowledgeGraphPage() {
-  const { data: processes } = useProcesses();
+  const { data: processes, isLoading: _processesLoading } = useProcesses();
   const { data: kpis } = useKpis();
   const l = "ar";
   const nodes = [
