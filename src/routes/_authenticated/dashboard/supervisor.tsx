@@ -2,74 +2,100 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
-import { DataTable } from "~/components/wpos/DataTable";
-import { StatusBadge } from "~/components/wpos/StatusBadge";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useEmployeesList } from "@/hooks/useOrganization";
+import { useSnapshots } from "@/hooks/useKpis";
 import { Users, TrendingUp, AlertTriangle, Clock } from "lucide-react";
+
 export const Route = createFileRoute("/_authenticated/dashboard/supervisor")({
   component: SupervisorDashboardPage,
 });
+
 function SupervisorDashboardPage() {
-  const team = [
-    {
-      id: "1",
-      name: "Ahmad Khalid",
-      role: "Senior Analyst",
-      status: "green" as const,
-      review: false,
-    },
-    { id: "2", name: "Layla Ibrahim", role: "Analyst", status: "yellow" as const, review: true },
-    { id: "3", name: "Omar Hassan", role: "Junior Analyst", status: "red" as const, review: true },
-  ];
+  const { t, lang: l } = useLanguage();
+  const { data: empData } = useEmployeesList({ pageSize: 100 });
+  const { data: snaps } = useSnapshots();
+  const employees = empData?.data ?? [];
+  const snapshots = snaps ?? [];
+  const redSnaps = snapshots.filter((s) => s.status === "red").length;
+
   return (
     <div>
-      <PageHeader title="Supervisor Dashboard" description="Manage your team performance" />
+      <PageHeader
+        title="Supervisor Dashboard"
+        titleAr="لوحة المشرف"
+        description="Team performance overview — live data"
+        descriptionAr="نظرة عامة على أداء الفريق — بيانات حية"
+        currentLang={l}
+      />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <StatsCard title="Team Members" value="8" icon={<Users />} />
         <StatsCard
-          title="Team Performance"
-          value="79%"
-          change={-2.5}
-          icon={<TrendingUp />}
-          status="warning"
+          title={t("Team Members", "أعضاء الفريق")}
+          value={String(employees.length)}
+          icon={<Users />}
         />
         <StatsCard
-          title="Need Review"
-          value="2"
-          change={100}
+          title={t("Snapshots", "اللقطات")}
+          value={String(snapshots.length)}
+          icon={<Clock />}
+          status="good"
+        />
+        <StatsCard
+          title={t("Issues", "مشاكل")}
+          value={String(redSnaps)}
           icon={<AlertTriangle />}
-          status="critical"
+          status={redSnaps > 0 ? "critical" : "good"}
         />
-        <StatsCard title="Recent Reports" value="5" icon={<Clock />} />
+        <StatsCard
+          title={t("Performance", "الأداء")}
+          value={
+            snapshots.length > 0
+              ? `${Math.round((snapshots.filter((s) => s.status === "green").length / snapshots.length) * 100)}%`
+              : "N/A"
+          }
+          icon={<TrendingUp />}
+          status="good"
+        />
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Team Members</CardTitle>
+          <CardTitle>{t("Team Members", "أعضاء الفريق")}</CardTitle>
         </CardHeader>
-        <DataTable
-          columns={[
-            {
-              key: "name",
-              label: "Name",
-              sortable: true,
-              render: (i) => <span className="font-medium">{i.name}</span>,
-            },
-            { key: "role", label: "Role" },
-            { key: "status", label: "Status", render: (i) => <StatusBadge status={i.status} /> },
-            {
-              key: "review",
-              label: "Needs Review",
-              render: (i) =>
-                i.review ? (
-                  <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">
-                    Yes
+        {employees.length === 0 ? (
+          <p className="text-sm text-gray-400 text-center py-4">
+            {t("No team members found.", "لا يوجد أعضاء فريق.")}
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {employees.slice(0, 20).map((emp) => {
+              const empSnaps = snapshots.filter((s) => s.employee_id === emp.id);
+              const worst = empSnaps.some((s) => s.status === "red")
+                ? "red"
+                : empSnaps.some((s) => s.status === "yellow")
+                  ? "yellow"
+                  : "green";
+              return (
+                <div
+                  key={emp.id}
+                  className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
+                >
+                  <div
+                    className={`w-3 h-3 rounded-full ${worst === "red" ? "bg-red-500" : worst === "yellow" ? "bg-yellow-500" : "bg-green-500"}`}
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">
+                      {emp.first_name} {emp.last_name}
+                    </p>
+                    <p className="text-xs text-gray-400">{emp.employee_code ?? ""}</p>
+                  </div>
+                  <span className="text-xs text-gray-500">
+                    {empSnaps.length} {t("snapshots", "لقطات")}
                   </span>
-                ) : (
-                  <span className="text-gray-400">No</span>
-                ),
-            },
-          ]}
-          data={team}
-        />
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Card>
     </div>
   );

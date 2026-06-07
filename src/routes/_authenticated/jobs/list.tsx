@@ -49,10 +49,7 @@ function JobsListPage() {
             key: "status",
             label: t("Status", "الحالة"),
             render: (row) => (
-              <StatusBadge
-                status={row.status === "active" ? "green" : "gray"}
-                label={row.status}
-              />
+              <StatusBadge status={row.status === "active" ? "green" : "gray"} label={row.status} />
             ),
           },
           {
