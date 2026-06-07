@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '../../../components/wpos/PageHeader';
-import { Card, CardHeader, CardTitle } from '../../../components/wpos/Card';
-import { DataTable } from '../../../components/wpos/DataTable';
+import { PageHeader } from '~/components/wpos/PageHeader';
+import { Card, CardHeader, CardTitle } from '~/components/wpos/Card';
+import { DataTable } from '~/components/wpos/DataTable';
 import { Plus, Gauge, TrendingUp, TrendingDown } from 'lucide-react';
 import { useState } from 'react';
 export const Route = createFileRoute('/_authenticated/kpis/library')({ component: KpiLibraryPage });
