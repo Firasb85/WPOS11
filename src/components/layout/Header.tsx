@@ -1,5 +1,7 @@
-import { Menu, Search, Bell, User, Globe } from "lucide-react";
+import { Menu, Search, Bell, User, Globe, LogOut } from "lucide-react";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "@tanstack/react-router";
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -7,6 +9,16 @@ interface HeaderProps {
 
 export function Header({ onMenuToggle }: HeaderProps) {
   const { lang, setLang, t } = useLanguage();
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.navigate({ to: "/login" });
+  };
+
+  const displayName = user?.user_metadata?.first_name || user?.email?.split("@")[0] || "User";
+  const displayRole = (user?.user_metadata?.role as string) || "User";
 
   return (
     <header
@@ -55,14 +67,22 @@ export function Header({ onMenuToggle }: HeaderProps) {
         </button>
         <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-gray-700">
           <div className="hidden md:block text-right">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">Ahmad Ali</p>
-            <p className="text-xs text-gray-500">Super Admin</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-white">{displayName}</p>
+            <p className="text-xs text-gray-500 capitalize">{displayRole}</p>
           </div>
           <button
             className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center"
             aria-label="User profile"
           >
             <User className="w-5 h-5 text-white" aria-hidden="true" />
+          </button>
+          <button
+            onClick={handleLogout}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            aria-label="Sign out"
+            title="Sign out"
+          >
+            <LogOut className="w-4 h-4 text-gray-500" />
           </button>
         </div>
       </div>
