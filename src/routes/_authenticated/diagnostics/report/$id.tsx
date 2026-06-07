@@ -13,6 +13,9 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { Stethoscope, Brain, CheckCircle, XCircle, Send, FileText } from "lucide-react";
 import { useState } from "react";
+import { useCreateCaseFromDiagnostic } from "@/hooks/useCases";
+import { useNavigate } from "@tanstack/react-router";
+import { Briefcase } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/diagnostics/report/$id")({
   component: DiagnosticReportPage,
@@ -26,6 +29,8 @@ function DiagnosticReportPage() {
   const submitForReview = useSubmitForReview();
   const approveMutation = useApproveDiagnostic();
   const rejectMutation = useRejectDiagnostic();
+  const createCase = useCreateCaseFromDiagnostic();
+  const navigate = useNavigate();
   const [rejectReason, setRejectReason] = useState("");
   const [showReject, setShowReject] = useState(false);
 
@@ -160,6 +165,21 @@ function DiagnosticReportPage() {
                   {t("Reject", "رفض")}
                 </button>
               </>
+            )}
+            {report.status === "approved" && (
+              <button
+                onClick={async () => {
+                  const c = await createCase.mutateAsync(report.id);
+                  if (c?.id) navigate({ to: "/cases" });
+                }}
+                disabled={createCase.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                <Briefcase className="w-4 h-4" />
+                {createCase.isPending
+                  ? t("Creating Case...", "جاري إنشاء الحالة...")
+                  : t("Create Case", "إنشاء حالة")}
+              </button>
             )}
           </div>
         </div>

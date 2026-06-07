@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useDashboardRealtime } from "@/hooks/useRealtimeSubscription";
 import {
   Users,
   Building2,
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/ceo")({
 function CEODashboardPage() {
   const { t, lang: l } = useLanguage();
   const { data: metrics, isLoading } = useCeoDashboard();
+  useDashboardRealtime(); // Live updates when any data changes
 
   if (isLoading) {
     return (

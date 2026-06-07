@@ -12,3 +12,4 @@ export { jobsService } from "./jobs.service";
 export { processesService } from "./processes.service";
 export { competenciesService } from "./competencies.service";
 export { dashboardService } from "./dashboard.service";
+export { casesService } from "./cases.service";
