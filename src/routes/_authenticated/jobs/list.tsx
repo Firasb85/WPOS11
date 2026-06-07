@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '../../../components/wpos/PageHeader';
-import { DataTable } from '../../../components/wpos/DataTable';
-import { StatusBadge } from '../../../components/wpos/StatusBadge';
+import { PageHeader } from '~/components/wpos/PageHeader';
+import { DataTable } from '~/components/wpos/DataTable';
+import { StatusBadge } from '~/components/wpos/StatusBadge';
 import { Plus, Briefcase } from 'lucide-react';
 export const Route = createFileRoute('/_authenticated/jobs/list')({ component: JobsListPage });
 function JobsListPage() {

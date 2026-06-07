@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PageHeader } from '../../../components/wpos/PageHeader';
-import { DataTable } from '../../../components/wpos/DataTable';
+import { PageHeader } from '~/components/wpos/PageHeader';
+import { DataTable } from '~/components/wpos/DataTable';
 import { Plus, FolderTree } from 'lucide-react';
 export const Route = createFileRoute('/_authenticated/jobs/families')({ component: JobFamiliesPage });
 function JobFamiliesPage() {
