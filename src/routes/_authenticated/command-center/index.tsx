@@ -28,10 +28,51 @@ function CommandCenterPage() {
   const { data: ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
   const { data: cases } = useCases();
   const l = "ar";
-  const criticalKPIs: { [k: string]: any }[] = [];
-  const deptRisk: { [k: string]: any }[] = [];
-  const caseStatus: { [k: string]: any }[] = [];
-  const maturityDims: { [k: string]: any }[] = [];
+  const criticalKPIs = [
+    {
+      kpi: "Production Efficiency",
+      kA: "كفاءة الإنتاج",
+      actual: 78,
+      target: 90,
+      gap: -13.3,
+      trend: "declining",
+    },
+    {
+      kpi: "Customer Satisfaction",
+      kA: "رضا العملاء",
+      actual: 82,
+      target: 95,
+      gap: -13.7,
+      trend: "declining",
+    },
+    {
+      kpi: "On-Time Delivery",
+      kA: "التسليم في الوقت",
+      actual: 91,
+      target: 98,
+      gap: -7.1,
+      trend: "stable",
+    },
+  ];
+  const deptRisk = [
+    { dept: "Operations", dA: "العمليات", risk: 72, status: "high" },
+    { dept: "Finance", dA: "المالية", risk: 55, status: "medium" },
+    { dept: "HR", dA: "الموارد البشرية", risk: 35, status: "low" },
+    { dept: "IT", dA: "تقنية المعلومات", risk: 28, status: "low" },
+  ];
+  const caseStatus = [
+    { st: "Open", stA: "مفتوحة", c: 9 },
+    { st: "Under Investigation", stA: "قيد التحقيق", c: 4 },
+    { st: "Monitoring", stA: "مراقبة", c: 2 },
+    { st: "Resolved", stA: "تم الحل", c: 8 },
+  ];
+  const maturityDims = [
+    { name: "People", nA: "الأفراد", s: 72 },
+    { name: "Processes", nA: "العمليات", s: 68 },
+    { name: "KPIs", nA: "المؤشرات", s: 81 },
+    { name: "Evidence", nA: "الأدلة", s: 63 },
+    { name: "Diagnostics", nA: "التشخيص", s: 58 },
+  ];
   return (
     <div>
       <PageHeader

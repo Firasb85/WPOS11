@@ -56,7 +56,12 @@ function JobArchitectureIndexPage() {
     },
   ];
 
-  const stats: { [k: string]: any }[] = [];
+  const stats = [
+    { label: "Total Jobs", labelAr: "إجمالي الوظائف", value: "58" },
+    { label: "Job Families", labelAr: "مجموعات الوظائف", value: "8" },
+    { label: "Grade Levels", labelAr: "المستويات", value: "12" },
+    { label: "Active Profiles", labelAr: "ملفات نشطة", value: "35" },
+  ];
 
   return (
     <div>

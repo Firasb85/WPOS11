@@ -9,8 +9,33 @@ export const Route = createFileRoute("/_authenticated/risk/")({ component: RiskD
 function RiskDashboardPage() {
   const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
-  const deptScores: { [k: string]: any }[] = [];
-  const empScores: { [k: string]: any }[] = [];
+  const deptScores = [
+    { name: "Operations", nA: "العمليات", s: 72, l: "high", e: 12 },
+    { name: "Finance", nA: "المالية", s: 55, l: "medium", e: 6 },
+    { name: "HR", nA: "الموارد البشرية", s: 35, l: "low", e: 8 },
+    { name: "IT", nA: "تقنية المعلومات", s: 28, l: "low", e: 5 },
+  ];
+  const empScores = [
+    {
+      name: "Ahmad Khalid",
+      nA: "أحمد خالد",
+      dept: "Operations",
+      dA: "العمليات",
+      s: 85,
+      l: "critical",
+    },
+    { name: "Omar Hassan", nA: "عمر حسن", dept: "Operations", dA: "العمليات", s: 72, l: "high" },
+    {
+      name: "Layla Ibrahim",
+      nA: "ليلى إبراهيم",
+      dept: "HR",
+      dA: "الموارد البشرية",
+      s: 45,
+      l: "medium",
+    },
+    { name: "Nadia Karim", nA: "نادية كريم", dept: "Finance", dA: "المالية", s: 35, l: "low" },
+    { name: "Hussein Ali", nA: "حسين علي", dept: "IT", dA: "تقنية المعلومات", s: 20, l: "low" },
+  ];
   const dist = [
     { lvl: "Critical", lvlA: "حرجة", c: 2, p: 8 },
     { lvl: "High", lvlA: "عالية", c: 5, p: 20 },

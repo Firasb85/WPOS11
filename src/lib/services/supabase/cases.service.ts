@@ -3,10 +3,7 @@
  * Uses untyped Supabase client for tables not yet in generated types.
  * Run supabase/migrations/002_cases_interventions.sql first.
  */
-import { createClient } from "@supabase/supabase-js";
-import { clientEnv } from "@/config/env";
-
-const db = createClient(clientEnv.VITE_SUPABASE_URL, clientEnv.VITE_SUPABASE_PUBLISHABLE_KEY);
+import { supabase as db } from "@/integrations/supabase/client";
 
 export interface CaseRecord {
   id: string;
@@ -68,8 +65,8 @@ export const casesService = {
       .insert({
         case_number: generateCaseNumber(),
         diagnostic_report_id: diagnosticReportId,
-        employee_id: r.employee_id,
-        department_id: r.department_id,
+        employee_id: String(r.employee_id ?? ""),
+        department_id: (r.department_id as string) ?? null,
         root_cause_category: (top?.category as string) ?? null,
         priority: prio,
         status: "open",
@@ -87,8 +84,10 @@ export const casesService = {
   },
 
   async updateStatus(id: string, status: string) {
-    const u: Record<string, unknown> = { status, updated_at: new Date().toISOString() };
-    if (status === "resolved" || status === "closed") u.closure_date = new Date().toISOString();
+    const u = { status, updated_at: new Date().toISOString() } as Record<string, string>;
+    if (status === "resolved" || status === "closed")
+      (u as Record<string, string>).closure_date = new Date().toISOString();
+    // @ts-expect-error — dynamic update fields
     const { data, error } = await db.from("cases").update(u).eq("id", id).select().single();
     if (error) throw error;
     return data;

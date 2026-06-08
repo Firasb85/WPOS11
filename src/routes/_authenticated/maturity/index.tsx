@@ -10,8 +10,54 @@ export const Route = createFileRoute("/_authenticated/maturity/")({ component: M
 function MaturityPage() {
   const { data: diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
   const l = "ar";
-  const dimensions: { [k: string]: any }[] = [];
-  const deptMaturity: { [k: string]: any }[] = [];
+  const dimensions = [
+    {
+      name: "People",
+      nA: "الأفراد",
+      score: 72,
+      lvl: 3,
+      icon: Users,
+      desc: "Skills, competencies, team capability",
+    },
+    {
+      name: "Processes",
+      nA: "العمليات",
+      score: 68,
+      lvl: 3,
+      icon: GitMerge,
+      desc: "Process documentation, execution maturity",
+    },
+    {
+      name: "KPIs",
+      nA: "المؤشرات",
+      score: 81,
+      lvl: 4,
+      icon: BarChart3,
+      desc: "KPI coverage, measurement accuracy",
+    },
+    {
+      name: "Evidence",
+      nA: "الأدلة",
+      score: 63,
+      lvl: 3,
+      icon: Shield,
+      desc: "Evidence collection, reliability scoring",
+    },
+    {
+      name: "Diagnostics",
+      nA: "التشخيص",
+      score: 58,
+      lvl: 2,
+      icon: Stethoscope,
+      desc: "Diagnostic maturity, root cause analysis",
+    },
+  ];
+  const deptMaturity = [
+    { dept: "Operations", dA: "العمليات", score: 68, lvl: 3, change: 4.2 },
+    { dept: "HR", dA: "الموارد البشرية", score: 75, lvl: 3, change: 2.1 },
+    { dept: "Finance", dA: "المالية", score: 62, lvl: 3, change: -1.5 },
+    { dept: "IT", dA: "تقنية المعلومات", score: 71, lvl: 3, change: 5.8 },
+  ];
   return (
     <div>
       <PageHeader

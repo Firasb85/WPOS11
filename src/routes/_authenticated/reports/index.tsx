@@ -39,7 +39,22 @@ function ReportsIndexPage() {
     },
   ];
 
-  const recentReports: { [k: string]: any }[] = [];
+  const recentReports = [
+    {
+      title: "Q2 2026 Performance Summary",
+      type: "Enterprise",
+      date: "2026-06-01",
+      status: "Ready",
+    },
+    {
+      title: "Engineering Dept Diagnostic",
+      type: "Diagnostic",
+      date: "2026-05-28",
+      status: "Ready",
+    },
+    { title: "HR Competency Gap Report", type: "Diagnostic", date: "2026-05-20", status: "Draft" },
+    { title: "May KPI Scorecard", type: "Enterprise", date: "2026-06-05", status: "Ready" },
+  ];
 
   return (
     <div>

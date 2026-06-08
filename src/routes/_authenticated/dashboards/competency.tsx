@@ -1,4 +1,3 @@
-import type { CompetencyHeatmapCell } from "~/lib/wpos/types/enhancement-pack";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
@@ -14,10 +13,79 @@ export const Route = createFileRoute("/_authenticated/dashboards/competency")({
 function CompetencyDashboardPage() {
   const { data: empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const l = "ar";
-  const heatmapData: CompetencyHeatmapCell[] = [];
+  const heatmapData = [
+    {
+      employeeId: "1",
+      employeeName: "Ahmad Khalid",
+      competencyName: "Data Analysis",
+      currentLevel: 2,
+      requiredLevel: 4,
+      gap: 2,
+    },
+    {
+      employeeId: "1",
+      employeeName: "Ahmad Khalid",
+      competencyName: "Leadership",
+      currentLevel: 2,
+      requiredLevel: 3,
+      gap: 1,
+    },
+    {
+      employeeId: "1",
+      employeeName: "Ahmad Khalid",
+      competencyName: "Communication",
+      currentLevel: 3,
+      requiredLevel: 3,
+      gap: 0,
+    },
+    {
+      employeeId: "2",
+      employeeName: "Layla Ibrahim",
+      competencyName: "Data Analysis",
+      currentLevel: 3,
+      requiredLevel: 3,
+      gap: 0,
+    },
+    {
+      employeeId: "2",
+      employeeName: "Layla Ibrahim",
+      competencyName: "Negotiation",
+      currentLevel: 2,
+      requiredLevel: 4,
+      gap: 2,
+    },
+    {
+      employeeId: "3",
+      employeeName: "Omar Hassan",
+      competencyName: "Time Management",
+      currentLevel: 1,
+      requiredLevel: 3,
+      gap: 2,
+    },
+    {
+      employeeId: "4",
+      employeeName: "Nadia Karim",
+      competencyName: "Technical",
+      currentLevel: 3,
+      requiredLevel: 4,
+      gap: 1,
+    },
+    {
+      employeeId: "5",
+      employeeName: "Hussein Ali",
+      competencyName: "Analytical Thinking",
+      currentLevel: 4,
+      requiredLevel: 4,
+      gap: 0,
+    },
+  ];
   const employees = [...new Set(heatmapData.map((d) => d.employeeName))];
   const competencies = [...new Set(heatmapData.map((d) => d.competencyName))];
-  const topMissing: { [k: string]: any }[] = [];
+  const topMissing = [
+    { name: l === "ar" ? "تحليل البيانات" : "Data Analysis", count: 3, gap: 1.7 },
+    { name: l === "ar" ? "التفاوض" : "Negotiation", count: 2, gap: 2.0 },
+    { name: l === "ar" ? "إدارة الوقت" : "Time Management", count: 2, gap: 1.5 },
+  ];
 
   return (
     <div>

@@ -11,8 +11,78 @@ export const Route = createFileRoute("/_authenticated/process-engineering/")({
 function ProcessEngineeringPage() {
   const { data: processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
-  const executions: { [k: string]: any }[] = [];
-  const analytics: { [k: string]: any }[] = [];
+  const executions = [
+    {
+      id: "1",
+      proc: "Order Fulfillment",
+      pA: "تنفيذ الطلبات",
+      emp: "Ahmad Khalid",
+      eA: "أحمد خالد",
+      start: "2026-06-07 09:15",
+      end: "2026-06-07 10:22",
+      dur: "1h 07m",
+      st: "completed",
+      steps: 4,
+      cp: 4,
+      fail: 0,
+    },
+    {
+      id: "2",
+      proc: "Invoice Processing",
+      pA: "معالجة الفواتير",
+      emp: "Nadia Karim",
+      eA: "نادية كريم",
+      start: "2026-06-07 08:30",
+      end: "2026-06-07 09:45",
+      dur: "1h 15m",
+      st: "completed",
+      steps: 3,
+      cp: 3,
+      fail: 0,
+    },
+    {
+      id: "3",
+      proc: "Customer Registration",
+      pA: "تسجيل العملاء",
+      emp: "Omar Hassan",
+      eA: "عمر حسن",
+      start: "2026-06-07 10:00",
+      st: "running",
+      steps: 4,
+      cp: 2,
+      fail: 1,
+      delay: 15,
+    },
+  ];
+  const analytics = [
+    {
+      proc: "Order Fulfillment",
+      pA: "تنفيذ الطلبات",
+      exe: 24,
+      avg: 12.5,
+      fail: 3,
+      rw: 5,
+      del: 4.2,
+    },
+    {
+      proc: "Invoice Processing",
+      pA: "معالجة الفواتير",
+      exe: 18,
+      avg: 15.2,
+      fail: 2,
+      rw: 3,
+      del: 6.8,
+    },
+    {
+      proc: "Customer Registration",
+      pA: "تسجيل العملاء",
+      exe: 15,
+      avg: 8.1,
+      fail: 0,
+      rw: 1,
+      del: 1.5,
+    },
+  ];
   return (
     <div>
       <PageHeader

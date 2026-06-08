@@ -15,9 +15,86 @@ function CompetencyFrameworkPage() {
   const { data: levelsData, isLoading: _levelsLoading } = useCompetencyLevels();
   const { data: competencies, isLoading: _competenciesLoading } = useCompetencies();
 
-  const frameworks: { [k: string]: any }[] = [];
+  const frameworks = [
+    {
+      code: "CF-TECH",
+      nameEn: "Technical Competencies",
+      nameAr: "الكفاءات الفنية",
+      type: "skill",
+      count: 12,
+      levels: 5,
+      color: "bg-blue-50 border-blue-200 dark:bg-blue-900/20",
+      icon: Brain,
+    },
+    {
+      code: "CF-LEAD",
+      nameEn: "Leadership Competencies",
+      nameAr: "كفاءات القيادة",
+      type: "behavior",
+      count: 8,
+      levels: 5,
+      color: "bg-purple-50 border-purple-200 dark:bg-purple-900/20",
+      icon: Award,
+    },
+    {
+      code: "CF-CORE",
+      nameEn: "Core Competencies",
+      nameAr: "الكفاءات الأساسية",
+      type: "knowledge",
+      count: 10,
+      levels: 4,
+      color: "bg-green-50 border-green-200 dark:bg-green-900/20",
+      icon: Target,
+    },
+    {
+      code: "CF-FUNC",
+      nameEn: "Functional Competencies",
+      nameAr: "الكفاءات الوظيفية",
+      type: "skill",
+      count: 15,
+      levels: 5,
+      color: "bg-orange-50 border-orange-200 dark:bg-orange-900/20",
+      icon: Layers,
+    },
+  ];
 
-  const levels: { [k: string]: any }[] = [];
+  const levels = [
+    {
+      level: 1,
+      nameEn: "Beginner",
+      nameAr: "مبتدئ",
+      descEn: "Basic awareness and understanding",
+      descAr: "وعي وفهم أساسي",
+    },
+    {
+      level: 2,
+      nameEn: "Developing",
+      nameAr: "قيد التطوير",
+      descEn: "Applies with guidance",
+      descAr: "يطبق بإرشاد",
+    },
+    {
+      level: 3,
+      nameEn: "Competent",
+      nameAr: "كفؤ",
+      descEn: "Applies independently",
+      descAr: "يطبق بشكل مستقل",
+    },
+    {
+      level: 4,
+      nameEn: "Advanced",
+      nameAr: "متقدم",
+      descEn: "Coaches and mentors others",
+      descAr: "يدرب ويوجه الآخرين",
+    },
+    {
+      level: 5,
+      nameEn: "Expert",
+      nameAr: "خبير",
+      descEn: "Strategic thought leader",
+      descAr: "قائد فكر استراتيجي",
+    },
+  ];
 
   return (
     <div>

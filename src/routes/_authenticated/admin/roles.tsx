@@ -15,8 +15,44 @@ function RoleManagementPage() {
   const { data: permsData } = usePermissions();
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const [selected, setSelected] = useState("super_admin");
-  const roles: { [k: string]: any }[] = [];
-  const modules: { [k: string]: any }[] = [];
+  const roles = [
+    {
+      id: "super_admin",
+      name: "Super Admin",
+      desc: "Full system access",
+      isSystem: true,
+      count: 1,
+    },
+    {
+      id: "organization_admin",
+      name: "Organization Admin",
+      desc: "Company level",
+      isSystem: true,
+      count: 2,
+    },
+    { id: "hr_director", name: "HR Director", desc: "HR operations", isSystem: true, count: 1 },
+    {
+      id: "department_manager",
+      name: "Department Manager",
+      desc: "Dept operations",
+      isSystem: true,
+      count: 2,
+    },
+    { id: "supervisor", name: "Supervisor", desc: "Team management", isSystem: true, count: 4 },
+    { id: "analyst", name: "Analyst", desc: "Read & analyze", isSystem: true, count: 5 },
+  ];
+  const modules = [
+    { name: "Dashboard", perms: ["view"] },
+    { name: "Organization", perms: ["view", "create", "edit", "delete"] },
+    { name: "Jobs", perms: ["view", "create", "edit", "delete"] },
+    { name: "Processes", perms: ["view", "create", "edit", "delete"] },
+    { name: "KPIs", perms: ["view", "create", "edit", "delete"] },
+    { name: "Snapshots", perms: ["view", "create", "edit", "delete"] },
+    { name: "Evidence", perms: ["view", "create", "edit", "delete"] },
+    { name: "Diagnostics", perms: ["view", "create", "edit", "delete", "review", "approve"] },
+    { name: "Reports", perms: ["view", "export"] },
+    { name: "Admin", perms: ["settings", "audit"] },
+  ];
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>

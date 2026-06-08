@@ -69,10 +69,42 @@ function makeHeatmap(
 function HeatmapsPage() {
   const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
-  const skillGapData: { [k: string]: any }[] = [];
-  const deptRiskData: { [k: string]: any }[] = [];
-  const processFailData: { [k: string]: any }[] = [];
-  const rootCauseData: { [k: string]: any }[] = [];
+  const skillGapData = [
+    { empAr: "أحمد خالد", data: 3 },
+    { empAr: "ليلى إبراهيم", data: 2 },
+    { empAr: "عمر حسن", data: 4 },
+    { empAr: "نادية كريم", data: 1 },
+    { empAr: "حسين علي", data: 0 },
+    { empAr: "سارة أحمد", data: 2 },
+    { empAr: "فهد العتيبي", data: 1 },
+    { empAr: "نورة الفيصل", data: 0 },
+  ];
+  const deptRiskData = [
+    { dA: "العمليات", data: 4 },
+    { dA: "الموارد البشرية", data: 2 },
+    { dA: "المالية", data: 3 },
+    { dA: "تقنية المعلومات", data: 1 },
+    { dA: "المبيعات", data: 3 },
+    { dA: "التسويق", data: 2 },
+  ];
+  const processFailData = [
+    { nA: "معالجة الطلبات", data: 5 },
+    { nA: "تسليم الطلبات", data: 4 },
+    { nA: "فوترة", data: 3 },
+    { nA: "تدقيق المخزون", data: 2 },
+    { nA: "تسجيل العملاء", data: 2 },
+    { nA: "الموافقات", data: 1 },
+  ];
+  const rootCauseData = [
+    { nA: "فجوة مهارية", data: 5 },
+    { nA: "مشكلة إجرائية", data: 4 },
+    { nA: "فجوة معرفية", data: 3 },
+    { nA: "مشكلة أدوات", data: 3 },
+    { nA: "تحفيز", data: 2 },
+    { nA: "قضايا إدارية", data: 2 },
+    { nA: "موارد", data: 1 },
+    { nA: "سياسات", data: 1 },
+  ];
 
   return (
     <div>

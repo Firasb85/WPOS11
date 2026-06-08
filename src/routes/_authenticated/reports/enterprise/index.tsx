@@ -21,8 +21,58 @@ function EnterpriseReportsPage() {
   const { data: ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
   const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
-  const reportTypes: { [k: string]: any }[] = [];
-  const recent: { [k: string]: any }[] = [];
+  const reportTypes = [
+    {
+      code: "board",
+      name: "Board Report",
+      nA: "تقرير مجلس الإدارة",
+      desc: "Executive summary for board meetings",
+      dA: "ملخص تنفيذي لاجتماعات المجلس",
+      icon: BarChart3,
+      freq: "monthly",
+    },
+    {
+      code: "executive",
+      name: "Executive Report",
+      nA: "تقرير تنفيذي",
+      desc: "Operational performance for executives",
+      dA: "أداء تشغيلي للتنفيذيين",
+      icon: TrendingUp,
+      freq: "weekly",
+    },
+    {
+      code: "operational",
+      name: "Operations Report",
+      nA: "تقرير عمليات",
+      desc: "Process and KPI performance details",
+      dA: "تفاصيل أداء العمليات والمؤشرات",
+      icon: FileBarChart,
+      freq: "daily",
+    },
+    {
+      code: "risk",
+      name: "Risk Report",
+      nA: "تقرير مخاطر",
+      desc: "Workforce risk assessment and scoring",
+      dA: "تقييم مخاطر القوى العاملة",
+      icon: AlertTriangle,
+      freq: "weekly",
+    },
+    {
+      code: "maturity",
+      name: "Maturity Report",
+      nA: "تقرير النضج",
+      desc: "Organizational maturity assessment",
+      dA: "تقييم النضج المؤسسي",
+      icon: Building2,
+      freq: "quarterly",
+    },
+  ];
+  const recent = [
+    { type: "Board", num: "BRD-2026-002", dt: "2026-06-01", st: "generated", size: "2.4 MB" },
+    { type: "Operational", num: "OPS-2026-015", dt: "2026-05-31", st: "generated", size: "1.8 MB" },
+    { type: "Risk", num: "RSK-2026-008", dt: "2026-05-28", st: "scheduled", size: "-" },
+  ];
   return (
     <div>
       <PageHeader
