@@ -52,7 +52,7 @@ function RulesEnginePage() {
       acts: ["notifyManagers", "scheduleReview", "priority: high"],
     },
   ];
-  const types: Record<string, unknown>[] = [];
+  const types: { [k: string]: any }[] = [];
   const filtered = type === "all" ? rules : rules.filter((r) => r.t === type);
   return (
     <div>

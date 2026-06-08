@@ -21,8 +21,8 @@ function EnterpriseReportsPage() {
   const { data: ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
   const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
-  const reportTypes: Record<string, unknown>[] = [];
-  const recent: Record<string, unknown>[] = [];
+  const reportTypes: { [k: string]: any }[] = [];
+  const recent: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

@@ -39,7 +39,7 @@ function ReportsIndexPage() {
     },
   ];
 
-  const recentReports: Record<string, unknown>[] = [];
+  const recentReports: { [k: string]: any }[] = [];
 
   return (
     <div>

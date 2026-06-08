@@ -15,9 +15,9 @@ function CompetencyFrameworkPage() {
   const { data: levelsData, isLoading: _levelsLoading } = useCompetencyLevels();
   const { data: competencies, isLoading: _competenciesLoading } = useCompetencies();
 
-  const frameworks: Record<string, unknown>[] = [];
+  const frameworks: { [k: string]: any }[] = [];
 
-  const levels: Record<string, unknown>[] = [];
+  const levels: { [k: string]: any }[] = [];
 
   return (
     <div>

@@ -8,8 +8,8 @@ export const Route = createFileRoute("/_authenticated/documents/")({ component: 
 function DocumentsPage() {
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
-  const types: Record<string, unknown>[] = [];
-  const docs: Record<string, unknown>[] = [];
+  const types: { [k: string]: any }[] = [];
+  const docs: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

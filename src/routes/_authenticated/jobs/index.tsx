@@ -56,7 +56,7 @@ function JobArchitectureIndexPage() {
     },
   ];
 
-  const stats: Record<string, unknown>[] = [];
+  const stats: { [k: string]: any }[] = [];
 
   return (
     <div>

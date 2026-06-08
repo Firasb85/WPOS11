@@ -22,9 +22,9 @@ function RootCauseDashboardPage() {
   const { data: rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
-  const causes: Record<string, unknown>[] = [];
-  const monthly: Record<string, unknown>[] = [];
-  const depts: Record<string, unknown>[] = [];
+  const causes: { [k: string]: any }[] = [];
+  const monthly: { [k: string]: any }[] = [];
+  const depts: { [k: string]: any }[] = [];
   const TrendIcon = ({ trend }: { trend: string }) =>
     trend === "increasing" ? (
       <ArrowUp className="w-3 h-3 text-red-500" />

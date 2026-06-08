@@ -15,8 +15,8 @@ function RoleManagementPage() {
   const { data: permsData } = usePermissions();
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const [selected, setSelected] = useState("super_admin");
-  const roles: Record<string, unknown>[] = [];
-  const modules: Record<string, unknown>[] = [];
+  const roles: { [k: string]: any }[] = [];
+  const modules: { [k: string]: any }[] = [];
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>

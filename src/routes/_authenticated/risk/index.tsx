@@ -9,8 +9,8 @@ export const Route = createFileRoute("/_authenticated/risk/")({ component: RiskD
 function RiskDashboardPage() {
   const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
-  const deptScores: Record<string, unknown>[] = [];
-  const empScores: Record<string, unknown>[] = [];
+  const deptScores: { [k: string]: any }[] = [];
+  const empScores: { [k: string]: any }[] = [];
   const dist = [
     { lvl: "Critical", lvlA: "حرجة", c: 2, p: 8 },
     { lvl: "High", lvlA: "عالية", c: 5, p: 20 },

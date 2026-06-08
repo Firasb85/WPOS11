@@ -54,7 +54,7 @@ function ProcessIntelligencePage() {
       { from: "p5", to: "p6", type: "sequential", criticality: "high" },
     ],
   };
-  const riskScores: Record<string, unknown>[] = [];
+  const riskScores: { [k: string]: any }[] = [];
 
   return (
     <div>

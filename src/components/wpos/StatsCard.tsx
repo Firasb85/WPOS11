@@ -2,11 +2,13 @@ import type { ReactNode } from "react";
 
 interface StatsCardProps {
   title: string;
+  titleAr?: string;
   value: string;
   change?: number;
   icon?: ReactNode;
   status?: "good" | "warning" | "critical";
   currentLang?: string;
+  [key: string]: unknown;
 }
 
 const statusStyles = {

@@ -12,8 +12,8 @@ export const Route = createFileRoute("/_authenticated/analytics/evidence-quality
 function EvidenceQualityPage() {
   const { data: evidenceMetrics, isLoading: _evidenceMetricsLoading } = useEvidenceMetrics();
   const l = "ar";
-  const byType: Record<string, unknown>[] = [];
-  const byVer: Record<string, unknown>[] = [];
+  const byType: { [k: string]: any }[] = [];
+  const byVer: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

@@ -10,8 +10,8 @@ export const Route = createFileRoute("/_authenticated/maturity/")({ component: M
 function MaturityPage() {
   const { data: diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
   const l = "ar";
-  const dimensions: Record<string, unknown>[] = [];
-  const deptMaturity: Record<string, unknown>[] = [];
+  const dimensions: { [k: string]: any }[] = [];
+  const deptMaturity: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

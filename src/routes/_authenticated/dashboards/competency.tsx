@@ -1,3 +1,4 @@
+import type { CompetencyHeatmapCell } from "~/lib/wpos/types/enhancement-pack";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
@@ -13,10 +14,10 @@ export const Route = createFileRoute("/_authenticated/dashboards/competency")({
 function CompetencyDashboardPage() {
   const { data: empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const l = "ar";
-  const heatmapData: Record<string, unknown>[] = [];
+  const heatmapData: CompetencyHeatmapCell[] = [];
   const employees = [...new Set(heatmapData.map((d) => d.employeeName))];
   const competencies = [...new Set(heatmapData.map((d) => d.competencyName))];
-  const topMissing: Record<string, unknown>[] = [];
+  const topMissing: { [k: string]: any }[] = [];
 
   return (
     <div>

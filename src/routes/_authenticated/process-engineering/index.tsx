@@ -11,8 +11,8 @@ export const Route = createFileRoute("/_authenticated/process-engineering/")({
 function ProcessEngineeringPage() {
   const { data: processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
-  const executions: Record<string, unknown>[] = [];
-  const analytics: Record<string, unknown>[] = [];
+  const executions: { [k: string]: any }[] = [];
+  const analytics: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

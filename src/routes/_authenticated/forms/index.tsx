@@ -8,8 +8,8 @@ export const Route = createFileRoute("/_authenticated/forms/")({ component: Form
 function FormsPage() {
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
-  const forms: Record<string, unknown>[] = [];
-  const types: Record<string, unknown>[] = [];
+  const forms: { [k: string]: any }[] = [];
+  const types: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

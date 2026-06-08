@@ -76,7 +76,7 @@ function AdministrationIndexPage() {
     },
   ];
 
-  const stats: Record<string, unknown>[] = [];
+  const stats: { [k: string]: any }[] = [];
 
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>

@@ -28,10 +28,10 @@ function CommandCenterPage() {
   const { data: ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
   const { data: cases } = useCases();
   const l = "ar";
-  const criticalKPIs: Record<string, unknown>[] = [];
-  const deptRisk: Record<string, unknown>[] = [];
-  const caseStatus: Record<string, unknown>[] = [];
-  const maturityDims: Record<string, unknown>[] = [];
+  const criticalKPIs: { [k: string]: any }[] = [];
+  const deptRisk: { [k: string]: any }[] = [];
+  const caseStatus: { [k: string]: any }[] = [];
+  const maturityDims: { [k: string]: any }[] = [];
   return (
     <div>
       <PageHeader

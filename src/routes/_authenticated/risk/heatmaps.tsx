@@ -69,10 +69,10 @@ function makeHeatmap(
 function HeatmapsPage() {
   const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
-  const skillGapData: Record<string, unknown>[] = [];
-  const deptRiskData: Record<string, unknown>[] = [];
-  const processFailData: Record<string, unknown>[] = [];
-  const rootCauseData: Record<string, unknown>[] = [];
+  const skillGapData: { [k: string]: any }[] = [];
+  const deptRiskData: { [k: string]: any }[] = [];
+  const processFailData: { [k: string]: any }[] = [];
+  const rootCauseData: { [k: string]: any }[] = [];
 
   return (
     <div>
