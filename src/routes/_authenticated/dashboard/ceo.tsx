@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { AtRiskEmployeesPanel, AtRiskDepartmentsPanel } from "@/components/diagnostics/AtRiskPanel";
 import { useDashboardRealtime } from "@/hooks/useRealtimeSubscription";
 import {
   Users,
@@ -199,6 +200,12 @@ function CEODashboardPage() {
             </div>
           </div>
         </Card>
+      </div>
+
+      {/* Proactive Risk Alerts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <AtRiskEmployeesPanel />
+        <AtRiskDepartmentsPanel />
       </div>
     </div>
   );

@@ -5,7 +5,9 @@ import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { MaturityBadge } from "~/components/wpos/MaturityBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useDiagnostics, useDeleteDiagnostic } from "@/hooks/useDiagnosticWorkflow";
-import { Plus, Stethoscope, Trash2, Eye } from "lucide-react";
+import { useState } from "react";
+import { GuidedDiagnosticWizard } from "@/components/diagnostics/GuidedDiagnosticWizard";
+import { Plus, Stethoscope, Trash2, Eye, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/diagnostics/")({
   component: DiagnosticsListPage,
@@ -13,6 +15,7 @@ export const Route = createFileRoute("/_authenticated/diagnostics/")({
 
 function DiagnosticsListPage() {
   const { t, lang: l } = useLanguage();
+  const [showWizard, setShowWizard] = useState(false);
   const { data: diagnostics, isLoading } = useDiagnostics();
   const deleteMutation = useDeleteDiagnostic();
 
@@ -49,13 +52,22 @@ function DiagnosticsListPage() {
         descriptionAr="التحقيقات التشخيصية للأداء والفرضيات"
         currentLang={l}
         actions={
-          <Link
-            to="/diagnostics/new"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 no-underline"
-          >
-            <Plus className="w-4 h-4" />
-            {t("New Diagnostic", "تشخيص جديد")}
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              to="/diagnostics/new"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 no-underline"
+            >
+              <Plus className="w-4 h-4" />
+              {t("New Diagnostic", "تشخيص جديد")}
+            </Link>
+            <button
+              onClick={() => setShowWizard(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700"
+            >
+              <Sparkles className="w-4 h-4" />
+              {t("Guided Wizard", "المعالج الموجه")}
+            </button>
+          </div>
         }
       />
 
@@ -134,6 +146,7 @@ function DiagnosticsListPage() {
           </Link>
         </div>
       )}
+      <GuidedDiagnosticWizard open={showWizard} onClose={() => setShowWizard(false)} />
     </div>
   );
 }

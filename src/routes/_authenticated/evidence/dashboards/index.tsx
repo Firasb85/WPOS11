@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useEvidenceMetrics } from "@/hooks/useAnalytics";
+import { EvidenceCorrelationHeatmap } from "@/components/diagnostics/EvidenceCorrelationHeatmap";
+import { useEvidence } from "@/hooks/useDiagnosticWorkflow";
 import { ClipboardCheck, BarChart3, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/evidence/dashboards/")({
@@ -12,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/evidence/dashboards/")({
 
 function EvidenceDashboardPage() {
   const { t, lang: l } = useLanguage();
+  const { data: allEvidence } = useEvidence();
   const { data: metrics, isLoading } = useEvidenceMetrics();
   const m = metrics ?? { total: 0, byType: {}, byReliability: {} };
 
@@ -105,6 +108,17 @@ function EvidenceDashboardPage() {
           </Card>
         </div>
       )}
+      <Card className="mt-6">
+        <EvidenceCorrelationHeatmap
+          evidence={
+            (allEvidence ?? []) as Array<{
+              evidence_type: string;
+              reliability: string | null;
+              description: string;
+            }>
+          }
+        />
+      </Card>
     </div>
   );
 }

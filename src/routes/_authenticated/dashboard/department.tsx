@@ -5,6 +5,7 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
+import { AtRiskDepartmentsPanel } from "@/components/diagnostics/AtRiskPanel";
 import { Building2, Users, TrendingUp, AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/department")({
@@ -119,6 +120,10 @@ function DepartmentDashboardPage() {
           </div>
         </Card>
       )}
+
+      <div className="mt-6">
+        <AtRiskDepartmentsPanel />
+      </div>
     </div>
   );
 }

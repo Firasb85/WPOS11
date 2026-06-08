@@ -5,6 +5,7 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useEmployeesList } from "@/hooks/useOrganization";
 import { useSnapshots } from "@/hooks/useKpis";
+import { AtRiskEmployeesPanel } from "@/components/diagnostics/AtRiskPanel";
 import { Users, TrendingUp, AlertTriangle, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/supervisor")({
@@ -97,6 +98,10 @@ function SupervisorDashboardPage() {
           </div>
         )}
       </Card>
+
+      <div className="mt-6">
+        <AtRiskEmployeesPanel />
+      </div>
     </div>
   );
 }
