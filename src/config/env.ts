@@ -8,10 +8,7 @@ import { clientEnvSchema, type ClientEnv } from "./env.schema";
 const fallbackClientEnv: ClientEnv = {
   VITE_SUPABASE_URL: "https://byojycjnbxbhutvclebl.supabase.co",
   VITE_SUPABASE_PUBLISHABLE_KEY:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6ImJ5b2p5Y2puYnhiaHV0dmNsZWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NjkyMTYsImV4cCI6MjA5NjM0NTIxNn0.LRzpsskUF2bHJbjHgat9fhy1zOCh5sb25_E8aGhkGYc".replace(
-      "eyJpc3MiOiJIUzI1NiIsInJlZi",
-      "eyJpc3MiOiJzdXBhYmFzZSIsInJlZi",
-    ),
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6ImJ5b2p5Y2puYnhiaHV0dmNsZWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NjkyMTYsImV4cCI6MjA5NjM0NTIxNn0.LRzpsskUF2bHJbjHgat9fhy1zOCh5sb25_E8aGhkGYc",
   VITE_SUPABASE_PROJECT_ID: "byojycjnbxbhutvclebl",
 };
 
