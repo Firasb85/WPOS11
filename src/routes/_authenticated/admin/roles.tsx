@@ -6,10 +6,13 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Shield, Plus, Check, Lock } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useRoles, usePermissions } from "@/hooks/useAdmin";
 export const Route = createFileRoute("/_authenticated/admin/roles")({
   component: RoleManagementPage,
 });
 function RoleManagementPage() {
+  const { data: rolesData, isLoading: _rolesLoading } = useRoles();
+  const { data: permsData } = usePermissions();
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const [selected, setSelected] = useState("super_admin");
   const roles = [

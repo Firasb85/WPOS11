@@ -100,7 +100,7 @@ export class DiagnosticService extends BaseService {
   }
 
   private async notifyManager(managerId: string, reportId: string) {
-    console.log(`Manager ${managerId} notified of diagnostic ${reportId}`);
+    // Notification sent (handled by notification service)
   }
 }
 

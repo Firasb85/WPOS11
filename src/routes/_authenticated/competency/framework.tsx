@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { Brain, Layers, Target, Award, TrendingUp } from "lucide-react";
 import { useCompetencies } from "@/hooks/useCompetencies";
+import { useCompetencyLevels } from "@/hooks/useAdmin";
 
 export const Route = createFileRoute("/_authenticated/competency/framework")({
   component: CompetencyFrameworkPage,
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/_authenticated/competency/framework")({
 
 function CompetencyFrameworkPage() {
   const { t, lang: l } = useLanguage();
+  const { data: levelsData, isLoading: _levelsLoading } = useCompetencyLevels();
   const { data: competencies, isLoading: _competenciesLoading } = useCompetencies();
 
   const frameworks = [

@@ -13,3 +13,5 @@ export { processesService } from "./processes.service";
 export { competenciesService } from "./competencies.service";
 export { dashboardService } from "./dashboard.service";
 export { casesService } from "./cases.service";
+export { analyticsService } from "./analytics.service";
+export { adminService } from "./admin.service";

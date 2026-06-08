@@ -5,8 +5,10 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { DataTable } from "~/components/wpos/DataTable";
 import { UserCircle, Download } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useAuditLogs } from "@/hooks/useAdmin";
 export const Route = createFileRoute("/_authenticated/admin/audit")({ component: AuditLogsPage });
 function AuditLogsPage() {
+  const { data: auditLogs, isLoading: _auditLoading } = useAuditLogs();
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const logs = [
     {

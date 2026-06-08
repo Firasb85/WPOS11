@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
