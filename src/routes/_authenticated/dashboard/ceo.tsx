@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useAIInsights } from "@/hooks/useAIInsights";
 import { AtRiskEmployeesPanel, AtRiskDepartmentsPanel } from "@/components/diagnostics/AtRiskPanel";
 import { useDashboardRealtime } from "@/hooks/useRealtimeSubscription";
 import {
@@ -23,7 +24,8 @@ export const Route = createFileRoute("/_authenticated/dashboard/ceo")({
 function CEODashboardPage() {
   const { t, lang: l } = useLanguage();
   const { data: metrics, isLoading } = useCeoDashboard();
-  useDashboardRealtime(); // Live updates when any data changes
+  useDashboardRealtime(); // Live updates
+  const { data: insights } = useAIInsights(); // AI insights
 
   if (isLoading) {
     return (
@@ -201,6 +203,58 @@ function CEODashboardPage() {
           </div>
         </Card>
       </div>
+
+      {/* AI Insights */}
+      {(insights ?? []).length > 0 && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>
+              <span className="mr-2">🧠</span>
+              {t("AI Insights", "رؤى ذكية")}
+              <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
+                {(insights ?? []).length}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {(insights ?? []).map((ins) => (
+              <div
+                key={ins.id}
+                className={
+                  "p-3 rounded-lg border text-sm " +
+                  (ins.priority === "critical"
+                    ? "bg-red-50 border-red-200"
+                    : ins.priority === "high"
+                      ? "bg-orange-50 border-orange-200"
+                      : ins.type === "achievement"
+                        ? "bg-green-50 border-green-200"
+                        : "bg-blue-50 border-blue-200")
+                }
+              >
+                <div className="flex items-start justify-between">
+                  <p className="font-medium">{ins.title}</p>
+                  <span
+                    className={
+                      "text-[10px] px-1.5 py-0.5 rounded-full font-bold " +
+                      (ins.priority === "critical"
+                        ? "bg-red-200 text-red-800"
+                        : ins.priority === "high"
+                          ? "bg-orange-200 text-orange-800"
+                          : "bg-gray-200 text-gray-700")
+                    }
+                  >
+                    {ins.priority}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">{ins.description}</p>
+                {ins.suggestedAction && (
+                  <p className="text-xs text-blue-600 mt-1 font-medium">💡 {ins.suggestedAction}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Proactive Risk Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
