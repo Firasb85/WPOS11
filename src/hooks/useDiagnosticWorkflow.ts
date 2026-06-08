@@ -1,3 +1,4 @@
+import { logAuditEvent } from "@/lib/audit/hook";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { evidenceService } from "@/lib/services/supabase/evidence.service";
 import { diagnosticsService } from "@/lib/services/supabase/diagnostics.service";
@@ -43,7 +44,14 @@ export function useCreateDiagnostic() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["diagnostic_reports"]["Insert"]) =>
       diagnosticsService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["diagnostics"] }),
+    onSuccess: (data) => {
+      logAuditEvent({
+        action: "CREATE",
+        entityType: "diagnostic_report",
+        entityId: (data as Record<string, unknown>)?.id as string,
+      });
+      qc.invalidateQueries({ queryKey: ["diagnostics"] });
+    },
   });
 }
 

@@ -1,3 +1,4 @@
+import { logAuditEvent } from "@/lib/audit/hook";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { kpiCategoriesService } from "@/lib/services/supabase/kpi-categories.service";
 import { kpisService } from "@/lib/services/supabase/kpis.service";
@@ -18,7 +19,10 @@ export function useCreateKpiCategory() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["kpi_categories"]["Insert"]) =>
       kpiCategoriesService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["kpi-categories"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "kpi_category" });
+      qc.invalidateQueries({ queryKey: ["kpi-categories"] });
+    },
   });
 }
 
@@ -52,7 +56,10 @@ export function useCreateKpi() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["kpis"]["Insert"]) =>
       kpisService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["kpis"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "kpi" });
+      qc.invalidateQueries({ queryKey: ["kpis"] });
+    },
   });
 }
 
@@ -78,6 +85,9 @@ export function useCreateSnapshot() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["performance_snapshots"]["Insert"]) =>
       snapshotsService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["snapshots"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "snapshot" });
+      qc.invalidateQueries({ queryKey: ["snapshots"] });
+    },
   });
 }

@@ -1,3 +1,4 @@
+import { logAuditEvent } from "@/lib/audit/hook";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { casesService } from "@/lib/services/supabase/cases.service";
 
@@ -22,6 +23,7 @@ export function useCreateCaseFromDiagnostic() {
     mutationFn: (diagnosticReportId: string) =>
       casesService.createFromDiagnostic(diagnosticReportId),
     onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "case" });
       qc.invalidateQueries({ queryKey: ["cases"] });
       qc.invalidateQueries({ queryKey: ["diagnostics"] });
     },

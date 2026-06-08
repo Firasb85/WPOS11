@@ -1,3 +1,4 @@
+import { logAuditEvent } from "@/lib/audit/hook";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   companiesService,
@@ -23,7 +24,14 @@ export function useCreateCompany() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["companies"]["Insert"]) =>
       companiesService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["companies"] }),
+    onSuccess: (data) => {
+      logAuditEvent({
+        action: "CREATE",
+        entityType: "company",
+        entityId: (data as Record<string, unknown>)?.id as string,
+      });
+      qc.invalidateQueries({ queryKey: ["companies"] });
+    },
   });
 }
 
@@ -63,7 +71,10 @@ export function useCreateBranch() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["branches"]["Insert"]) =>
       branchesService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["branches"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "branch" });
+      qc.invalidateQueries({ queryKey: ["branches"] });
+    },
   });
 }
 
@@ -103,7 +114,10 @@ export function useCreateDepartment() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["departments"]["Insert"]) =>
       departmentsService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["departments"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "department" });
+      qc.invalidateQueries({ queryKey: ["departments"] });
+    },
   });
 }
 
@@ -143,7 +157,10 @@ export function useCreateTeam() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["teams"]["Insert"]) =>
       teamsService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["teams"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "team" });
+      qc.invalidateQueries({ queryKey: ["teams"] });
+    },
   });
 }
 
@@ -191,7 +208,10 @@ export function useCreateEmployee() {
   return useMutation({
     mutationFn: (input: Database["public"]["Tables"]["employees"]["Insert"]) =>
       employeesService.create(input),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["employees"] }),
+    onSuccess: () => {
+      logAuditEvent({ action: "CREATE", entityType: "employee" });
+      qc.invalidateQueries({ queryKey: ["employees"] });
+    },
   });
 }
 
