@@ -1,3 +1,4 @@
+import { EvidenceImpactSorter } from "@/components/diagnostics/EvidenceImpactSorter";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
@@ -108,6 +109,20 @@ function EvidenceDashboardPage() {
           </Card>
         </div>
       )}
+      <Card className="mt-6">
+        <EvidenceImpactSorter
+          evidence={
+            (allEvidence ?? []) as Array<{
+              id: string;
+              evidence_type: string;
+              source: string;
+              description: string;
+              reliability: string | null;
+              reliability_score: number | null;
+            }>
+          }
+        />
+      </Card>
       <Card className="mt-6">
         <EvidenceCorrelationHeatmap
           evidence={

@@ -13,6 +13,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { Stethoscope, Brain, CheckCircle, XCircle, Send, FileText } from "lucide-react";
 import { useState } from "react";
+import { PeerComparison } from "@/components/diagnostics/PeerComparison";
 import { useCreateCaseFromDiagnostic } from "@/hooks/useCases";
 import { useNavigate } from "@tanstack/react-router";
 import { Briefcase } from "lucide-react";
@@ -304,6 +305,16 @@ function DiagnosticReportPage() {
           </div>
         )}
       </Card>
+
+      {/* Peer Comparison */}
+      {report.employee_id && (
+        <Card className="mt-6">
+          <PeerComparison
+            employeeId={report.employee_id}
+            employeeName={emp ? `${emp.first_name} ${emp.last_name}` : ""}
+          />
+        </Card>
+      )}
     </div>
   );
 }
