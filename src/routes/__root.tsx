@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider } from "@/lib/wpos/context/LanguageContext";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ErrorBoundary } from "@/components/errors/ErrorBoundary";
+import { Toaster } from "sonner";
 import { initMonitoring } from "@/lib/monitoring/init";
 
 function NotFoundComponent() {
@@ -136,6 +137,7 @@ function RootComponent() {
         <AuthProvider>
           <LanguageProvider>
             <Outlet />
+            <Toaster position="top-right" richColors closeButton />
           </LanguageProvider>
         </AuthProvider>
       </ErrorBoundary>

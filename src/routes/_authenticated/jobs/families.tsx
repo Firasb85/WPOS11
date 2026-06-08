@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { DataTable } from "~/components/wpos/DataTable";
@@ -21,7 +22,13 @@ function JobFamiliesPage() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createMutation.mutateAsync(formData);
+    try {
+      await createMutation.mutateAsync(formData);
+      toast.success("Created successfully");
+    } catch (err) {
+      toast.error("Failed to create: " + (err instanceof Error ? err.message : "Unknown error"));
+      return;
+    }
     setFormData({ name: "", code: "", description: "" });
     setShowForm(false);
   };

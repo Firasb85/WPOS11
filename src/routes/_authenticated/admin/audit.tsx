@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { DataTable } from "~/components/wpos/DataTable";
 import { UserCircle, Download } from "lucide-react";
@@ -51,53 +53,55 @@ function AuditLogsPage() {
     Delete: "bg-red-100 text-red-700",
   };
   return (
-    <div>
-      <PageHeader
-        title="Audit Logs"
-        description="Track all system activities"
-        actions={
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm">
-            <Download className="w-4 h-4" />
-            Export
-          </button>
-        }
-      />
-      <DataTable
-        columns={[
-          {
-            key: "user",
-            label: "User",
-            sortable: true,
-            render: (i) => (
-              <div className="flex items-center gap-2">
-                <UserCircle className="w-5 h-5 text-gray-400" />
-                <span className="font-medium">{i.user}</span>
-              </div>
-            ),
-          },
-          {
-            key: "action",
-            label: "Action",
-            render: (i) => (
-              <span
-                className={`px-2 py-1 rounded text-xs font-medium ${actionColors[i.action] || "bg-gray-100"}`}
-              >
-                {i.action}
-              </span>
-            ),
-          },
-          { key: "entity", label: "Entity" },
-          { key: "desc", label: "Description" },
-          {
-            key: "ip",
-            label: "IP",
-            render: (i) => <span className="font-mono text-xs text-gray-500">{i.ip}</span>,
-          },
-          { key: "time", label: "Time", sortable: true },
-        ]}
-        data={logs}
-        pageSize={10}
-      />
-    </div>
+    <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
+      <div>
+        <PageHeader
+          title="Audit Logs"
+          description="Track all system activities"
+          actions={
+            <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm">
+              <Download className="w-4 h-4" />
+              Export
+            </button>
+          }
+        />
+        <DataTable
+          columns={[
+            {
+              key: "user",
+              label: "User",
+              sortable: true,
+              render: (i) => (
+                <div className="flex items-center gap-2">
+                  <UserCircle className="w-5 h-5 text-gray-400" />
+                  <span className="font-medium">{i.user}</span>
+                </div>
+              ),
+            },
+            {
+              key: "action",
+              label: "Action",
+              render: (i) => (
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${actionColors[i.action] || "bg-gray-100"}`}
+                >
+                  {i.action}
+                </span>
+              ),
+            },
+            { key: "entity", label: "Entity" },
+            { key: "desc", label: "Description" },
+            {
+              key: "ip",
+              label: "IP",
+              render: (i) => <span className="font-mono text-xs text-gray-500">{i.ip}</span>,
+            },
+            { key: "time", label: "Time", sortable: true },
+          ]}
+          data={logs}
+          pageSize={10}
+        />
+      </div>
+    </PermissionGuard>
   );
 }
