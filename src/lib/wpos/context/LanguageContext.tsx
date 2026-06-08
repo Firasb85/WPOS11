@@ -22,7 +22,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 const STORAGE_KEY = "wpos_lang";
 
 function getInitialLanguage(): Lang {
-  if (typeof window === "undefined") return "ar";
+  if (typeof window === "undefined") return "en";
 
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -37,16 +37,16 @@ function getInitialLanguage(): Lang {
     // localStorage may be unavailable (SSR, private browsing)
   }
 
-  return "ar";
+  return "en";
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Always start with 'ar' to match SSR; hydrate from localStorage after mount
-  const [lang, setLangState] = useState<Lang>("ar");
+  // Always start with 'en' to match the root SSR shell; hydrate from localStorage after mount
+  const [lang, setLangState] = useState<Lang>("en");
 
   useEffect(() => {
     const initial = getInitialLanguage();
-    if (initial !== "ar") setLangState(initial);
+    if (initial !== "en") setLangState(initial);
   }, []);
 
   const setLang = (next: Lang) => {
