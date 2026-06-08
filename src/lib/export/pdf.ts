@@ -21,6 +21,19 @@ export interface DiagnosticExportData {
   }[];
 }
 
+/**
+ * Sanitize string for safe HTML injection.
+ * Prevents XSS in PDF export.
+ */
+function sanitize(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function exportDiagnosticsPDF(
   reports: DiagnosticExportData[],
   title = "Diagnostic Reports — Executive Review",
@@ -36,23 +49,23 @@ export function exportDiagnosticsPDF(
       (r, idx) => `
     <div class="report ${idx > 0 ? "page-break" : ""}">
       <div class="report-header">
-        <h2>${r.title}</h2>
+        <h2>${sanitize(String(r.title))}</h2>
         <div class="meta-grid">
-          <div class="meta"><span class="label">Employee:</span> ${r.employee}</div>
-          <div class="meta"><span class="label">Department:</span> ${r.department}</div>
-          <div class="meta"><span class="label">Status:</span> <span class="badge badge-${r.status}">${r.status.replace("_", " ")}</span></div>
-          <div class="meta"><span class="label">Maturity:</span> Level ${r.maturity}/5</div>
-          <div class="meta"><span class="label">Confidence:</span> ${r.confidence}%</div>
-          <div class="meta"><span class="label">Date:</span> ${r.date}</div>
+          <div class="meta"><span class="label">Employee:</span> ${sanitize(String(r.employee))}</div>
+          <div class="meta"><span class="label">Department:</span> ${sanitize(String(r.department))}</div>
+          <div class="meta"><span class="label">Status:</span> <span class="badge badge-${sanitize(String(r.status))}">${r.status.replace("_", " ")}</span></div>
+          <div class="meta"><span class="label">Maturity:</span> Level ${sanitize(String(r.maturity))}/5</div>
+          <div class="meta"><span class="label">Confidence:</span> ${sanitize(String(r.confidence))}%</div>
+          <div class="meta"><span class="label">Date:</span> ${sanitize(String(r.date))}</div>
         </div>
       </div>
-      ${r.summary ? `<div class="section"><h3>Performance Summary</h3><p>${r.summary}</p></div>` : ""}
+      ${r.summary ? `<div class="section"><h3>Performance Summary</h3><p>${sanitize(String(r.summary))}</p></div>` : ""}
       ${
         r.hypotheses.length > 0
           ? `<div class="section"><h3>Diagnostic Hypotheses</h3>
           <table>
             <thead><tr><th>#</th><th>Category</th><th>Hypothesis</th><th>Confidence</th></tr></thead>
-            <tbody>${r.hypotheses.map((h) => `<tr><td>${h.rank}</td><td>${h.category.replace("_", " ")}</td><td>${h.hypothesis}</td><td><strong>${h.confidence}%</strong></td></tr>`).join("")}</tbody>
+            <tbody>${r.hypotheses.map((h) => `<tr><td>${sanitize(String(h.rank))}</td><td>${h.category.replace("_", " ")}</td><td>${sanitize(String(h.hypothesis))}</td><td><strong>${sanitize(String(h.confidence))}%</strong></td></tr>`).join("")}</tbody>
           </table></div>`
           : ""
       }

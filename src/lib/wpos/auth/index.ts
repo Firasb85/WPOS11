@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "crypto";
+import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { executeQuery, queryOne } from "../db/client";
 
 interface DbSession {
@@ -20,20 +20,28 @@ interface DbUser {
   theme: string;
 }
 
+/**
+ * Hash password using scrypt (OWASP-recommended).
+ * Replaces SHA-256 which is not suitable for password hashing.
+ */
 export function hashPassword(password: string): string {
-  const salt = randomBytes(16).toString("hex");
-  const hash = createHash("sha256")
-    .update(password + salt)
-    .digest("hex");
+  const salt = randomBytes(32).toString("hex");
+  const hash = scryptSync(password, salt, 64).toString("hex");
   return `${salt}:${hash}`;
 }
 
+/**
+ * Verify password using timing-safe comparison.
+ */
 export function verifyPassword(password: string, storedHash: string): boolean {
   const [salt, hash] = storedHash.split(":");
-  const computedHash = createHash("sha256")
-    .update(password + salt)
-    .digest("hex");
-  return hash === computedHash;
+  if (!salt || !hash) return false;
+  const computedHash = scryptSync(password, salt, 64).toString("hex");
+  try {
+    return timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(computedHash, "hex"));
+  } catch {
+    return false;
+  }
 }
 
 export function generateToken(): string {

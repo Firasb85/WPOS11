@@ -71,7 +71,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     // Extract role from Supabase user metadata or JWT claims
-    const userRole = (authUser.user_metadata?.role || "USER") as AppRole;
+    // SECURITY: Read role from app_metadata first (server-controlled, not user-editable)
+    // Falls back to user_metadata for backward compatibility
+    const userRole = (authUser.app_metadata?.role ||
+      authUser.user_metadata?.role ||
+      "USER") as AppRole;
     setRole(userRole);
 
     // Assign permissions from centralized RBAC config
