@@ -76,12 +76,7 @@ function AdministrationIndexPage() {
     },
   ];
 
-  const stats = [
-    { label: "Total Users", labelAr: "المستخدمون", value: "12" },
-    { label: "Active Roles", labelAr: "الأدوار النشطة", value: "7" },
-    { label: "API Keys", labelAr: "مفاتيح API", value: "3" },
-    { label: "Audit Events Today", labelAr: "أحداث اليوم", value: "84" },
-  ];
+  const stats: Record<string, unknown>[] = [];
 
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>

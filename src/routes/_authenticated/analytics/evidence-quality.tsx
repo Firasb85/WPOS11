@@ -12,35 +12,8 @@ export const Route = createFileRoute("/_authenticated/analytics/evidence-quality
 function EvidenceQualityPage() {
   const { data: evidenceMetrics, isLoading: _evidenceMetricsLoading } = useEvidenceMetrics();
   const l = "ar";
-  const byType = [
-    { label: "System Generated", la: "منشأ من النظام", count: 15, rel: 92 },
-    { label: "Quantitative", la: "كمي", count: 12, rel: 85 },
-    { label: "Qualitative", la: "نوعي", count: 8, rel: 60 },
-    { label: "Behavioral", la: "سلوكي", count: 6, rel: 55 },
-  ];
-  const byVer = [
-    {
-      label: "Verified",
-      la: "موثقة",
-      count: 22,
-      icon: CheckCircle,
-      color: "text-green-600 bg-green-50",
-    },
-    {
-      label: "Pending",
-      la: "قيد الانتظار",
-      count: 8,
-      icon: Clock,
-      color: "text-yellow-600 bg-yellow-50",
-    },
-    {
-      label: "Unverified",
-      la: "غير موثقة",
-      count: 5,
-      icon: XCircle,
-      color: "text-gray-600 bg-gray-50",
-    },
-  ];
+  const byType: Record<string, unknown>[] = [];
+  const byVer: Record<string, unknown>[] = [];
   return (
     <div>
       <PageHeader

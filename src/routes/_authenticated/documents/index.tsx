@@ -8,45 +8,8 @@ export const Route = createFileRoute("/_authenticated/documents/")({ component: 
 function DocumentsPage() {
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
-  const types = [
-    { type: "policy", tA: "سياسة", c: 3 },
-    { type: "sop", tA: "إجراء تشغيلي", c: 5 },
-    { type: "work_instruction", tA: "تعليمات عمل", c: 4 },
-    { type: "training_material", tA: "مادة تدريبية", c: 6 },
-    { type: "evidence_attachment", tA: "مرفق دليل", c: 8 },
-  ];
-  const docs = [
-    {
-      code: "DOC-001",
-      tE: "Attendance Policy",
-      tA: "سياسة الحضور",
-      type: "policy",
-      ver: 3,
-      st: "published",
-      cat: "HR",
-      dt: "2026-05-15",
-    },
-    {
-      code: "DOC-002",
-      tE: "Invoice SOP",
-      tA: "إجراء الفواتير",
-      type: "sop",
-      ver: 2,
-      st: "draft",
-      cat: "Finance",
-      dt: "2026-06-01",
-    },
-    {
-      code: "DOC-003",
-      tE: "System Training Guide",
-      tA: "دليل تدريب النظام",
-      type: "training_material",
-      ver: 1,
-      st: "published",
-      cat: "IT",
-      dt: "2026-05-20",
-    },
-  ];
+  const types: Record<string, unknown>[] = [];
+  const docs: Record<string, unknown>[] = [];
   return (
     <div>
       <PageHeader

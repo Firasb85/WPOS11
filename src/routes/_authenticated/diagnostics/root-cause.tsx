@@ -22,54 +22,9 @@ function RootCauseDashboardPage() {
   const { data: rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const { data: diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
-  const causes = [
-    {
-      la: "Skill Gap",
-      laAr: "فجوة مهارية",
-      c: 12,
-      p: 28,
-      t: "increasing",
-      ch: 15,
-      top: "Data Analysis",
-    },
-    { la: "Process Issue", laAr: "مشكلة إجرائية", c: 10, p: 23, t: "stable", ch: 2, top: "—" },
-    {
-      la: "Knowledge Gap",
-      laAr: "فجوة معرفية",
-      c: 7,
-      p: 16,
-      t: "stable",
-      ch: 1,
-      top: "Product Knowledge",
-    },
-    {
-      la: "Tool Issue",
-      laAr: "مشكلة أدوات",
-      c: 5,
-      p: 12,
-      t: "decreasing",
-      ch: -8,
-      top: "Technical",
-    },
-    { la: "Motivation", laAr: "تحفيز", c: 4, p: 9, t: "increasing", ch: 10, top: "—" },
-    { la: "Management", laAr: "إدارة", c: 3, p: 7, t: "stable", ch: 0, top: "Leadership" },
-    { la: "Resources", laAr: "موارد", c: 2, p: 5, t: "decreasing", ch: -5, top: "—" },
-    { la: "Policy", laAr: "سياسات", c: 1, p: 2, t: "stable", ch: 0, top: "—" },
-  ];
-  const monthly = [
-    { m: "Jan", sk: 5, pr: 4, kn: 3, to: 3, mv: 1 },
-    { m: "Feb", sk: 6, pr: 5, kn: 3, to: 3, mv: 1 },
-    { m: "Mar", sk: 7, pr: 6, kn: 4, to: 4, mv: 2 },
-    { m: "Apr", sk: 9, pr: 7, kn: 5, to: 4, mv: 2 },
-    { m: "May", sk: 10, pr: 8, kn: 5, to: 4, mv: 3 },
-    { m: "Jun", sk: 12, pr: 10, kn: 7, to: 5, mv: 4 },
-  ];
-  const depts = [
-    { d: "Operations", dA: "العمليات", sk: 6, pr: 5, kn: 3, to: 2, total: 16 },
-    { d: "HR", dA: "الموارد البشرية", sk: 2, pr: 1, kn: 2, to: 1, total: 6 },
-    { d: "Finance", dA: "المالية", sk: 3, pr: 2, kn: 1, to: 1, total: 7 },
-    { d: "IT", dA: "تقنية المعلومات", sk: 1, pr: 2, kn: 1, to: 1, total: 5 },
-  ];
+  const causes: Record<string, unknown>[] = [];
+  const monthly: Record<string, unknown>[] = [];
+  const depts: Record<string, unknown>[] = [];
   const TrendIcon = ({ trend }: { trend: string }) =>
     trend === "increasing" ? (
       <ArrowUp className="w-3 h-3 text-red-500" />

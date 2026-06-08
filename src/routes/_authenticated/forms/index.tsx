@@ -8,54 +8,8 @@ export const Route = createFileRoute("/_authenticated/forms/")({ component: Form
 function FormsPage() {
   const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
-  const forms = [
-    {
-      code: "EVIDENCE-Q-001",
-      nE: "Qualitative Evidence Form",
-      nA: "نموذج دليل نوعي",
-      t: "evidence",
-      tA: "دليل",
-      fields: 3,
-      ver: 1,
-      st: true,
-    },
-    {
-      code: "DIAG-001",
-      nE: "Quick Diagnostic Form",
-      nA: "نموذج تشخيص سريع",
-      t: "diagnostic",
-      tA: "تشخيص",
-      fields: 2,
-      ver: 1,
-      st: true,
-    },
-    {
-      code: "ASSESS-001",
-      nE: "Competency Assessment",
-      nA: "تقييم الكفاءة",
-      t: "assessment",
-      tA: "تقييم",
-      fields: 5,
-      ver: 2,
-      st: true,
-    },
-    {
-      code: "AUDIT-001",
-      nE: "Process Audit Form",
-      nA: "نموذج تدقيق العملية",
-      t: "audit",
-      tA: "تدقيق",
-      fields: 8,
-      ver: 1,
-      st: false,
-    },
-  ];
-  const types = [
-    { t: "evidence", tA: "دليل", c: 1 },
-    { t: "diagnostic", tA: "تشخيص", c: 1 },
-    { t: "assessment", tA: "تقييم", c: 1 },
-    { t: "audit", tA: "تدقيق", c: 1 },
-  ];
+  const forms: Record<string, unknown>[] = [];
+  const types: Record<string, unknown>[] = [];
   return (
     <div>
       <PageHeader

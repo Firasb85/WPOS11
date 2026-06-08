@@ -53,12 +53,7 @@ function KpisIndexPage() {
     },
   ];
 
-  const stats = [
-    { label: "Total KPIs", labelAr: "إجمالي المؤشرات", value: "64" },
-    { label: "Categories", labelAr: "الفئات", value: "5" },
-    { label: "On Target", labelAr: "على الهدف", value: "48" },
-    { label: "At Risk", labelAr: "في خطر", value: "16" },
-  ];
+  const stats: Record<string, unknown>[] = [];
 
   return (
     <div>

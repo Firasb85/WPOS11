@@ -24,7 +24,10 @@ export async function exportUserData(userId: string): Promise<void> {
 
   for (const { table, field } of tables) {
     try {
-      const { data } = await supabase.from(table as "employees").select("*").eq(field, userId);
+      const { data } = await supabase
+        .from(table as "employees")
+        .select("*")
+        .eq(field, userId);
       allData[table] = data ?? [];
     } catch {
       allData[table] = [];

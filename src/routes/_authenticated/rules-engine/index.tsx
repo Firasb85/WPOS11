@@ -52,16 +52,7 @@ function RulesEnginePage() {
       acts: ["notifyManagers", "scheduleReview", "priority: high"],
     },
   ];
-  const types = [
-    { v: "all", l: "All Rules", lA: "جميع القواعد" },
-    { v: "diagnostic", l: "Diagnostic", lA: "تشخيص" },
-    { v: "kpi", l: "KPI", lA: "مؤشر" },
-    { v: "escalation", l: "Escalation", lA: "تصعيد" },
-    { v: "workflow", l: "Workflow", lA: "سير عمل" },
-    { v: "notification", l: "Notification", lA: "إشعار" },
-    { v: "maturity", l: "Maturity", lA: "نضج" },
-    { v: "risk", l: "Risk", lA: "مخاطرة" },
-  ];
+  const types: Record<string, unknown>[] = [];
   const filtered = type === "all" ? rules : rules.filter((r) => r.t === type);
   return (
     <div>

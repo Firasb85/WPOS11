@@ -54,12 +54,7 @@ function ProcessIntelligencePage() {
       { from: "p5", to: "p6", type: "sequential", criticality: "high" },
     ],
   };
-  const riskScores = [
-    { name: l === "ar" ? "معالجة الطلبات" : "Order Processing", score: 85, level: "critical" },
-    { name: l === "ar" ? "تسليم الطلبات" : "Order Delivery", score: 78, level: "high" },
-    { name: l === "ar" ? "معالجة الفواتير" : "Invoice Processing", score: 72, level: "high" },
-    { name: l === "ar" ? "التحقق من المخزون" : "Inventory Validation", score: 55, level: "medium" },
-  ];
+  const riskScores: Record<string, unknown>[] = [];
 
   return (
     <div>

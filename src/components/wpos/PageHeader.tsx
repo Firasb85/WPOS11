@@ -1,32 +1,37 @@
-type PageHeaderProps = {
+import type { ReactNode } from "react";
+
+interface PageHeaderProps {
   title: string;
   titleAr?: string;
   description?: string;
   descriptionAr?: string;
-  actions?: React.ReactNode;
-  currentLang?: "ar" | "en";
-};
+  currentLang?: string;
+  actions?: ReactNode;
+}
 
 export function PageHeader({
   title,
   titleAr,
   description,
   descriptionAr,
-  actions,
   currentLang = "en",
+  actions,
 }: PageHeaderProps) {
-  const resolvedTitle = currentLang === "ar" && titleAr ? titleAr : title;
-  const resolvedDescription = currentLang === "ar" && descriptionAr ? descriptionAr : description;
+  const isAr = currentLang === "ar";
 
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{resolvedTitle}</h1>
-        {resolvedDescription && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{resolvedDescription}</p>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+          {isAr && titleAr ? titleAr : title}
+        </h1>
+        {description && (
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            {isAr && descriptionAr ? descriptionAr : description}
+          </p>
         )}
       </div>
-      {actions && <div className="flex items-center gap-3">{actions}</div>}
+      {actions && <div className="flex items-center gap-2 flex-shrink-0">{actions}</div>}
     </div>
   );
 }
