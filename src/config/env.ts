@@ -6,10 +6,10 @@
 import { clientEnvSchema, type ClientEnv } from "./env.schema";
 
 const fallbackClientEnv: ClientEnv = {
-  VITE_SUPABASE_URL: "https://byojycjnbxbhutvclebl.supabase.co",
+  VITE_SUPABASE_URL: "https://nsbmrtohkdttsufxwzdi.supabase.co",
   VITE_SUPABASE_PUBLISHABLE_KEY:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2p5Y2puYnhiaHV0dmNsZWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NjkyMTYsImV4cCI6MjA5NjM0NTIxNn0.LRzpsskUF2bHJbjHgat9fhy1zOCh5sb25_E8aGhkGYc",
-  VITE_SUPABASE_PROJECT_ID: "byojycjnbxbhutvclebl",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zYm1ydG9oa2R0dHN1Znh3emRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTkxNTIsImV4cCI6MjA5NjQzNTE1Mn0.mrjM5EWl_BAAjM8u7mY4nxOLVyTNEnt3ST3k8gl7I8w",
+  VITE_SUPABASE_PROJECT_ID: "nsbmrtohkdttsufxwzdi",
 };
 
 function validateClientEnv(): ClientEnv {
