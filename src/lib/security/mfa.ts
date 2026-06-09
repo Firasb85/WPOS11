@@ -29,10 +29,14 @@ export async function enrollMFA(): Promise<MFAEnrollment> {
 
   if (error) throw new Error(`MFA enrollment failed: ${error.message}`);
 
-  // Generate backup recovery codes
-  const backupCodes = Array.from({ length: 8 }, () =>
-    Math.random().toString(36).substring(2, 8).toUpperCase(),
-  );
+  // Generate cryptographically secure backup recovery codes
+  const backupCodes = Array.from({ length: 8 }, () => {
+    const bytes = crypto.getRandomValues(new Uint8Array(6));
+    return Array.from(bytes)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase();
+  });
 
   return {
     id: data.id,

@@ -18,7 +18,8 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  // Public self-registration disabled — accounts are admin-provisioned only.
+  const mode = "login" as const;
 
   // Redirect if already logged in
   useEffect(() => {
