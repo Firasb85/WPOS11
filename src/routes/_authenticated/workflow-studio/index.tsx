@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { GitBranch, Play, Settings, ArrowRight} from "lucide-react";
+import { GitBranch, Play, Settings, ArrowRight } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/workflow-studio/")({
   component: WorkflowStudioPage,

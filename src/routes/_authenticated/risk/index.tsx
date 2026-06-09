@@ -3,7 +3,7 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Shield, AlertTriangle, Users, Building2} from "lucide-react";
+import { Shield, AlertTriangle, Users, Building2 } from "lucide-react";
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/risk/")({ component: RiskDashboardPage });
 function RiskDashboardPage() {

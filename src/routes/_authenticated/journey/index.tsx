@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { Activity, Stethoscope, Briefcase, ClipboardList, Clock } from "lucide-react";
 import { useEmployeesList } from "@/hooks/useOrganization";

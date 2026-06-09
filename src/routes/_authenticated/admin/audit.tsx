@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useAuditLogs } from "@/hooks/useAdmin";
 import { exportToCSV } from "@/lib/export/csv";

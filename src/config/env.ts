@@ -9,8 +9,7 @@ const processEnv = typeof process !== "undefined" && process.env ? process.env :
 
 const fallbackClientEnv: ClientEnv = {
   VITE_SUPABASE_URL: "https://nsbmrtohkdttsufxwzdi.supabase.co",
-  VITE_SUPABASE_PUBLISHABLE_KEY:
-    "sb_publishable_dXfF2sIngV2Z3wT-_M9t8g_GkxdnHEk",
+  VITE_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_dXfF2sIngV2Z3wT-_M9t8g_GkxdnHEk",
   VITE_SUPABASE_PROJECT_ID: "nsbmrtohkdttsufxwzdi",
 };
 

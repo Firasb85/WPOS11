@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 import {

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";

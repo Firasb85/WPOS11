@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
-import { TrendingUp, DollarSign, Target, Award} from "lucide-react";
+import { TrendingUp, DollarSign, Target, Award } from "lucide-react";
 import { useInterventionLibrary } from "@/hooks/useCases";
 export const Route = createFileRoute("/_authenticated/interventions/effectiveness")({
   component: EffectivenessPage,

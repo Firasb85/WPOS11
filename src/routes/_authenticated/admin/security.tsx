@@ -4,7 +4,7 @@ import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { FormSelect } from "~/components/wpos/FormInput";
-import { Save, Lock, Globe} from "lucide-react";
+import { Save, Lock, Globe } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/security")({ component: SecurityPage });
 function SecurityPage() {

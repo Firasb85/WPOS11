@@ -3,7 +3,7 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { FormSelect, FormTextarea } from "~/components/wpos/FormInput";
-import { Plus, Play} from "lucide-react";
+import { Plus, Play } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/rules-engine/")({

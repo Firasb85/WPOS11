@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, Key, Copy, Clock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";

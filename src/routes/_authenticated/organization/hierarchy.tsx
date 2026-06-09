@@ -11,7 +11,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
-import { useCompanies, useBranches} from "@/hooks/useOrganization";
+import { useCompanies, useBranches } from "@/hooks/useOrganization";
 
 export const Route = createFileRoute("/_authenticated/organization/hierarchy")({
   component: HierarchyPage,

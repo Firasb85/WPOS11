@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card} from "~/components/wpos/Card";
+import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Building, GitBranch, Building2, Users, UserCircle, GitFork } from "lucide-react";
 import {
