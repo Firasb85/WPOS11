@@ -3,6 +3,7 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Building, GitBranch, Building2, Users, UserCircle, GitFork } from "lucide-react";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import {
   useCompanies,
   useBranches,
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/organization/")({
 });
 
 function OrganizationIndexPage() {
+  const { t } = useLanguage();
   const { data: _companies, isLoading: _companiesLoading } = useCompanies();
   const { data: _branches } = useBranches();
   const { data: _depts } = useDepartments();

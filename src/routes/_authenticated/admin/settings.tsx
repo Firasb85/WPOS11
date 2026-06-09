@@ -5,13 +5,15 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { Save } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/admin/settings")({ component: SettingsPage });
 function SettingsPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>
-        <PageHeader title="System Settings" description="Configure system preferences" />
+        <PageHeader title={t("System Settings", "إعدادات النظام")} description="Configure system preferences" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
@@ -87,9 +89,9 @@ function SettingsPage() {
                   className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm"
                   defaultValue="medium"
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
+                  <option value="low">{t("Low", "منخفض")}</option>
+                  <option value="medium">{t("Medium", "متوسط")}</option>
+                  <option value="high">{t("High", "مرتفع")}</option>
                 </select>
               </div>
             </div>

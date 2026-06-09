@@ -5,10 +5,12 @@ import { KpiTreeView } from "~/components/wpos/visualizations/KpiTreeView";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { Share2, TrendingUp, GitBranch, Layers } from "lucide-react";
 import { useKpis, useKpiCategories } from "@/hooks/useKpis";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/kpis/tree")({ component: KpiTreePage });
 
 function KpiTreePage() {
+  const { t } = useLanguage();
   const { data: _kpis, isLoading: _kpisLoading } = useKpis();
   const { data: _cats } = useKpiCategories();
   const l = "ar";

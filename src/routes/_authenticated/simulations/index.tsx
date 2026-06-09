@@ -6,10 +6,12 @@ import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { FormSelect, FormInput } from "~/components/wpos/FormInput";
 import { Play, Brain, DollarSign, TrendingUp, Target } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/simulations/")({
   component: SimulationsPage,
 });
 function SimulationsPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const scenarios = [
@@ -48,7 +50,7 @@ function SimulationsPage() {
         currentLang={l}
       />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <StatsCard title="Simulations" titleAr="محاكات" value="3" icon={<Play />} currentLang={l} />
+        <StatsCard title={t("Simulations", "المحاكاة")} titleAr="محاكات" value="3" icon={<Play />} currentLang={l} />
         <StatsCard
           title="Avg Confidence"
           titleAr="متوسط الثقة"

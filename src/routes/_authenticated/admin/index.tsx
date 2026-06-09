@@ -6,12 +6,14 @@ import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Users, Shield, ScrollText, Settings, Key } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdministrationIndexPage,
 });
 
 function AdministrationIndexPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const sections = [
     {
@@ -87,7 +89,7 @@ function AdministrationIndexPage() {
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>
         <PageHeader
-          title="Administration"
+          title={t("Administration", "الإدارة")}
           titleAr="الإدارة"
           description="System administration and configuration"
           descriptionAr="إدارة وتكوين النظام"

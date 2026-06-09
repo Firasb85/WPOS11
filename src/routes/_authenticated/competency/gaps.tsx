@@ -4,12 +4,14 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { HeatmapGrid } from "~/components/wpos/visualizations/HeatmapGrid";
 import { Brain, AlertTriangle, TrendingUp, Users, Download } from "lucide-react";
 import { useEmployeeCompetencies } from "@/hooks/useCompetencies";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/competency/gaps")({
   component: CompetencyGapsPage,
 });
 
 function CompetencyGapsPage() {
+  const { t } = useLanguage();
   const { data: _empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const currentLang = "ar";
   const heatmapData = [
@@ -100,7 +102,7 @@ function CompetencyGapsPage() {
   return (
     <div>
       <PageHeader
-        title="Competency Gap Analysis"
+        title={t("Competency Gap Analysis", "تحليل فجوات الكفاءات")}
         titleAr="تحليل فجوات الكفاءات"
         description="Identify and analyze competency gaps"
         descriptionAr="تحديد وتحليل فجوات الكفاءات"

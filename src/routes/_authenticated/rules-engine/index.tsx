@@ -6,10 +6,12 @@ import { FormSelect, FormTextarea } from "~/components/wpos/FormInput";
 import { Plus, Play } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/rules-engine/")({
   component: RulesEnginePage,
 });
 function RulesEnginePage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [type, setType] = useState("all");
@@ -139,7 +141,7 @@ function RulesEnginePage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-gray-500 mb-1">Actions</p>
+                  <p className="text-xs font-medium text-gray-500 mb-1">{t("Actions", "الإجراءات")}</p>
                   <div className="space-y-1">
                     {r.acts.map((a, j) => (
                       <div

@@ -4,12 +4,14 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { Shield, CheckCircle, XCircle, Clock, TrendingUp } from "lucide-react";
 import { useEvidenceMetrics } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/analytics/evidence-quality")({
   component: EvidenceQualityPage,
 });
 
 function EvidenceQualityPage() {
+  const { t } = useLanguage();
   const { data: _evidenceMetrics, isLoading: _evidenceMetricsLoading } = useEvidenceMetrics();
   const l = "ar";
   const byType = [
@@ -44,7 +46,7 @@ function EvidenceQualityPage() {
   return (
     <div>
       <PageHeader
-        title="Evidence Quality"
+        title={t("Evidence Quality", "جودة الأدلة")}
         titleAr="جودة الأدلة"
         description="Analyze evidence reliability and verification"
         descriptionAr="تحليل موثوقية الأدلة"

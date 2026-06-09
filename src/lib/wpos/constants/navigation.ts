@@ -626,6 +626,15 @@ export const navigation: SecureNavItem[] = [
     ],
   },
 
+  {
+    label: "My Profile",
+    labelAr: "ملفي الشخصي",
+    href: "/profile",
+    icon: "UserCircle",
+    module: "profile",
+    moduleKey: "profile",
+    /* All roles can see their profile */
+  },
   /* ────────────────── NOTIFICATIONS ────────────────── */
   {
     label: "Notifications",
@@ -637,6 +646,15 @@ export const navigation: SecureNavItem[] = [
     /* All roles can see notifications */
   },
 
+  {
+    label: "HR Integrations",
+    labelAr: "تكامل الموارد البشرية",
+    href: "/integrations",
+    icon: "Link2",
+    module: "integrations",
+    moduleKey: "integrations",
+    allowedRoles: ["ADMIN", "CEO"],
+  },
   /* ────────────────── ADMINISTRATION ────────────────── */
   {
     label: "Administration",

@@ -6,10 +6,12 @@ import { KpiTreeView } from "~/components/wpos/visualizations/KpiTreeView";
 import { Share2, Search, ArrowDown, AlertTriangle } from "lucide-react";
 import { useKpis } from "@/hooks/useKpis";
 import { useKpiRelationships } from "@/hooks/useAdmin";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/kpis/dependency")({
   component: KpiDependencyPage,
 });
 function KpiDependencyPage() {
+  const { t } = useLanguage();
   const { data: _relationships, isLoading: _relLoading } = useKpiRelationships();
   const { data: _kpis, isLoading: _kpisLoading } = useKpis();
   const l = "ar";

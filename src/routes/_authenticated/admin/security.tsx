@@ -6,8 +6,10 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { Save, Lock, Globe } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/admin/security")({ component: SecurityPage });
 function SecurityPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   return (

@@ -61,6 +61,7 @@ import {
   TrendingUp,
   ClipboardList,
   Layout,
+  Link2,
 } from "lucide-react";
 import { navigation, type SecureNavItem, type Role } from "@/lib/wpos/constants/navigation";
 import { APP_NAME } from "@/lib/constants";
@@ -121,6 +122,7 @@ const iconMap: Record<string, LucideIcon> = {
   TrendingUp,
   ClipboardList,
   Layout,
+  Link2,
 };
 
 interface SidebarProps {
@@ -158,7 +160,7 @@ function filterNav(items: SecureNavItem[], userRole: Role): SecureNavItem[] {
 
 export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProps) {
   const location = useLocation();
-  const { lang, t } = useLanguage();
+  const { lang, t, isRTL } = useLanguage();
   const { role, signOut } = useAuth();
 
   /* Cast role to our Role type — useAuth returns string */
@@ -268,7 +270,7 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
         />
       )}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${isOpen ? "w-64" : "w-0 lg:w-16"} overflow-hidden lg:overflow-visible`}
+        className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} z-50 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${isOpen ? "w-64" : "w-0 lg:w-16"} overflow-hidden lg:overflow-visible`}
         role="navigation"
         aria-label="Main navigation"
       >
@@ -294,7 +296,7 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
         {/* Collapse toggle */}
         <button
           onClick={onToggle}
-          className="hidden lg:flex absolute top-4 -right-3 w-6 h-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full items-center justify-center shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 z-10"
+          className={`hidden lg:flex absolute top-4 ${isRTL ? "-left-3" : "-right-3"} w-6 h-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full items-center justify-center shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 z-10`}
           aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
           {isOpen ? (

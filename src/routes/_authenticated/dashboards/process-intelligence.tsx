@@ -6,12 +6,14 @@ import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { DependencyGraph } from "~/components/wpos/visualizations/DependencyGraph";
 import { GitBranch, AlertTriangle, Shield, TrendingUp } from "lucide-react";
 import { useProcesses } from "@/hooks/useProcesses";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/dashboards/process-intelligence")({
   component: ProcessIntelligencePage,
 });
 
 function ProcessIntelligencePage() {
+  const { t } = useLanguage();
   const { data: _processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const graph = {
@@ -64,7 +66,7 @@ function ProcessIntelligencePage() {
   return (
     <div>
       <PageHeader
-        title="Process Intelligence"
+        title={t("Process Intelligence", "ذكاء العمليات")}
         titleAr="لوحة ذكاء العمليات"
         description="Process dependency analysis"
         descriptionAr="تحليل تبعيات العمليات"

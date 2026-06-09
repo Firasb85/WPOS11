@@ -3,10 +3,12 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { Database, RefreshCw, BarChart3, Search } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/data-catalog/")({
   component: DataCatalogPage,
 });
 function DataCatalogPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const entries = [

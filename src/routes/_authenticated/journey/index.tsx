@@ -4,8 +4,10 @@ import { Card } from "~/components/wpos/Card";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { Activity, Stethoscope, Briefcase, ClipboardList, Clock } from "lucide-react";
 import { useEmployeesList } from "@/hooks/useOrganization";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/journey/")({ component: JourneyPage });
 function JourneyPage() {
+  const { t } = useLanguage();
   const { data: _employees, isLoading: _employeesLoading } = useEmployeesList({ pageSize: 50 });
   const l = "ar";
   const entries = [
@@ -63,7 +65,7 @@ function JourneyPage() {
   return (
     <div>
       <PageHeader
-        title="Performance Journey"
+        title={t("Performance Journey", "رحلة الأداء")}
         titleAr="رحلة الأداء"
         description="Timeline view of employee performance development"
         descriptionAr="عرض زمني لتطوير أداء الموظف"

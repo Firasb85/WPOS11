@@ -4,10 +4,12 @@ import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Tags, Gauge, Share2 } from "lucide-react";
 import { useKpiCategories, useKpis } from "@/hooks/useKpis";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/kpis/")({ component: KpisIndexPage });
 
 function KpisIndexPage() {
+  const { t } = useLanguage();
   const { data: _categories, isLoading: _categoriesLoading } = useKpiCategories();
   const { data: _kpis } = useKpis();
   const sections = [

@@ -4,12 +4,14 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { TrendingUp, TrendingDown, Brain } from "lucide-react";
 import { useEmployeeCompetencies } from "@/hooks/useCompetencies";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/analytics/competency-trends")({
   component: CompetencyTrendsPage,
 });
 
 function CompetencyTrendsPage() {
+  const { t } = useLanguage();
   const { data: _empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const l = "ar";
   const trends = [
@@ -29,7 +31,7 @@ function CompetencyTrendsPage() {
   return (
     <div>
       <PageHeader
-        title="Competency Trends"
+        title={t("Competency Trends", "اتجاهات الكفاءات")}
         titleAr="اتجاهات الكفاءات"
         description="Track gap evolution over time"
         descriptionAr="تتبع تطور الفجوات"

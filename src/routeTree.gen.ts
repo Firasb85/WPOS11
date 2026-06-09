@@ -20,6 +20,7 @@ import { Route as AuthenticatedSaasIndexRouteImport } from './routes/_authentica
 import { Route as AuthenticatedRulesEngineIndexRouteImport } from './routes/_authenticated/rules-engine/index'
 import { Route as AuthenticatedRiskIndexRouteImport } from './routes/_authenticated/risk/index'
 import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
+import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile/index'
 import { Route as AuthenticatedProcessesIndexRouteImport } from './routes/_authenticated/processes/index'
 import { Route as AuthenticatedProcessEngineeringIndexRouteImport } from './routes/_authenticated/process-engineering/index'
 import { Route as AuthenticatedPortfolioIndexRouteImport } from './routes/_authenticated/portfolio/index'
@@ -33,6 +34,7 @@ import { Route as AuthenticatedKnowledgeGraphIndexRouteImport } from './routes/_
 import { Route as AuthenticatedJourneyIndexRouteImport } from './routes/_authenticated/journey/index'
 import { Route as AuthenticatedJobsIndexRouteImport } from './routes/_authenticated/jobs/index'
 import { Route as AuthenticatedInterventionsIndexRouteImport } from './routes/_authenticated/interventions/index'
+import { Route as AuthenticatedIntegrationsIndexRouteImport } from './routes/_authenticated/integrations/index'
 import { Route as AuthenticatedFormsIndexRouteImport } from './routes/_authenticated/forms/index'
 import { Route as AuthenticatedFollowUpIndexRouteImport } from './routes/_authenticated/follow-up/index'
 import { Route as AuthenticatedExecutiveIndexRouteImport } from './routes/_authenticated/executive/index'
@@ -162,6 +164,12 @@ const AuthenticatedReportsIndexRoute =
     path: '/reports/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedProfileIndexRoute =
+  AuthenticatedProfileIndexRouteImport.update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedProcessesIndexRoute =
   AuthenticatedProcessesIndexRouteImport.update({
     id: '/processes/',
@@ -236,6 +244,12 @@ const AuthenticatedInterventionsIndexRoute =
   AuthenticatedInterventionsIndexRouteImport.update({
     id: '/interventions/',
     path: '/interventions/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedIntegrationsIndexRoute =
+  AuthenticatedIntegrationsIndexRouteImport.update({
+    id: '/integrations/',
+    path: '/integrations/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedFormsIndexRoute = AuthenticatedFormsIndexRouteImport.update({
@@ -705,6 +719,7 @@ export interface FileRoutesByFullPath {
   '/executive/': typeof AuthenticatedExecutiveIndexRoute
   '/follow-up/': typeof AuthenticatedFollowUpIndexRoute
   '/forms/': typeof AuthenticatedFormsIndexRoute
+  '/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/interventions/': typeof AuthenticatedInterventionsIndexRoute
   '/jobs/': typeof AuthenticatedJobsIndexRoute
   '/journey/': typeof AuthenticatedJourneyIndexRoute
@@ -718,6 +733,7 @@ export interface FileRoutesByFullPath {
   '/portfolio/': typeof AuthenticatedPortfolioIndexRoute
   '/process-engineering/': typeof AuthenticatedProcessEngineeringIndexRoute
   '/processes/': typeof AuthenticatedProcessesIndexRoute
+  '/profile/': typeof AuthenticatedProfileIndexRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
   '/risk/': typeof AuthenticatedRiskIndexRoute
   '/rules-engine/': typeof AuthenticatedRulesEngineIndexRoute
@@ -798,6 +814,7 @@ export interface FileRoutesByTo {
   '/executive': typeof AuthenticatedExecutiveIndexRoute
   '/follow-up': typeof AuthenticatedFollowUpIndexRoute
   '/forms': typeof AuthenticatedFormsIndexRoute
+  '/integrations': typeof AuthenticatedIntegrationsIndexRoute
   '/interventions': typeof AuthenticatedInterventionsIndexRoute
   '/jobs': typeof AuthenticatedJobsIndexRoute
   '/journey': typeof AuthenticatedJourneyIndexRoute
@@ -811,6 +828,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof AuthenticatedPortfolioIndexRoute
   '/process-engineering': typeof AuthenticatedProcessEngineeringIndexRoute
   '/processes': typeof AuthenticatedProcessesIndexRoute
+  '/profile': typeof AuthenticatedProfileIndexRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
   '/risk': typeof AuthenticatedRiskIndexRoute
   '/rules-engine': typeof AuthenticatedRulesEngineIndexRoute
@@ -893,6 +911,7 @@ export interface FileRoutesById {
   '/_authenticated/executive/': typeof AuthenticatedExecutiveIndexRoute
   '/_authenticated/follow-up/': typeof AuthenticatedFollowUpIndexRoute
   '/_authenticated/forms/': typeof AuthenticatedFormsIndexRoute
+  '/_authenticated/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/_authenticated/interventions/': typeof AuthenticatedInterventionsIndexRoute
   '/_authenticated/jobs/': typeof AuthenticatedJobsIndexRoute
   '/_authenticated/journey/': typeof AuthenticatedJourneyIndexRoute
@@ -906,6 +925,7 @@ export interface FileRoutesById {
   '/_authenticated/portfolio/': typeof AuthenticatedPortfolioIndexRoute
   '/_authenticated/process-engineering/': typeof AuthenticatedProcessEngineeringIndexRoute
   '/_authenticated/processes/': typeof AuthenticatedProcessesIndexRoute
+  '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
   '/_authenticated/risk/': typeof AuthenticatedRiskIndexRoute
   '/_authenticated/rules-engine/': typeof AuthenticatedRulesEngineIndexRoute
@@ -988,6 +1008,7 @@ export interface FileRouteTypes {
     | '/executive/'
     | '/follow-up/'
     | '/forms/'
+    | '/integrations/'
     | '/interventions/'
     | '/jobs/'
     | '/journey/'
@@ -1001,6 +1022,7 @@ export interface FileRouteTypes {
     | '/portfolio/'
     | '/process-engineering/'
     | '/processes/'
+    | '/profile/'
     | '/reports/'
     | '/risk/'
     | '/rules-engine/'
@@ -1081,6 +1103,7 @@ export interface FileRouteTypes {
     | '/executive'
     | '/follow-up'
     | '/forms'
+    | '/integrations'
     | '/interventions'
     | '/jobs'
     | '/journey'
@@ -1094,6 +1117,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/process-engineering'
     | '/processes'
+    | '/profile'
     | '/reports'
     | '/risk'
     | '/rules-engine'
@@ -1175,6 +1199,7 @@ export interface FileRouteTypes {
     | '/_authenticated/executive/'
     | '/_authenticated/follow-up/'
     | '/_authenticated/forms/'
+    | '/_authenticated/integrations/'
     | '/_authenticated/interventions/'
     | '/_authenticated/jobs/'
     | '/_authenticated/journey/'
@@ -1188,6 +1213,7 @@ export interface FileRouteTypes {
     | '/_authenticated/portfolio/'
     | '/_authenticated/process-engineering/'
     | '/_authenticated/processes/'
+    | '/_authenticated/profile/'
     | '/_authenticated/reports/'
     | '/_authenticated/risk/'
     | '/_authenticated/rules-engine/'
@@ -1286,6 +1312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/profile/': {
+      id: '/_authenticated/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/processes/': {
       id: '/_authenticated/processes/'
       path: '/processes'
@@ -1375,6 +1408,13 @@ declare module '@tanstack/react-router' {
       path: '/interventions'
       fullPath: '/interventions/'
       preLoaderRoute: typeof AuthenticatedInterventionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/integrations/': {
+      id: '/_authenticated/integrations/'
+      path: '/integrations'
+      fullPath: '/integrations/'
+      preLoaderRoute: typeof AuthenticatedIntegrationsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/forms/': {
@@ -1922,6 +1962,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedExecutiveIndexRoute: typeof AuthenticatedExecutiveIndexRoute
   AuthenticatedFollowUpIndexRoute: typeof AuthenticatedFollowUpIndexRoute
   AuthenticatedFormsIndexRoute: typeof AuthenticatedFormsIndexRoute
+  AuthenticatedIntegrationsIndexRoute: typeof AuthenticatedIntegrationsIndexRoute
   AuthenticatedInterventionsIndexRoute: typeof AuthenticatedInterventionsIndexRoute
   AuthenticatedJobsIndexRoute: typeof AuthenticatedJobsIndexRoute
   AuthenticatedJourneyIndexRoute: typeof AuthenticatedJourneyIndexRoute
@@ -1935,6 +1976,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedPortfolioIndexRoute: typeof AuthenticatedPortfolioIndexRoute
   AuthenticatedProcessEngineeringIndexRoute: typeof AuthenticatedProcessEngineeringIndexRoute
   AuthenticatedProcessesIndexRoute: typeof AuthenticatedProcessesIndexRoute
+  AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
   AuthenticatedReportsIndexRoute: typeof AuthenticatedReportsIndexRoute
   AuthenticatedRiskIndexRoute: typeof AuthenticatedRiskIndexRoute
   AuthenticatedRulesEngineIndexRoute: typeof AuthenticatedRulesEngineIndexRoute
@@ -2029,6 +2071,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedExecutiveIndexRoute: AuthenticatedExecutiveIndexRoute,
   AuthenticatedFollowUpIndexRoute: AuthenticatedFollowUpIndexRoute,
   AuthenticatedFormsIndexRoute: AuthenticatedFormsIndexRoute,
+  AuthenticatedIntegrationsIndexRoute: AuthenticatedIntegrationsIndexRoute,
   AuthenticatedInterventionsIndexRoute: AuthenticatedInterventionsIndexRoute,
   AuthenticatedJobsIndexRoute: AuthenticatedJobsIndexRoute,
   AuthenticatedJourneyIndexRoute: AuthenticatedJourneyIndexRoute,
@@ -2043,6 +2086,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedProcessEngineeringIndexRoute:
     AuthenticatedProcessEngineeringIndexRoute,
   AuthenticatedProcessesIndexRoute: AuthenticatedProcessesIndexRoute,
+  AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
   AuthenticatedReportsIndexRoute: AuthenticatedReportsIndexRoute,
   AuthenticatedRiskIndexRoute: AuthenticatedRiskIndexRoute,
   AuthenticatedRulesEngineIndexRoute: AuthenticatedRulesEngineIndexRoute,
@@ -2070,3 +2114,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

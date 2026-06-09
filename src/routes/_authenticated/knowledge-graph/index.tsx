@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import { useProcesses } from "@/hooks/useProcesses";
 import { useKpis } from "@/hooks/useKpis";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/knowledge-graph/")({
   component: KnowledgeGraphPage,
 });
 function KnowledgeGraphPage() {
+  const { t } = useLanguage();
   const { data: _processes, isLoading: _processesLoading } = useProcesses();
   const { data: _kpis } = useKpis();
   const l = "ar";
@@ -73,7 +75,7 @@ function KnowledgeGraphPage() {
   return (
     <div>
       <PageHeader
-        title="Knowledge Graph"
+        title={t("Knowledge Graph", "الرسم المعرفي")}
         titleAr="الرسم البياني المعرفي"
         description="Relationship mapping across all WPOS entities"
         descriptionAr="رسم خرائط العلاقات عبر جميع كيانات WPOS"

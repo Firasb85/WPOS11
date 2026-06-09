@@ -7,10 +7,12 @@ import { Shield, Plus, Check, Lock } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useRoles, usePermissions } from "@/hooks/useAdmin";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/admin/roles")({
   component: RoleManagementPage,
 });
 function RoleManagementPage() {
+  const { t } = useLanguage();
   const { data: _rolesData, isLoading: _rolesLoading } = useRoles();
   const { data: _permsData } = usePermissions();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
@@ -57,7 +59,7 @@ function RoleManagementPage() {
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>
         <PageHeader
-          title="Role Management"
+          title={t("Role Management", "إدارة الأدوار")}
           description="Manage roles and permissions"
           actions={
             <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">

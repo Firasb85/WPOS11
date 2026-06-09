@@ -14,11 +14,13 @@ import {
   Building2,
 } from "lucide-react";
 import { useRootCauseMetrics, useDiagnosticMetrics } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/diagnostics/root-cause")({
   component: RootCauseDashboardPage,
 });
 function RootCauseDashboardPage() {
+  const { t } = useLanguage();
   const { data: _rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const { data: _diagMetrics } = useDiagnosticMetrics();
   const l = "ar";

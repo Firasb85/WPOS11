@@ -7,8 +7,10 @@ import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, Key, Copy, Clock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/api-keys/")({ component: ApiKeysPage });
 function ApiKeysPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [showKey, setShowKey] = useState<string | null>(null);
@@ -42,7 +44,7 @@ function ApiKeysPage() {
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>
         <PageHeader
-          title="API Keys"
+          title={t("API Keys", "مفاتيح API")}
           titleAr="مفاتيح API"
           description="Manage API integrations for ERP, HR, CRM, and BI systems"
           descriptionAr="إدارة تكاملات API لأنظمة ERP و HR و CRM و BI"

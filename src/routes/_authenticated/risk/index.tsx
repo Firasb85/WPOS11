@@ -5,8 +5,10 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Shield, AlertTriangle, Users, Building2 } from "lucide-react";
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/risk/")({ component: RiskDashboardPage });
 function RiskDashboardPage() {
+  const { t } = useLanguage();
   const { data: _deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
   const deptScores = [

@@ -5,10 +5,12 @@ import { FormSelect } from "~/components/wpos/FormInput";
 import { BookOpen, Search, AlertTriangle, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useRootCauseMetrics } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/cases/root-causes")({
   component: RootCauseKBPage,
 });
 function RootCauseKBPage() {
+  const { t } = useLanguage();
   const { data: _rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const l = "ar";
   const [cat, setCat] = useState("all");
@@ -75,7 +77,7 @@ function RootCauseKBPage() {
   return (
     <div>
       <PageHeader
-        title="Root Cause Knowledge Base"
+        title={t("Root Cause Knowledge Base", "قاعدة معرفة الأسباب الجذرية")}
         titleAr="قاعدة المعرفة للأسباب الجذرية"
         description="Library of identified root causes with indicators and validation methods"
         descriptionAr="مكتبة الأسباب الجذرية مع المؤشرات وطرق التحقق"

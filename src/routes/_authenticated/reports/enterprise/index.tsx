@@ -14,10 +14,12 @@ import {
 } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/reports/enterprise/")({
   component: EnterpriseReportsPage,
 });
 function EnterpriseReportsPage() {
+  const { t } = useLanguage();
   const { data: _ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
   const { data: _diagMetrics } = useDiagnosticMetrics();
   const l = "ar";
@@ -76,7 +78,7 @@ function EnterpriseReportsPage() {
   return (
     <div>
       <PageHeader
-        title="Enterprise Reports"
+        title={t("Enterprise Reports", "تقارير المؤسسة")}
         titleAr="التقارير المؤسسية"
         description="Board, executive, operational, risk, and maturity reports"
         descriptionAr="تقارير مجلس الإدارة والتنفيذيين والعمليات والمخاطر والنضج"

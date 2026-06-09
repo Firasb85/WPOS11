@@ -4,8 +4,10 @@ import { Card } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Calendar, Minus } from "lucide-react";
 import { useCases } from "@/hooks/useCases";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/follow-up/")({ component: FollowUpPage });
 function FollowUpPage() {
+  const { t } = useLanguage();
   const { data: _cases, isLoading: _casesLoading } = useCases();
   const l = "ar";
   const items = [

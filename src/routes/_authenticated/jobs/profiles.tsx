@@ -5,10 +5,12 @@ import { Plus, FileText, Briefcase, Award } from "lucide-react";
 import { useState } from "react";
 import { useJobs } from "@/hooks/useJobs";
 import { useJobProfiles } from "@/hooks/useAdmin";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/jobs/profiles")({
   component: JobProfilesPage,
 });
 function JobProfilesPage() {
+  const { t } = useLanguage();
   const { data: _profilesData, isLoading: _profLoading } = useJobProfiles();
   const { data: _jobs, isLoading: _jobsLoading } = useJobs();
   const [selected, setSelected] = useState<string | null>("1");
@@ -42,7 +44,7 @@ function JobProfilesPage() {
   return (
     <div>
       <PageHeader
-        title="Job Profiles"
+        title={t("Job Profiles", "الملفات الوظيفية")}
         description="Manage job profiles"
         actions={
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">

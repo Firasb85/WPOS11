@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useCompanies, useBranches } from "@/hooks/useOrganization";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/organization/hierarchy")({
   component: HierarchyPage,
@@ -76,6 +77,7 @@ function Node({ node, depth = 0 }: { node: OrgNode; depth?: number }) {
 }
 
 function HierarchyPage() {
+  const { t } = useLanguage();
   const { data: _companies, isLoading: _companiesLoading } = useCompanies();
   const { data: _branches } = useBranches();
   const tree: OrgNode = {
@@ -149,7 +151,7 @@ function HierarchyPage() {
   return (
     <div>
       <PageHeader
-        title="Organization Hierarchy"
+        title={t("Organization Hierarchy", "التسلسل الهرمي")}
         description="Visualize the organizational structure"
       />
       <Card>

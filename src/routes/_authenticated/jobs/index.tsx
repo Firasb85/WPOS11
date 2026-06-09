@@ -4,12 +4,14 @@ import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { FolderTree, Layers, FileText, Briefcase } from "lucide-react";
 import { useJobFamilies, useJobGrades, useJobs } from "@/hooks/useJobs";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/jobs/")({
   component: JobArchitectureIndexPage,
 });
 
 function JobArchitectureIndexPage() {
+  const { t } = useLanguage();
   const { data: _families, isLoading: _familiesLoading } = useJobFamilies();
   const { data: _grades } = useJobGrades();
   const { data: _jobs } = useJobs();
@@ -66,7 +68,7 @@ function JobArchitectureIndexPage() {
   return (
     <div>
       <PageHeader
-        title="Job Architecture"
+        title={t("Job Architecture", "هيكل الوظائف")}
         titleAr="هيكل الوظائف"
         description="Design and manage your job classification framework"
         descriptionAr="تصميم وإدارة إطار تصنيف الوظائف"

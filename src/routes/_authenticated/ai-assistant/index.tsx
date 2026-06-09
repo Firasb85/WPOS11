@@ -14,10 +14,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/ai-assistant/")({
   component: AiAssistantPage,
 });
 function AiAssistantPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [mode, setMode] = useState("summarize");
@@ -38,7 +40,7 @@ function AiAssistantPage() {
   return (
     <div>
       <PageHeader
-        title="AI Assistant"
+        title={t("AI Assistant", "المساعد الذكي")}
         titleAr="المساعد الذكي"
         description="AI-powered insights — all outputs require human validation"
         descriptionAr="رؤى مدعومة بالذكاء الاصطناعي — جميع المخرجات تتطلب التحقق البشري"

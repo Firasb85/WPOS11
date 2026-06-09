@@ -3,6 +3,7 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { MaturityBadge } from "~/components/wpos/MaturityBadge";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import {
   Briefcase,
   AlertTriangle,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/cases/$id")({ component: CaseDetailPage });
 function CaseDetailPage() {
+  const { t } = useLanguage();
   // Real data hook - needs route param
   // const { data: caseData, isLoading: _caseDataLoading } = useCase(id);
   const l = "ar";

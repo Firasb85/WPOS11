@@ -5,10 +5,12 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Search, AlertTriangle, CheckCircle, ArrowRight, ArrowUp } from "lucide-react";
 import { useProcesses } from "@/hooks/useProcesses";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/process-engineering/mining")({
   component: ProcessMiningPage,
 });
 function ProcessMiningPage() {
+  const { t } = useLanguage();
   const { data: _processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const results = [
@@ -49,7 +51,7 @@ function ProcessMiningPage() {
   return (
     <div>
       <PageHeader
-        title="Process Mining"
+        title={t("Process Mining", "تعدين العمليات")}
         titleAr="تعدين العمليات"
         description="Compare expected vs actual process execution to detect bottlenecks"
         descriptionAr="مقارنة التنفيذ المتوقع مع الفعلي لاكتشاف الاختناقات"

@@ -37,6 +37,8 @@ const DEFAULT_VISIBILITY: ModuleVisibilityConfig = {
   notifications: true,
   admin: true,
   advanced: true,
+  profile: true,
+  integrations: true,
 };
 
 export function getModuleVisibility(): ModuleVisibilityConfig {

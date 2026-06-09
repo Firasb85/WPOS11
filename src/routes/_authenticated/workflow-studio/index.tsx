@@ -4,10 +4,12 @@ import { Card } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { GitBranch, Play, Settings, ArrowRight } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/workflow-studio/")({
   component: WorkflowStudioPage,
 });
 function WorkflowStudioPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const workflows = [
@@ -18,7 +20,7 @@ function WorkflowStudioPage() {
   return (
     <div>
       <PageHeader
-        title="Workflow Studio"
+        title={t("Workflow Studio", "استوديو سير العمل")}
         titleAr="استوديو سير العمل"
         description="Visual workflow designer with simulation and versioning"
         descriptionAr="مصمم سير عمل بصري مع المحاكاة وإدارة الإصدارات"

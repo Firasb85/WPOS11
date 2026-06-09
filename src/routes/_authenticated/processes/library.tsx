@@ -5,10 +5,12 @@ import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, GitMerge, AlertTriangle, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { useProcesses } from "@/hooks/useProcesses";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/processes/library")({
   component: ProcessLibraryPage,
 });
 function ProcessLibraryPage() {
+  const { t } = useLanguage();
   const { data: _processesData, isLoading: _processesDataLoading } = useProcesses();
   const [selected, setSelected] = useState<string | null>("1");
   const processes = [
@@ -74,7 +76,7 @@ function ProcessLibraryPage() {
   return (
     <div>
       <PageHeader
-        title="Process Library"
+        title={t("Process Library", "مكتبة العمليات")}
         description="Manage business processes"
         actions={
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">

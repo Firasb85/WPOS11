@@ -3,6 +3,7 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { useCeoDashboard } from "@/hooks/useDashboard";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import {
   Building2,
   GitBranch,
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/_authenticated/digital-twin/")({
   component: DigitalTwinPage,
 });
 function DigitalTwinPage() {
+  const { t } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const entities = [
@@ -109,7 +111,7 @@ function DigitalTwinPage() {
           currentLang={l}
         />
         <StatsCard
-          title="Active"
+          title={t("Active", "نشط")}
           titleAr="نشط"
           value="74"
           icon={<Building2 />}

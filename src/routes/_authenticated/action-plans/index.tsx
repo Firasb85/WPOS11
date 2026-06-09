@@ -4,10 +4,12 @@ import { Card } from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Plus, Calendar } from "lucide-react";
 import { useCases } from "@/hooks/useCases";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/action-plans/")({
   component: ActionPlansPage,
 });
 function ActionPlansPage() {
+  const { t } = useLanguage();
   const { data: _cases, isLoading: _casesLoading } = useCases();
   const l = "ar";
   const plans = [
@@ -45,7 +47,7 @@ function ActionPlansPage() {
   return (
     <div>
       <PageHeader
-        title="Action Plans"
+        title={t("Action Plans", "خطط العمل")}
         titleAr="خطط العمل"
         description="Track action items across all open cases"
         descriptionAr="تتبع إجراءات العمل عبر جميع الحالات المفتوحة"

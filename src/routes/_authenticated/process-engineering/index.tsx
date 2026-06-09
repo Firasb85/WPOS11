@@ -5,10 +5,12 @@ import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { Play, AlertTriangle, CheckCircle, Clock, Activity } from "lucide-react";
 import { useProcesses } from "@/hooks/useProcesses";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/process-engineering/")({
   component: ProcessEngineeringPage,
 });
 function ProcessEngineeringPage() {
+  const { t } = useLanguage();
   const { data: _processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const executions = [
@@ -110,7 +112,7 @@ function ProcessEngineeringPage() {
           currentLang={l}
         />
         <StatsCard
-          title="Completed"
+          title={t("Completed", "مكتمل")}
           titleAr="مكتملة"
           value="42"
           icon={<CheckCircle />}

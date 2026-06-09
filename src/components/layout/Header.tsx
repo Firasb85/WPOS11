@@ -1,7 +1,7 @@
 import { Menu, Search, Bell, User, Globe, LogOut } from "lucide-react";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, useNavigate } from "@tanstack/react-router";
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -11,6 +11,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const { lang, setLang, t } = useLanguage();
   const { user, role, signOut } = useAuth();
   const router = useRouter();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await signOut();
@@ -71,7 +72,8 @@ export function Header({ onMenuToggle }: HeaderProps) {
             <p className="text-xs text-gray-500 capitalize">{displayRole}</p>
           </div>
           <button
-            className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center"
+            onClick={() => navigate({ to: "/profile" })}
+            className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
             aria-label="User profile"
           >
             <User className="w-5 h-5 text-white" aria-hidden="true" />

@@ -4,10 +4,12 @@ import { Card } from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { FileSearch, FileBarChart, Download } from "lucide-react";
 import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 
 export const Route = createFileRoute("/_authenticated/reports/")({ component: ReportsIndexPage });
 
 function ReportsIndexPage() {
+  const { t } = useLanguage();
   const { data: _diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
   const sections = [
     {
@@ -59,7 +61,7 @@ function ReportsIndexPage() {
   return (
     <div>
       <PageHeader
-        title="Reports"
+        title={t("Reports", "التقارير")}
         titleAr="التقارير"
         description="Generate and manage performance reports"
         descriptionAr="إنشاء وإدارة تقارير الأداء"
