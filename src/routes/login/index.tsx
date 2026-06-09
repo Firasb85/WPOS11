@@ -3,9 +3,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { APP_NAME, APP_NAME_FULL } from "@/lib/constants";
+import { clientEnv } from "@/config/env";
 import { Eye, EyeOff, LogIn, AlertCircle } from "lucide-react";
 
-export const Route = createFileRoute("/login/")({
+export const Route = createFileRoute("/login/")(
+  {
   component: LoginPage,
 });
 
@@ -18,7 +20,6 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {
       navigate({ to: "/dashboard/ceo", replace: true });
@@ -31,23 +32,23 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
 
       if (authError) {
-        if (authError.message.includes("Invalid login")) {
-          setError("Invalid email or password. Please try again.");
-        } else if (authError.message.includes("Email not confirmed")) {
-          setError("Please check your email and confirm your account before signing in.");
-        } else {
-          setError(authError.message);
-        }
+        const project = clientEnv.VITE_SUPABASE_URL.replace("https://", "").replace(".supabase.co", "");
+        setError(authError.message + " [project: " + project + "]");
         return;
       }
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
+
+      if (!data.session) {
+        setError("Login succeeded but no session was returned.");
+        return;
+      }
+    } catch (err) {
+      setError("Unexpected: " + (err instanceof Error ? err.message : String(err)));
     } finally {
       setLoading(false);
     }
@@ -60,6 +61,8 @@ function LoginPage() {
       </div>
     );
   }
+
+  const projectId = clientEnv.VITE_SUPABASE_PROJECT_ID || "unknown";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
@@ -86,10 +89,7 @@ function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 Email address
               </label>
               <input
@@ -97,7 +97,7 @@ function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
+                placeholder="admin@wpos.com"
                 required
                 autoComplete="email"
                 className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -105,10 +105,7 @@ function LoginPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -117,7 +114,7 @@ function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter password"
                   required
                   autoComplete="current-password"
                   minLength={6}
@@ -148,15 +145,29 @@ function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-center">
-            <p className="text-sm text-gray-500">
-              Accounts are provisioned by your administrator. Contact your admin for access.
-            </p>
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+            <p className="text-xs text-gray-400 mb-2 text-center">Quick Login (Test Accounts)</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: "Admin", e: "admin@wpos.com", p: "Admin@123" },
+                { label: "CEO", e: "ceo@wpos.com", p: "Ceo@12345" },
+                { label: "Manager", e: "manager@wpos.com", p: "Manager@1" },
+              ].map((acc) => (
+                <button
+                  key={acc.e}
+                  type="button"
+                  onClick={() => { setEmail(acc.e); setPassword(acc.p); }}
+                  className="text-xs py-1.5 px-2 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
+                >
+                  {acc.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          WPOS v1.0.0 · Workforce Performance Operating System
+          WPOS v1.0.0 &middot; {projectId === "nsbmrtohkdttsufxwzdi" ? "\u2705" : "\u26A0\uFE0F"} {projectId.substring(0, 8)}&hellip;
         </p>
       </div>
     </div>
