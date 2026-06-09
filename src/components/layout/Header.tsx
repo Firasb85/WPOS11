@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export function Header({ onMenuToggle }: HeaderProps) {
   const { lang, setLang, t } = useLanguage();
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -18,7 +18,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
   };
 
   const displayName = user?.user_metadata?.first_name || user?.email?.split("@")[0] || "User";
-  const displayRole = (user?.user_metadata?.role as string) || "User";
+  const displayRole = role.toLowerCase().replace(/_/g, " ");
 
   return (
     <header
