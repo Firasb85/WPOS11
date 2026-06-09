@@ -168,6 +168,7 @@ function AuditLogsPage() {
           actions={
             <div className="flex gap-2">
               <button
+                aria-label="Toggle filters"
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm ${showFilters ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}
               >

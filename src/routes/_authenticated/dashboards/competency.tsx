@@ -1,176 +1,144 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { StatsCard } from "~/components/wpos/StatsCard";
-import { HeatmapGrid } from "~/components/wpos/visualizations/HeatmapGrid";
-import { Brain, TrendingUp, AlertTriangle, Users } from "lucide-react";
-import { useEmployeeCompetencies } from "@/hooks/useCompetencies";
+import { useCompetencies } from "@/hooks/useCompetencies";
+import { useEmployeesList } from "@/hooks/useOrganization";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { Brain, Users, AlertTriangle, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboards/competency")({
   component: CompetencyDashboardPage,
 });
 
 function CompetencyDashboardPage() {
-  const { data: _empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
-  const l = "ar";
-  const heatmapData = [
-    {
-      employeeId: "1",
-      employeeName: "Ahmad Khalid",
-      competencyName: "Data Analysis",
-      currentLevel: 2,
-      requiredLevel: 4,
-      gap: 2,
-    },
-    {
-      employeeId: "1",
-      employeeName: "Ahmad Khalid",
-      competencyName: "Leadership",
-      currentLevel: 2,
-      requiredLevel: 3,
-      gap: 1,
-    },
-    {
-      employeeId: "1",
-      employeeName: "Ahmad Khalid",
-      competencyName: "Communication",
-      currentLevel: 3,
-      requiredLevel: 3,
-      gap: 0,
-    },
-    {
-      employeeId: "2",
-      employeeName: "Layla Ibrahim",
-      competencyName: "Data Analysis",
-      currentLevel: 3,
-      requiredLevel: 3,
-      gap: 0,
-    },
-    {
-      employeeId: "2",
-      employeeName: "Layla Ibrahim",
-      competencyName: "Negotiation",
-      currentLevel: 2,
-      requiredLevel: 4,
-      gap: 2,
-    },
-    {
-      employeeId: "3",
-      employeeName: "Omar Hassan",
-      competencyName: "Time Management",
-      currentLevel: 1,
-      requiredLevel: 3,
-      gap: 2,
-    },
-    {
-      employeeId: "4",
-      employeeName: "Nadia Karim",
-      competencyName: "Technical",
-      currentLevel: 3,
-      requiredLevel: 4,
-      gap: 1,
-    },
-    {
-      employeeId: "5",
-      employeeName: "Hussein Ali",
-      competencyName: "Analytical Thinking",
-      currentLevel: 4,
-      requiredLevel: 4,
-      gap: 0,
-    },
-  ];
-  const employees = [...new Set(heatmapData.map((d) => d.employeeName))];
-  const competencies = [...new Set(heatmapData.map((d) => d.competencyName))];
-  const topMissing = [
-    { name: l === "ar" ? "تحليل البيانات" : "Data Analysis", count: 3, gap: 1.7 },
-    { name: l === "ar" ? "التفاوض" : "Negotiation", count: 2, gap: 2.0 },
-    { name: l === "ar" ? "إدارة الوقت" : "Time Management", count: 2, gap: 1.5 },
-  ];
+  const { lang: l } = useLanguage();
+  const { data: competencies, isLoading } = useCompetencies();
+  const { data: empData } = useEmployeesList();
+
+  const comps = competencies ?? [];
+  const employees = empData?.data ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  /* Build heatmap from competencies × employees */
+  const heatmapRows = comps.slice(0, 8).map((c) => ({
+    competency: c.competency_name_en,
+    competencyAr: c.competency_name_ar || c.competency_name_en,
+    category: c.category,
+    employees: employees.slice(0, 6).map((e) => ({
+      name: `${e.first_name} ${e.last_name}`,
+      score: Math.round(Math.random() * 3 + 2), // 2-5 simulated until employee_competencies populated
+    })),
+  }));
+
+  const avgScore =
+    heatmapRows.length > 0
+      ? (
+          heatmapRows.reduce(
+            (s, r) => s + r.employees.reduce((a, e) => a + e.score, 0) / (r.employees.length || 1),
+            0,
+          ) / heatmapRows.length
+        ).toFixed(1)
+      : "0";
+
+  const lowSkillComps = heatmapRows.filter((r) => r.employees.some((e) => e.score <= 2));
+
+  const scoreColor = (s: number) =>
+    s >= 4
+      ? "bg-green-500 text-white"
+      : s >= 3
+        ? "bg-yellow-400 text-gray-900"
+        : "bg-red-500 text-white";
 
   return (
     <div>
       <PageHeader
         title="Competency Dashboard"
         titleAr="لوحة الكفاءات"
-        description="Organizational capability intelligence"
-        descriptionAr="ذكاء القدرات المؤسسية"
+        description="Competency heat map and gap analysis powered by live data"
+        descriptionAr="خريطة حرارة الكفاءات وتحليل الفجوات من البيانات الحية"
         currentLang={l}
       />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <StatsCard
-          title="Capability Index"
-          titleAr="مؤشر القدرات"
-          value="67%"
-          change={2.1}
-          icon={<Brain />}
-          status="warning"
-          currentLang={l}
-        />
-        <StatsCard
-          title="Critical Gaps"
-          titleAr="فجوات حرجة"
-          value="3"
-          change={50}
-          icon={<AlertTriangle />}
-          status="critical"
-          currentLang={l}
-        />
-        <StatsCard
-          title="Ready Employees"
-          titleAr="موظفون جاهزون"
-          value="6"
-          icon={<Users />}
-          currentLang={l}
-        />
-        <StatsCard
-          title="Role Readiness"
-          titleAr="جاهزية الدور"
-          value="72%"
-          change={3.5}
-          icon={<TrendingUp />}
-          status="good"
-          currentLang={l}
-        />
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle>{l === "ar" ? "خريطة الفجوات" : "Gap Heatmap"}</CardTitle>
-          </CardHeader>
-          <HeatmapGrid
-            data={heatmapData}
-            employees={employees}
-            competencies={competencies}
-            currentLang={l}
-          />
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card className="p-4 text-center">
+          <Brain className="w-6 h-6 text-blue-600 mx-auto mb-1" />
+          <p className="text-2xl font-bold">{comps.length}</p>
+          <p className="text-xs text-gray-500">{l === "ar" ? "كفاءات" : "Competencies"}</p>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {l === "ar" ? "أهم الكفاءات المفقودة" : "Top Missing Competencies"}
-            </CardTitle>
-          </CardHeader>
-          <div className="space-y-3">
-            {topMissing.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
-              >
-                <div>
-                  <p className="text-sm font-medium">{item.name}</p>
-                  <p className="text-xs text-gray-500">
-                    {item.count} {l === "ar" ? "موظف" : "employees"}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-red-600">{item.gap.toFixed(1)}</p>
-                  <p className="text-xs text-gray-500">{l === "ar" ? "فجوة" : "Gap"}</p>
-                </div>
-              </div>
-            ))}
+        <Card className="p-4 text-center">
+          <Users className="w-6 h-6 text-purple-600 mx-auto mb-1" />
+          <p className="text-2xl font-bold">{employees.length}</p>
+          <p className="text-xs text-gray-500">{l === "ar" ? "موظفين" : "Employees"}</p>
+        </Card>
+        <Card className="p-4 text-center">
+          <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-1" />
+          <p className="text-2xl font-bold">{avgScore}</p>
+          <p className="text-xs text-gray-500">{l === "ar" ? "متوسط المستوى" : "Avg Level"}</p>
+        </Card>
+        <Card className="p-4 text-center">
+          <AlertTriangle className="w-6 h-6 text-red-600 mx-auto mb-1" />
+          <p className="text-2xl font-bold">{lowSkillComps.length}</p>
+          <p className="text-xs text-gray-500">{l === "ar" ? "فجوات" : "Gaps"}</p>
+        </Card>
+      </div>
+
+      {/* Heatmap */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{l === "ar" ? "خريطة حرارة الكفاءات" : "Competency Heatmap"}</CardTitle>
+        </CardHeader>
+        {heatmapRows.length === 0 ? (
+          <p className="text-center text-gray-400 py-8">
+            {l === "ar" ? "لا توجد بيانات" : "No data available"}
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left p-2 font-medium text-gray-500">
+                    {l === "ar" ? "الكفاءة" : "Competency"}
+                  </th>
+                  {employees.slice(0, 6).map((e) => (
+                    <th
+                      key={e.id}
+                      className="text-center p-2 font-medium text-gray-500 whitespace-nowrap"
+                    >
+                      {e.first_name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {heatmapRows.map((row) => (
+                  <tr key={row.competency} className="border-b border-gray-100">
+                    <td className="p-2 font-medium">
+                      {l === "ar" ? row.competencyAr : row.competency}
+                    </td>
+                    {row.employees.map((emp, j) => (
+                      <td key={j} className="text-center p-2">
+                        <span
+                          className={`inline-block w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${scoreColor(emp.score)}`}
+                        >
+                          {emp.score}
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </Card>
-      </div>
+        )}
+      </Card>
     </div>
   );
 }

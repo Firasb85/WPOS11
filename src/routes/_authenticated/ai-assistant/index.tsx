@@ -60,6 +60,7 @@ function AiAssistantPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-2">
           <button
+            aria-label="Action"
             onClick={() => setMode("summarize")}
             className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "summarize" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
           >
@@ -72,6 +73,7 @@ function AiAssistantPage() {
             </p>
           </button>
           <button
+            aria-label="Action"
             onClick={() => setMode("explain")}
             className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "explain" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
           >
@@ -84,6 +86,7 @@ function AiAssistantPage() {
             </p>
           </button>
           <button
+            aria-label="Action"
             onClick={() => setMode("compare")}
             className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "compare" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
           >
@@ -94,6 +97,7 @@ function AiAssistantPage() {
             </p>
           </button>
           <button
+            aria-label="Action"
             onClick={() => setMode("insights")}
             className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "insights" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
           >

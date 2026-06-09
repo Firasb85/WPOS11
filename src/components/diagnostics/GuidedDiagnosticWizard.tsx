@@ -207,6 +207,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
             </div>
           </div>
           <button
+            aria-label="Close"
             onClick={onClose}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
           >
@@ -270,6 +271,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {underperformers.map((emp) => (
                       <button
+                        aria-label="Action"
                         key={emp.id}
                         onClick={() => setSelectedEmployee(emp.id)}
                         className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${selectedEmployee === emp.id ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20" : "border-red-200 bg-red-50/50 hover:border-red-300"}`}
@@ -415,6 +417,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                   </select>
                 </div>
                 <button
+                  aria-label="Add item"
                   onClick={addEvidence}
                   disabled={!evSource.trim() || !evDesc.trim()}
                   className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-40"
@@ -586,6 +589,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
 
           {step < 4 ? (
             <button
+              aria-label="Expand sidebar"
               onClick={() => setStep(step + 1)}
               disabled={!canProceed()}
               className="flex items-center gap-1.5 px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-40 hover:bg-blue-700"
@@ -595,6 +599,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
             </button>
           ) : (
             <button
+              aria-label="Action"
               onClick={handleSubmit}
               disabled={isSubmitting || !title.trim()}
               className="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-40 hover:bg-blue-700"

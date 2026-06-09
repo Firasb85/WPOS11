@@ -2,35 +2,125 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 import {
-  LayoutDashboard, Building2, Briefcase, GitMerge, Gauge, Camera,
-  ClipboardCheck, Stethoscope, FileBarChart, Settings, ChevronDown,
-  ChevronLeft, ChevronRight, X, Building, GitBranch, Users, UserCircle,
-  GitFork, FolderTree, Layers, FileText, Library, ListOrdered, Tags,
-  List, PlusCircle, Upload, FileSearch, Download, Shield, ScrollText,
-  BarChart3, LogOut, Moon, Sun, Brain, Activity, CreditCard, Zap, Cpu,
-  Play, AlertTriangle, Share2, Grid3x3, Monitor, Target, FolderOpen,
-  Database, Bell, Award, Clock, Key, Bot, Search, BookOpen, TrendingUp,
-  ClipboardList, Layout,
+  LayoutDashboard,
+  Building2,
+  Briefcase,
+  GitMerge,
+  Gauge,
+  Camera,
+  ClipboardCheck,
+  Stethoscope,
+  FileBarChart,
+  Settings,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Building,
+  GitBranch,
+  Users,
+  UserCircle,
+  GitFork,
+  FolderTree,
+  Layers,
+  FileText,
+  Library,
+  ListOrdered,
+  Tags,
+  List,
+  PlusCircle,
+  Upload,
+  FileSearch,
+  Download,
+  Shield,
+  ScrollText,
+  BarChart3,
+  LogOut,
+  Moon,
+  Sun,
+  Brain,
+  Activity,
+  CreditCard,
+  Zap,
+  Cpu,
+  Play,
+  AlertTriangle,
+  Share2,
+  Grid3x3,
+  Monitor,
+  Target,
+  FolderOpen,
+  Database,
+  Bell,
+  Award,
+  Clock,
+  Key,
+  Bot,
+  Search,
+  BookOpen,
+  TrendingUp,
+  ClipboardList,
+  Layout,
 } from "lucide-react";
-import {
-  navigation,
-  type SecureNavItem,
-  type Role,
-} from "@/lib/wpos/constants/navigation";
+import { navigation, type SecureNavItem, type Role } from "@/lib/wpos/constants/navigation";
 import { APP_NAME } from "@/lib/constants";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { isModuleVisible } from "@/lib/stores/module-visibility";
 
 const iconMap: Record<string, LucideIcon> = {
-  LayoutDashboard, Building2, Briefcase, GitMerge, Gauge, Camera,
-  ClipboardCheck, Stethoscope, FileBarChart, Settings, Building,
-  GitBranch, Users, UserCircle, GitFork, FolderTree, Layers, FileText,
-  Library, ListOrdered, Tags, List, PlusCircle, Upload, FileSearch,
-  Download, Shield, ScrollText, BarChart3, Brain, Activity, CreditCard,
-  Zap, Cpu, Play, AlertTriangle, Share2, Grid3x3, Monitor, Target,
-  FolderOpen, Database, Bell, Award, Clock, Key, Bot, Search, BookOpen,
-  TrendingUp, ClipboardList, Layout,
+  LayoutDashboard,
+  Building2,
+  Briefcase,
+  GitMerge,
+  Gauge,
+  Camera,
+  ClipboardCheck,
+  Stethoscope,
+  FileBarChart,
+  Settings,
+  Building,
+  GitBranch,
+  Users,
+  UserCircle,
+  GitFork,
+  FolderTree,
+  Layers,
+  FileText,
+  Library,
+  ListOrdered,
+  Tags,
+  List,
+  PlusCircle,
+  Upload,
+  FileSearch,
+  Download,
+  Shield,
+  ScrollText,
+  BarChart3,
+  Brain,
+  Activity,
+  CreditCard,
+  Zap,
+  Cpu,
+  Play,
+  AlertTriangle,
+  Share2,
+  Grid3x3,
+  Monitor,
+  Target,
+  FolderOpen,
+  Database,
+  Bell,
+  Award,
+  Clock,
+  Key,
+  Bot,
+  Search,
+  BookOpen,
+  TrendingUp,
+  ClipboardList,
+  Layout,
 };
 
 interface SidebarProps {
@@ -72,7 +162,9 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
   const { role, signOut } = useAuth();
 
   /* Cast role to our Role type — useAuth returns string */
-  const userRole: Role = (["ADMIN", "CEO", "MANAGER", "USER"].includes(role) ? role : "USER") as Role;
+  const userRole: Role = (
+    ["ADMIN", "CEO", "MANAGER", "USER"].includes(role) ? role : "USER"
+  ) as Role;
 
   /* Filter navigation based on role + module visibility */
   const visibleNav = filterNav(navigation, userRole);
@@ -104,7 +196,8 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
     setExpanded((p) => (p.includes(href) ? p.filter((i) => i !== href) : [...p, href]));
 
   const isActive = (item: SecureNavItem): boolean => {
-    if (location.pathname === item.href || location.pathname.startsWith(item.href + "/")) return true;
+    if (location.pathname === item.href || location.pathname.startsWith(item.href + "/"))
+      return true;
     if (item.children) return item.children.some((c) => isActive(c));
     return false;
   };
@@ -129,14 +222,19 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
             type="button"
             className={`${cls} w-full`}
             style={{ paddingLeft: `${depth * 12 + 12}px` }}
-            onClick={(e) => { e.preventDefault(); toggle(item.href); }}
+            onClick={(e) => {
+              e.preventDefault();
+              toggle(item.href);
+            }}
             aria-expanded={open}
           >
             <Icon className="w-5 h-5 flex-shrink-0" />
             {isOpen && (
               <>
                 <span className="flex-1 truncate text-left">{label}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
+                />
               </>
             )}
           </button>
@@ -147,9 +245,7 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
           </Link>
         )}
         {hasKids && open && isOpen && (
-          <div className="mt-0.5">
-            {item.children!.map((c) => renderItem(c, depth + 1))}
-          </div>
+          <div className="mt-0.5">{item.children!.map((c) => renderItem(c, depth + 1))}</div>
         )}
       </div>
     );
@@ -165,7 +261,11 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={onToggle} role="presentation" />
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onToggle}
+          role="presentation"
+        />
       )}
       <aside
         className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${isOpen ? "w-64" : "w-0 lg:w-16"} overflow-hidden lg:overflow-visible`}
@@ -177,9 +277,15 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">WP</span>
           </div>
-          {isOpen && <span className="font-bold text-gray-900 dark:text-white text-lg">{APP_NAME}</span>}
           {isOpen && (
-            <button onClick={onToggle} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden ml-auto" aria-label="Close sidebar">
+            <span className="font-bold text-gray-900 dark:text-white text-lg">{APP_NAME}</span>
+          )}
+          {isOpen && (
+            <button
+              onClick={onToggle}
+              className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden ml-auto"
+              aria-label="Close sidebar"
+            >
               <X className="w-5 h-5 text-gray-500" />
             </button>
           )}
@@ -191,18 +297,22 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
           className="hidden lg:flex absolute top-4 -right-3 w-6 h-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full items-center justify-center shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 z-10"
           aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
-          {isOpen ? <ChevronLeft className="w-3.5 h-3.5 text-gray-500" /> : <ChevronRight className="w-3.5 h-3.5 text-gray-500" />}
+          {isOpen ? (
+            <ChevronLeft className="w-3.5 h-3.5 text-gray-500" />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
+          )}
         </button>
 
         {/* Role badge */}
         {isOpen && (
           <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge[userRole] || badge.USER}`}>
+            <span
+              className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge[userRole] || badge.USER}`}
+            >
               {userRole}
             </span>
-            <span className="text-xs text-gray-400 truncate">
-              {visibleNav.length} modules
-            </span>
+            <span className="text-xs text-gray-400 truncate">{visibleNav.length} modules</span>
           </div>
         )}
 

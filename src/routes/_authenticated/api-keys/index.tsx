@@ -85,6 +85,7 @@ function ApiKeysPage() {
                         {k.prefix}_****_****
                       </span>
                       <button
+                        aria-label="Hide password"
                         onClick={() => setShowKey(showKey === k.prefix ? null : k.prefix)}
                         className="text-gray-400 hover:text-gray-600"
                       >
@@ -94,7 +95,10 @@ function ApiKeysPage() {
                           <Eye className="w-3.5 h-3.5" />
                         )}
                       </button>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button
+                        aria-label="Copy to clipboard"
+                        className="text-gray-400 hover:text-gray-600"
+                      >
                         <Copy className="w-3.5 h-3.5" />
                       </button>
                     </div>

@@ -8,6 +8,7 @@ import { useEvidence, useCreateEvidence } from "@/hooks/useDiagnosticWorkflow";
 import { useCreateDiagnostic, useGenerateHypotheses } from "@/hooks/useDiagnosticWorkflow";
 import { useAuth } from "@/hooks/useAuth";
 import { Stethoscope, Plus, Brain, FileText, Upload } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/diagnostics/new")({
   component: NewDiagnosticPage,
@@ -84,6 +85,7 @@ function NewDiagnosticPage() {
       reportId,
       employeeId: formData.employee_id,
     });
+    toast.success("Saved successfully");
     navigate({ to: "/diagnostics" });
   };
 
@@ -297,6 +299,7 @@ function NewDiagnosticPage() {
                 </select>
               </div>
               <button
+                aria-label="Add item"
                 type="submit"
                 disabled={createEvidence.isPending}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
@@ -382,6 +385,7 @@ function NewDiagnosticPage() {
               {t("Back", "رجوع")}
             </button>
             <button
+              aria-label="Action"
               onClick={handleGenerate}
               disabled={generateHypotheses.isPending}
               className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"

@@ -6,6 +6,7 @@ import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useEmployeesList } from "@/hooks/useOrganization";
 import { useKpis, useCreateSnapshot } from "@/hooks/useKpis";
 import { Save, Calculator } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/snapshots/new")({
   component: NewSnapshotPage,
@@ -43,6 +44,7 @@ function NewSnapshotPage() {
       target_value: target,
       actual_value: actual,
     });
+    toast.success("Saved successfully");
     navigate({ to: "/snapshots" });
   };
 
@@ -152,6 +154,7 @@ function NewSnapshotPage() {
                   {t("Cancel", "إلغاء")}
                 </button>
                 <button
+                  aria-label="Save"
                   type="submit"
                   disabled={createMutation.isPending}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"

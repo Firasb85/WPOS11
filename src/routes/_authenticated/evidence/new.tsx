@@ -7,6 +7,7 @@ import { useEmployeesList } from "@/hooks/useOrganization";
 import { useCreateEvidence } from "@/hooks/useDiagnosticWorkflow";
 import { useAuth } from "@/hooks/useAuth";
 import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/evidence/new")({
   component: NewEvidencePage,
@@ -35,6 +36,7 @@ function NewEvidencePage() {
       ...formData,
       submitted_by: user?.id ?? null,
     });
+    toast.success("Saved successfully");
     navigate({ to: "/evidence" });
   };
 
@@ -150,6 +152,7 @@ function NewEvidencePage() {
               {t("Cancel", "إلغاء")}
             </button>
             <button
+              aria-label="Upload"
               type="submit"
               disabled={createMutation.isPending}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"

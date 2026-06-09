@@ -98,10 +98,10 @@ function FormsPage() {
                 </div>
               </div>
               <div className="flex gap-1">
-                <button className="p-1.5 rounded hover:bg-gray-100">
+                <button aria-label="Show password" className="p-1.5 rounded hover:bg-gray-100">
                   <Eye className="w-4 h-4 text-gray-400" />
                 </button>
-                <button className="p-1.5 rounded hover:bg-gray-100">
+                <button aria-label="Action" className="p-1.5 rounded hover:bg-gray-100">
                   <Layout className="w-4 h-4 text-gray-400" />
                 </button>
               </div>

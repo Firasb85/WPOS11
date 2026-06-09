@@ -138,6 +138,7 @@ function DiagnosticReportPage() {
           <div className="ml-auto flex gap-2">
             {report.status === "draft" && (
               <button
+                aria-label="Send message"
                 onClick={handleSubmit}
                 disabled={submitForReview.isPending}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
@@ -151,6 +152,7 @@ function DiagnosticReportPage() {
             {report.status === "under_review" && (
               <>
                 <button
+                  aria-label="Action"
                   onClick={handleApprove}
                   disabled={approveMutation.isPending}
                   className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"

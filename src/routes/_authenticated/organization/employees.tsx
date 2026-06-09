@@ -12,7 +12,8 @@ import {
   useCreateEmployee,
   useDeleteEmployee,
 } from "@/hooks/useOrganization";
-import { Plus, UserCircle, Trash2 } from "lucide-react";
+import { Plus, UserCircle, Trash2, Pencil } from "lucide-react";
+import { EditModal } from "@/components/wpos/EditModal";
 
 export const Route = createFileRoute("/_authenticated/organization/employees")({
   component: EmployeesPage,
@@ -26,6 +27,7 @@ function EmployeesPage() {
   const createMutation = useCreateEmployee();
   const deleteMutation = useDeleteEmployee();
   const [showForm, setShowForm] = useState(false);
+  const [editEmployee, setEditEmployee] = useState<Record<string, string> | null>(null);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -69,6 +71,26 @@ function EmployeesPage() {
       } catch (err) {
         toast.error("Failed to delete: " + (err instanceof Error ? err.message : "Unknown error"));
       }
+    }
+  };
+
+  const handleEdit = async (formData: Record<string, string>) => {
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { error } = await supabase
+        .from("employees")
+        .update({
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          email: formData.email,
+          phone: formData.phone,
+          employment_status: formData.employment_status,
+        })
+        .eq("id", formData.id);
+      if (error) throw error;
+      toast.success("Employee updated successfully");
+    } catch {
+      toast.error("Failed to update employee");
     }
   };
 
@@ -269,6 +291,31 @@ function EmployeesPage() {
           </button>
         </div>
       )}
+      {/* Edit Modal */}
+      <EditModal
+        isOpen={!!editEmployee}
+        onClose={() => setEditEmployee(null)}
+        onSave={handleEdit}
+        title="Edit Employee"
+        initialData={editEmployee || undefined}
+        fields={[
+          { key: "first_name", label: "First Name", required: true },
+          { key: "last_name", label: "Last Name", required: true },
+          { key: "email", label: "Email", type: "email" },
+          { key: "phone", label: "Phone", type: "tel" },
+          {
+            key: "employment_status",
+            label: "Status",
+            type: "select",
+            options: [
+              { value: "active", label: "Active" },
+              { value: "inactive", label: "Inactive" },
+              { value: "on_leave", label: "On Leave" },
+              { value: "terminated", label: "Terminated" },
+            ],
+          },
+        ]}
+      />
     </div>
   );
 }

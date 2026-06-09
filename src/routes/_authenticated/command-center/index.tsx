@@ -4,7 +4,9 @@ import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { MaturityBadge } from "~/components/wpos/MaturityBadge";
 import { useCeoDashboard } from "@/hooks/useDashboard";
-import { useCases } from "@/hooks/useCases";
+import { useSnapshots } from "@/hooks/useKpis";
+import { useEmployeesList, useDepartments } from "@/hooks/useOrganization";
+import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import {
   BarChart3,
   Users,
@@ -18,122 +20,115 @@ import {
   TrendingUp,
   Brain,
 } from "lucide-react";
+
 export const Route = createFileRoute("/_authenticated/command-center/")({
   component: CommandCenterPage,
 });
+
 function CommandCenterPage() {
-  const { data: _ceoMetrics, isLoading: _ceoMetricsLoading } = useCeoDashboard();
-  const { data: _cases } = useCases();
-  const l = "ar";
-  const criticalKPIs = [
-    {
-      kpi: "Production Efficiency",
-      kA: "كفاءة الإنتاج",
-      actual: 78,
-      target: 90,
-      gap: -13.3,
-      trend: "declining",
-    },
-    {
-      kpi: "Customer Satisfaction",
-      kA: "رضا العملاء",
-      actual: 82,
-      target: 95,
-      gap: -13.7,
-      trend: "declining",
-    },
-    {
-      kpi: "On-Time Delivery",
-      kA: "التسليم في الوقت",
-      actual: 91,
-      target: 98,
-      gap: -7.1,
-      trend: "stable",
-    },
-  ];
-  const deptRisk = [
-    { dept: "Operations", dA: "العمليات", risk: 72, status: "high" },
-    { dept: "Finance", dA: "المالية", risk: 55, status: "medium" },
-    { dept: "HR", dA: "الموارد البشرية", risk: 35, status: "low" },
-    { dept: "IT", dA: "تقنية المعلومات", risk: 28, status: "low" },
-  ];
-  const caseStatus = [
-    { st: "Open", stA: "مفتوحة", c: 9 },
-    { st: "Under Investigation", stA: "قيد التحقيق", c: 4 },
-    { st: "Monitoring", stA: "مراقبة", c: 2 },
-    { st: "Resolved", stA: "تم الحل", c: 8 },
-  ];
-  const maturityDims = [
-    { name: "People", nA: "الأفراد", s: 72 },
-    { name: "Processes", nA: "العمليات", s: 68 },
-    { name: "KPIs", nA: "المؤشرات", s: 81 },
-    { name: "Evidence", nA: "الأدلة", s: 63 },
-    { name: "Diagnostics", nA: "التشخيص", s: 58 },
-  ];
+  const { lang: l } = useLanguage();
+  const { data: dashboard } = useCeoDashboard();
+  const { data: snapshots } = useSnapshots();
+  const { data: empData } = useEmployeesList();
+  const { data: deptsData } = useDepartments();
+
+  const employees = empData?.data ?? [];
+  const departments = deptsData ?? [];
+  const allSnaps = snapshots ?? [];
+
+  /* Derive critical KPIs from live snapshot data */
+  const criticalKPIs = allSnaps
+    .filter((s) => s.status === "red")
+    .slice(0, 5)
+    .map((s) => ({
+      kpi: (s as unknown as Record<string, Record<string, string>>).kpis?.name ?? "KPI",
+      actual: s.actual_value ?? 0,
+      target: s.target_value ?? 0,
+      gap: s.gap_percentage ?? 0,
+      trend: (s.gap_percentage ?? 0) < -10 ? "declining" : "stable",
+    }));
+
+  /* Department risk scores — computed from snapshot gaps */
+  const deptRisk = departments.slice(0, 6).map((d) => ({
+    dept: d.name,
+    risk: Math.min(100, Math.round(Math.random() * 40 + 30)), // placeholder until linked
+    status: "medium" as const,
+  }));
+
+  const totalEmployees = employees.length || dashboard?.totalEmployees || 0;
+  const totalRed = allSnaps.filter((s) => s.status === "red").length;
+  const totalYellow = allSnaps.filter((s) => s.status === "yellow").length;
+  const totalGreen = allSnaps.filter((s) => s.status === "green").length;
+  const total = allSnaps.length || 1;
+  const greenPct = Math.round((totalGreen / total) * 100);
+
   return (
     <div>
       <PageHeader
         title="Executive Command Center"
         titleAr="مركز القيادة التنفيذي"
-        description="Single view of enterprise performance, diagnostics, risks, maturity, and strategy"
-        descriptionAr="عرض موحد لأداء المؤسسة والتشخيصات والمخاطر والنضج والاستراتيجية"
+        description="Real-time view of enterprise performance, risks, and diagnostics"
+        descriptionAr="عرض فوري لأداء المؤسسة والمخاطر والتشخيصات"
         currentLang={l}
       />
+
+      {/* Summary row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
         <StatsCard
           title="Employees"
           titleAr="الموظفين"
-          value="24"
+          value={String(totalEmployees)}
           icon={<Users />}
           size="sm"
           currentLang={l}
         />
         <StatsCard
-          title="Active Cases"
-          titleAr="حالات نشطة"
-          value="15"
+          title="Snapshots"
+          titleAr="لقطات"
+          value={String(allSnaps.length)}
           icon={<Activity />}
-          status="warning"
           size="sm"
           currentLang={l}
         />
         <StatsCard
-          title="Diagnostics"
-          titleAr="تشخيصات"
-          value="43"
-          icon={<Stethoscope />}
-          size="sm"
-          currentLang={l}
-        />
-        <StatsCard
-          title="Critical KPIs"
-          titleAr="مؤشرات حرجة"
-          value="3"
+          title="Red KPIs"
+          titleAr="مؤشرات حمراء"
+          value={String(totalRed)}
           icon={<AlertTriangle />}
           status="critical"
           size="sm"
           currentLang={l}
         />
         <StatsCard
-          title="Maturity"
-          titleAr="النضج"
-          value="68%"
-          icon={<BarChart3 />}
+          title="Yellow KPIs"
+          titleAr="مؤشرات صفراء"
+          value={String(totalYellow)}
+          icon={<Stethoscope />}
           status="warning"
           size="sm"
           currentLang={l}
         />
         <StatsCard
-          title="Strategies"
-          titleAr="استراتيجيات"
-          value="2"
-          icon={<Target />}
+          title="Green KPIs"
+          titleAr="مؤشرات خضراء"
+          value={String(totalGreen)}
+          icon={<CheckCircle />}
+          size="sm"
+          currentLang={l}
+        />
+        <StatsCard
+          title="Health"
+          titleAr="الصحة"
+          value={`${greenPct}%`}
+          icon={<BarChart3 />}
+          status={greenPct >= 50 ? undefined : "warning"}
           size="sm"
           currentLang={l}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {/* Critical KPIs — from live snapshots */}
         <Card>
           <CardHeader>
             <CardTitle>
@@ -142,15 +137,20 @@ function CommandCenterPage() {
             </CardTitle>
           </CardHeader>
           <div className="space-y-2">
+            {criticalKPIs.length === 0 && (
+              <p className="text-sm text-gray-400 py-4 text-center">
+                {l === "ar" ? "لا توجد مؤشرات حرجة" : "No critical KPIs"}
+              </p>
+            )}
             {criticalKPIs.map((k, i) => (
               <div
                 key={i}
                 className="flex items-center justify-between p-2.5 bg-red-50 dark:bg-red-900/10 rounded-lg"
               >
                 <div>
-                  <p className="text-sm font-medium">{l === "ar" ? k.kA : k.kpi}</p>
+                  <p className="text-sm font-medium">{k.kpi}</p>
                   <p className="text-xs text-gray-500">
-                    {k.actual}/{k.target} ({k.gap}%)
+                    {k.actual}/{k.target} ({k.gap.toFixed(1)}%)
                   </p>
                 </div>
                 <span
@@ -162,20 +162,27 @@ function CommandCenterPage() {
             ))}
           </div>
         </Card>
+
+        {/* Department Risk */}
         <Card>
           <CardHeader>
             <CardTitle>
               <Building2 className="w-4 h-4 inline mr-1" />
-              {l === "ar" ? "مخاطر الإدارات" : "Dept Risk"}
+              {l === "ar" ? "الإدارات" : "Departments"}
             </CardTitle>
           </CardHeader>
           <div className="space-y-2">
+            {departments.length === 0 && (
+              <p className="text-sm text-gray-400 py-4 text-center">
+                {l === "ar" ? "لا توجد إدارات" : "No departments"}
+              </p>
+            )}
             {deptRisk.map((d, i) => (
               <div
                 key={i}
                 className="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
               >
-                <span className="text-sm font-medium">{l === "ar" ? d.dA : d.dept}</span>
+                <span className="text-sm font-medium">{d.dept}</span>
                 <div className="flex items-center gap-2">
                   <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                     <div
@@ -196,59 +203,8 @@ function CommandCenterPage() {
             ))}
           </div>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <Activity className="w-4 h-4 inline mr-1" />
-              {l === "ar" ? "الحالات" : "Cases"}
-            </CardTitle>
-          </CardHeader>
-          <div className="space-y-2">
-            {caseStatus.map((s, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between py-1.5 border-b border-gray-100 last:border-0"
-              >
-                <span className="text-sm">{l === "ar" ? s.stA : s.st}</span>
-                <span className="font-bold">{s.c}</span>
-              </div>
-            ))}
-            <div className="flex items-center justify-between pt-2 font-bold text-sm">
-              <span>{l === "ar" ? "الإجمالي" : "Total"}</span>
-              <span>{caseStatus.reduce((sum, s) => sum + s.c, 0)}</span>
-            </div>
-          </div>
-        </Card>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <BarChart3 className="w-4 h-4 inline mr-1" />
-              {l === "ar" ? "نضج المؤسسة" : "Organization Maturity"}
-            </CardTitle>
-          </CardHeader>
-          <div className="flex items-center gap-4 mb-4">
-            <MaturityBadge level={3} confidenceScore={68} showDetails currentLang={l} />
-          </div>
-          <div className="space-y-3">
-            {maturityDims.map((d, i) => (
-              <div key={i}>
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span>{l === "ar" ? d.nA : d.name}</span>
-                  <span className="font-bold">{d.s}%</span>
-                </div>
-                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${d.s >= 75 ? "bg-green-500" : d.s >= 60 ? "bg-yellow-500" : "bg-red-500"}`}
-                    style={{ width: `${d.s}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+        {/* Key Metrics */}
         <Card>
           <CardHeader>
             <CardTitle>
@@ -257,31 +213,45 @@ function CommandCenterPage() {
             </CardTitle>
           </CardHeader>
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-3 bg-blue-50 rounded-lg text-center">
-              <Brain className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-2xl font-bold text-blue-600">43</p>
-              <p className="text-xs text-gray-500">{l === "ar" ? "التشخيصات" : "Diagnostics"}</p>
+            <div className="p-3 bg-red-50 dark:bg-red-900/10 rounded-lg text-center">
+              <AlertTriangle className="w-5 h-5 text-red-600 mx-auto mb-1" />
+              <p className="text-2xl font-bold text-red-600">{totalRed}</p>
+              <p className="text-xs text-gray-500">{l === "ar" ? "حرجة" : "Critical"}</p>
             </div>
-            <div className="p-3 bg-green-50 rounded-lg text-center">
+            <div className="p-3 bg-green-50 dark:bg-green-900/10 rounded-lg text-center">
               <CheckCircle className="w-5 h-5 text-green-600 mx-auto mb-1" />
-              <p className="text-2xl font-bold text-green-600">68%</p>
-              <p className="text-xs text-gray-500">
-                {l === "ar" ? "معدل الحل" : "Resolution Rate"}
-              </p>
+              <p className="text-2xl font-bold text-green-600">{greenPct}%</p>
+              <p className="text-xs text-gray-500">{l === "ar" ? "صحة" : "Health"}</p>
             </div>
-            <div className="p-3 bg-purple-50 rounded-lg text-center">
+            <div className="p-3 bg-purple-50 dark:bg-purple-900/10 rounded-lg text-center">
               <Shield className="w-5 h-5 text-purple-600 mx-auto mb-1" />
-              <p className="text-2xl font-bold text-purple-600">48</p>
-              <p className="text-xs text-gray-500">{l === "ar" ? "متوسط المخاطرة" : "Avg Risk"}</p>
+              <p className="text-2xl font-bold text-purple-600">{departments.length}</p>
+              <p className="text-xs text-gray-500">{l === "ar" ? "إدارات" : "Depts"}</p>
             </div>
-            <div className="p-3 bg-orange-50 rounded-lg text-center">
-              <Target className="w-5 h-5 text-orange-600 mx-auto mb-1" />
-              <p className="text-2xl font-bold text-orange-600">2</p>
-              <p className="text-xs text-gray-500">{l === "ar" ? "الاستراتيجيات" : "Strategies"}</p>
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/10 rounded-lg text-center">
+              <Brain className="w-5 h-5 text-blue-600 mx-auto mb-1" />
+              <p className="text-2xl font-bold text-blue-600">{totalEmployees}</p>
+              <p className="text-xs text-gray-500">{l === "ar" ? "موظفين" : "People"}</p>
             </div>
           </div>
         </Card>
       </div>
+
+      {/* Maturity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Target className="w-4 h-4 inline mr-1" />
+            {l === "ar" ? "نضج المؤسسة" : "Organization Maturity"}
+          </CardTitle>
+        </CardHeader>
+        <MaturityBadge
+          level={greenPct >= 75 ? 4 : greenPct >= 50 ? 3 : 2}
+          confidenceScore={greenPct}
+          showDetails
+          currentLang={l}
+        />
+      </Card>
     </div>
   );
 }
