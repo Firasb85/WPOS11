@@ -1,64 +1,49 @@
 /**
- * Validated client environment.
- * Supports both JWT anon keys and sb_publishable_ format.
- * During SSR, returns fallback values to prevent build crashes.
+ * Client environment configuration for WPOS.
+ *
+ * ARCHITECTURE NOTE:
+ * The canonical Supabase project is hardcoded here because Lovable's
+ * hidden .env (which we cannot edit) may inject credentials for an
+ * older project.  All env-var lookups are intentionally skipped so
+ * that Vite's compile-time string replacement cannot override us.
+ *
+ * To switch projects, update the three constants below.
  */
 import { clientEnvSchema, type ClientEnv } from "./env.schema";
 
-const processEnv = typeof process !== "undefined" && process.env ? process.env : {};
+/* ── Canonical Supabase credentials ────────────────────────── */
+const SUPABASE_PROJECT = "nsbmrtohkdttsufxwzdi";
+const SUPABASE_URL = "https://nsbmrtohkdttsufxwzdi.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+  "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zYm1ydG9oa2R0dHN1Znh3emRpIiwi" +
+  "cm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTkxNTIsImV4cCI6MjA5NjQzNTE1Mn0." +
+  "mrjM5EWl_BAAjM8u7mY4nxOLVyTNEnt3ST3k8gl7I8w";
 
-const fallbackClientEnv: ClientEnv = {
-  VITE_SUPABASE_URL: "https://nsbmrtohkdttsufxwzdi.supabase.co",
-  VITE_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_dXfF2sIngV2Z3wT-_M9t8g_GkxdnHEk",
-  VITE_SUPABASE_PROJECT_ID: "nsbmrtohkdttsufxwzdi",
-};
-
+/* ── Build the validated config ────────────────────────────── */
 function validateClientEnv(): ClientEnv {
-  const raw = {
-    VITE_SUPABASE_URL:
-      (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_URL) ||
-      processEnv.VITE_SUPABASE_URL ||
-      processEnv.SUPABASE_URL ||
-      fallbackClientEnv.VITE_SUPABASE_URL,
-    VITE_SUPABASE_PUBLISHABLE_KEY:
-      (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY) ||
-      processEnv.VITE_SUPABASE_PUBLISHABLE_KEY ||
-      processEnv.SUPABASE_PUBLISHABLE_KEY ||
-      fallbackClientEnv.VITE_SUPABASE_PUBLISHABLE_KEY,
-    VITE_SUPABASE_PROJECT_ID:
-      (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_PROJECT_ID) ||
-      processEnv.VITE_SUPABASE_PROJECT_ID ||
-      processEnv.SUPABASE_PROJECT_ID ||
-      // Extract project ID from URL if not set
-      extractProjectId(
-        (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_URL) ||
-          processEnv.VITE_SUPABASE_URL ||
-          "",
-      ) ||
-      fallbackClientEnv.VITE_SUPABASE_PROJECT_ID,
+  const raw: ClientEnv = {
+    VITE_SUPABASE_URL: SUPABASE_URL,
+    VITE_SUPABASE_PUBLISHABLE_KEY: SUPABASE_ANON_KEY,
+    VITE_SUPABASE_PROJECT_ID: SUPABASE_PROJECT,
   };
 
   const result = clientEnvSchema.safeParse(raw);
 
   if (!result.success) {
+    /* SSR: swallow gracefully */
     if (typeof window === "undefined") {
-      console.warn("[env] Client env validation failed during SSR — using fallbacks");
-      return fallbackClientEnv;
+      console.warn("[env] validation failed during SSR — using defaults");
+      return raw;
     }
-
     const formatted = result.error.issues
       .map((i) => `  • ${i.path.join(".")}: ${i.message}`)
       .join("\n");
-    console.error(`\n❌ Client environment validation failed:\n${formatted}\n`);
-    throw new Error("Missing or invalid client environment variables. Check your .env file.");
+    console.error(`\n❌ Client env validation failed:\n${formatted}\n`);
+    throw new Error("Invalid client environment. Check src/config/env.ts.");
   }
 
   return result.data;
-}
-
-function extractProjectId(url: string): string {
-  const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
-  return match?.[1] ?? "";
 }
 
 export const clientEnv = validateClientEnv();
