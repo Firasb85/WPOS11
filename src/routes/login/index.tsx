@@ -38,7 +38,9 @@ function LoginPage() {
       });
 
       if (authError) {
-        const project = clientEnv.VITE_SUPABASE_URL.replace("https://", "").replace(".supabase.co", "");
+        const project = clientEnv.VITE_SUPABASE_URL.replace(
+          "https://", "",
+        ).replace(".supabase.co", "");
         setError(authError.message + " [project: " + project + "]");
         return;
       }
@@ -48,7 +50,9 @@ function LoginPage() {
         return;
       }
     } catch (err) {
-      setError("Unexpected: " + (err instanceof Error ? err.message : String(err)));
+      setError(
+        "Unexpected: " + (err instanceof Error ? err.message : String(err)),
+      );
     } finally {
       setLoading(false);
     }
@@ -63,6 +67,7 @@ function LoginPage() {
   }
 
   const projectId = clientEnv.VITE_SUPABASE_PROJECT_ID || "unknown";
+  const isCorrectProject = projectId === "nsbmrtohkdttsufxwzdi";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
@@ -71,7 +76,9 @@ function LoginPage() {
           <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">WP</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{APP_NAME}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {APP_NAME}
+          </h1>
           <p className="text-sm text-gray-500 mt-1">{APP_NAME_FULL}</p>
         </div>
 
@@ -83,13 +90,18 @@ function LoginPage() {
           {error && (
             <div className="flex items-start gap-2 p-3 mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+              <p className="text-sm text-red-600 dark:text-red-400 break-all">
+                {error}
+              </p>
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+              >
                 Email address
               </label>
               <input
@@ -105,7 +117,10 @@ function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+              >
                 Password
               </label>
               <div className="relative">
@@ -126,7 +141,11 @@ function LoginPage() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -146,17 +165,22 @@ function LoginPage() {
           </form>
 
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-            <p className="text-xs text-gray-400 mb-2 text-center">Quick Login (Test Accounts)</p>
+            <p className="text-xs text-gray-400 mb-2 text-center">
+              Quick Login (Test Accounts)
+            </p>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: "Admin", e: "admin@wpos.com", p: "Admin@123" },
-                { label: "CEO", e: "ceo@wpos.com", p: "Ceo@12345" },
-                { label: "Manager", e: "manager@wpos.com", p: "Manager@1" },
+                { label: "Admin", e: "admin@wpos.com", p: "Password123!" },
+                { label: "CEO", e: "ceo@wpos.com", p: "Password123!" },
+                { label: "Manager", e: "manager@wpos.com", p: "Password123!" },
               ].map((acc) => (
                 <button
                   key={acc.e}
                   type="button"
-                  onClick={() => { setEmail(acc.e); setPassword(acc.p); }}
+                  onClick={() => {
+                    setEmail(acc.e);
+                    setPassword(acc.p);
+                  }}
                   className="text-xs py-1.5 px-2 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
                 >
                   {acc.label}
@@ -167,7 +191,9 @@ function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          WPOS v1.0.0 &middot; {projectId === "nsbmrtohkdttsufxwzdi" ? "\u2705" : "\u26A0\uFE0F"} {projectId.substring(0, 8)}&hellip;
+          WPOS v1.0.0 &middot;{" "}
+          {isCorrectProject ? "\u2705" : "\u26A0\uFE0F"}{" "}
+          {projectId.substring(0, 8)}&hellip;
         </p>
       </div>
     </div>
