@@ -47,13 +47,13 @@ CREATE INDEX IF NOT EXISTS idx_action_plans_case_id ON action_plans(case_id);
 -- ─── Process Steps ──────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_process_steps_process_id ON process_steps(process_id);
 
--- ─── Jobs → job_profile_id, employee_id (NOT family/grade) ──
+-- ─── Jobs (job_profile_id, employee_id) ─────────────────────
 CREATE INDEX IF NOT EXISTS idx_jobs_job_profile_id ON jobs(job_profile_id);
 CREATE INDEX IF NOT EXISTS idx_jobs_employee_id ON jobs(employee_id);
 
--- ─── Job Profiles → job_family_id, job_grade_id ─────────────
-CREATE INDEX IF NOT EXISTS idx_job_profiles_job_family_id ON job_profiles(job_family_id);
-CREATE INDEX IF NOT EXISTS idx_job_profiles_job_grade_id ON job_profiles(job_grade_id);
+-- ─── Job Profiles (family_id, grade_id) ─────────────────────
+CREATE INDEX IF NOT EXISTS idx_job_profiles_family_id ON job_profiles(family_id);
+CREATE INDEX IF NOT EXISTS idx_job_profiles_grade_id ON job_profiles(grade_id);
 
 -- ─── Audit Logs ─────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON audit_logs(user_id);
@@ -65,5 +65,5 @@ CREATE INDEX IF NOT EXISTS idx_snapshots_status_period ON performance_snapshots(
 CREATE INDEX IF NOT EXISTS idx_evidence_emp_type ON evidence(employee_id, evidence_type);
 
 -- ═══════════════════════════════════════════════════════════════
--- ✅ DONE — Performance indexes created for all major tables.
+-- ✅ DONE — 32 performance indexes created.
 -- ═══════════════════════════════════════════════════════════════
