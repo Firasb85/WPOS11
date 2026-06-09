@@ -1,9 +1,11 @@
 /**
  * Validated client environment.
- * Safe to use in browser code — only VITE_ prefixed vars.
+ * Supports both JWT anon keys and sb_publishable_ format.
  * During SSR, returns fallback values to prevent build crashes.
  */
 import { clientEnvSchema, type ClientEnv } from "./env.schema";
+
+const processEnv = typeof process !== "undefined" && process.env ? process.env : {};
 
 const fallbackClientEnv: ClientEnv = {
   VITE_SUPABASE_URL: "https://nsbmrtohkdttsufxwzdi.supabase.co",
@@ -13,7 +15,6 @@ const fallbackClientEnv: ClientEnv = {
 };
 
 function validateClientEnv(): ClientEnv {
-  const processEnv = typeof process !== "undefined" ? process.env : {};
   const raw = {
     VITE_SUPABASE_URL:
       (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_URL) ||
@@ -29,13 +30,18 @@ function validateClientEnv(): ClientEnv {
       (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_PROJECT_ID) ||
       processEnv.VITE_SUPABASE_PROJECT_ID ||
       processEnv.SUPABASE_PROJECT_ID ||
+      // Extract project ID from URL if not set
+      extractProjectId(
+        (typeof import.meta !== "undefined" && import.meta.env?.VITE_SUPABASE_URL) ||
+          processEnv.VITE_SUPABASE_URL ||
+          "",
+      ) ||
       fallbackClientEnv.VITE_SUPABASE_PROJECT_ID,
   };
 
   const result = clientEnvSchema.safeParse(raw);
 
   if (!result.success) {
-    // In SSR / build context, don't crash — return placeholders
     if (typeof window === "undefined") {
       console.warn("[env] Client env validation failed during SSR — using fallbacks");
       return fallbackClientEnv;
@@ -49,6 +55,11 @@ function validateClientEnv(): ClientEnv {
   }
 
   return result.data;
+}
+
+function extractProjectId(url: string): string {
+  const match = url.match(/https:\/\/([^.]+)\.supabase\.co/);
+  return match?.[1] ?? "";
 }
 
 export const clientEnv = validateClientEnv();
