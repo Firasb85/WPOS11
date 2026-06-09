@@ -2,7 +2,7 @@ import { useAtRiskEmployees, useAtRiskDepartments } from "@/hooks/useRiskPredict
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { Card, CardHeader, CardTitle } from "@/components/wpos/Card";
 import { AtRiskBadge } from "./AtRiskBadge";
-import { AlertTriangle, UserCircle, Building, TrendingDown, Shield } from "lucide-react";
+import { AlertTriangle, UserCircle, Building, Shield } from "lucide-react";
 
 /**
  * At-Risk Employees Panel — shows employees predicted to breach KPIs.

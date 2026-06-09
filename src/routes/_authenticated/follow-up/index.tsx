@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Clock, Calendar, CheckCircle, XCircle, Minus } from "lucide-react";
+import { Calendar, Minus } from "lucide-react";
 import { useCases } from "@/hooks/useCases";
 export const Route = createFileRoute("/_authenticated/follow-up/")({ component: FollowUpPage });
 function FollowUpPage() {
-  const { data: cases, isLoading: _casesLoading } = useCases();
+  const { data: _cases, isLoading: _casesLoading } = useCases();
   const l = "ar";
   const items = [
     {

@@ -2,13 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
-import { TrendingUp, DollarSign, Target, Award, ArrowUp, ArrowDown } from "lucide-react";
+import { TrendingUp, DollarSign, Target, Award} from "lucide-react";
 import { useInterventionLibrary } from "@/hooks/useCases";
 export const Route = createFileRoute("/_authenticated/interventions/effectiveness")({
   component: EffectivenessPage,
 });
 function EffectivenessPage() {
-  const { data: interventions, isLoading: _interventionsLoading } = useInterventionLibrary();
+  const { data: _interventions, isLoading: _interventionsLoading } = useInterventionLibrary();
   const l = "ar";
   const rankings = [
     { name: "One-on-One Coaching", nA: "تدريب فردي", score: 92, roi: 380, cases: 15, imp: 24.5 },

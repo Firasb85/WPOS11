@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, TrendingUp, TrendingDown } from "lucide-react";
+import { ChevronDown, ChevronRight} from "lucide-react";
 
 interface KpiNode {
   kpi: {

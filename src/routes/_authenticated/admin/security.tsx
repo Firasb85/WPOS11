@@ -3,12 +3,12 @@ import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { FormInput, FormSelect } from "~/components/wpos/FormInput";
-import { Shield, Save, Lock, Key, Globe, Clock } from "lucide-react";
+import { FormSelect } from "~/components/wpos/FormInput";
+import { Save, Lock, Globe} from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/security")({ component: SecurityPage });
 function SecurityPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>

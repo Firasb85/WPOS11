@@ -1,14 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { BookOpen, Database, User, RefreshCw, BarChart3, Search } from "lucide-react";
+import { Card} from "~/components/wpos/Card";
+import { Database, RefreshCw, BarChart3, Search } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/data-catalog/")({
   component: DataCatalogPage,
 });
 function DataCatalogPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const entries = [
     {

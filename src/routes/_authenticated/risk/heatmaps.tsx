@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { FormSelect } from "~/components/wpos/FormInput";
 import { Grid3x3, AlertTriangle, Building2, GitMerge } from "lucide-react";
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
@@ -67,7 +66,7 @@ function makeHeatmap(
 }
 
 function HeatmapsPage() {
-  const { data: deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
+  const { data: _deptMetrics, isLoading: _deptMetricsLoading } = useDepartmentMetrics();
   const l = "ar";
   const skillGapData = [
     { empAr: "أحمد خالد", data: 3 },

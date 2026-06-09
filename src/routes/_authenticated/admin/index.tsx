@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/admin/")({
 });
 
 function AdministrationIndexPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const sections = [
     {
       href: "/admin/users",

@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute} from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useCases, useDeleteCase, useUpdateCaseStatus } from "@/hooks/useCases";
-import { Briefcase, Trash2, Eye } from "lucide-react";
+import { Briefcase, Trash2} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/cases/")({
   component: CasesListPage,

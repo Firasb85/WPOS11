@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card } from "~/components/wpos/Card";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";

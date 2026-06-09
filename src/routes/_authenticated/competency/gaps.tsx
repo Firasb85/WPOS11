@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/competency/gaps")({
 });
 
 function CompetencyGapsPage() {
-  const { data: empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
+  const { data: _empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const currentLang = "ar";
   const heatmapData = [
     {

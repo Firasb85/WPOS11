@@ -8,8 +8,8 @@ import { useKpiCategories, useKpis } from "@/hooks/useKpis";
 export const Route = createFileRoute("/_authenticated/kpis/")({ component: KpisIndexPage });
 
 function KpisIndexPage() {
-  const { data: categories, isLoading: _categoriesLoading } = useKpiCategories();
-  const { data: kpis } = useKpis();
+  const { data: _categories, isLoading: _categoriesLoading } = useKpiCategories();
+  const { data: _kpis } = useKpis();
   const sections = [
     {
       href: "/kpis/categories",

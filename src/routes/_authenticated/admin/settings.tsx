@@ -7,7 +7,7 @@ import { Save } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/admin/settings")({ component: SettingsPage });
 function SettingsPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>

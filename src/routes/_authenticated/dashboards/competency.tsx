@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/dashboards/competency")({
 });
 
 function CompetencyDashboardPage() {
-  const { data: empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
+  const { data: _empComps, isLoading: _empCompsLoading } = useEmployeeCompetencies();
   const l = "ar";
   const heatmapData = [
     {

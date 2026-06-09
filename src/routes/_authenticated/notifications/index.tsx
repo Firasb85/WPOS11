@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
-import { Bell, CheckCircle, AlertTriangle, Info, Clock } from "lucide-react";
+import { CheckCircle, AlertTriangle, Info, Clock } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 
 export const Route = createFileRoute("/_authenticated/notifications/")({
@@ -10,8 +10,8 @@ export const Route = createFileRoute("/_authenticated/notifications/")({
 });
 
 function NotificationsPage() {
-  const { t, lang: l } = useLanguage();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { lang: l } = useLanguage();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const notifications = [
     {

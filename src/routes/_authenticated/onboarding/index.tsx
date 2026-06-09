@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
-import { Zap, CheckCircle, Circle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 
 export const Route = createFileRoute("/_authenticated/onboarding/")({
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/onboarding/")({
 
 function OnboardingPage() {
   const { t, lang: l } = useLanguage();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const steps = [
     {

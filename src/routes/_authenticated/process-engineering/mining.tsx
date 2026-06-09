@@ -3,13 +3,13 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Search, AlertTriangle, CheckCircle, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
+import { Search, AlertTriangle, CheckCircle, ArrowRight, ArrowUp} from "lucide-react";
 import { useProcesses } from "@/hooks/useProcesses";
 export const Route = createFileRoute("/_authenticated/process-engineering/mining")({
   component: ProcessMiningPage,
 });
 function ProcessMiningPage() {
-  const { data: processes, isLoading: _processesLoading } = useProcesses();
+  const { data: _processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const results = [
     {

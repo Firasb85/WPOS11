@@ -11,9 +11,9 @@ export const Route = createFileRoute("/_authenticated/admin/roles")({
   component: RoleManagementPage,
 });
 function RoleManagementPage() {
-  const { data: rolesData, isLoading: _rolesLoading } = useRoles();
-  const { data: permsData } = usePermissions();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _rolesData, isLoading: _rolesLoading } = useRoles();
+  const { data: _permsData } = usePermissions();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const [selected, setSelected] = useState("super_admin");
   const roles = [
     {

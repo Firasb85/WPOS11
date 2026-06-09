@@ -2,12 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { DataTable } from "~/components/wpos/DataTable";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useInterventionLibrary, useCreateInterventionTemplate } from "@/hooks/useCases";
-import { Plus, Activity, Trash2 } from "lucide-react";
+import { Plus, Activity} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/interventions/")({
   component: InterventionsPage,

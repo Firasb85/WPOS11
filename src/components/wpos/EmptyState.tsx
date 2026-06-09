@@ -25,7 +25,7 @@ export function EmptyState({
   descriptionAr,
   action,
 }: EmptyStateProps) {
-  const { t, lang } = useLanguage();
+  const { lang } = useLanguage();
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6">

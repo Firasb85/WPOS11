@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
-import { ArrowUpDown, ArrowDown, ArrowUp, Zap, ClipboardCheck } from "lucide-react";
+import { ArrowDown, ArrowUp, Zap, ClipboardCheck } from "lucide-react";
 
 interface EvidenceItem {
   id: string;
@@ -88,7 +88,7 @@ function calculateImpactScore(item: EvidenceItem): {
  * weights and allows sorting by impact score.
  */
 export function EvidenceImpactSorter({ evidence }: Props) {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
 
   const scored = useMemo(() => {

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { CreditCard, Users, HardDrive, CheckCircle, Zap } from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/saas/")({
 
 function SaasPage() {
   const { t, lang: l } = useLanguage();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const plans = [
     {

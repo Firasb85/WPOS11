@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
-import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
 import { AtRiskDepartmentsPanel } from "@/components/diagnostics/AtRiskPanel";

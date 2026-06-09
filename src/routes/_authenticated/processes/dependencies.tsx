@@ -6,7 +6,6 @@ import {
   DependencyGraph,
   CriticalPathChain,
 } from "~/components/wpos/visualizations/DependencyGraph";
-import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { GitBranch, AlertTriangle, Share2, Shield } from "lucide-react";
 import { useProcesses } from "@/hooks/useProcesses";
 import { useProcessDependencies } from "@/hooks/useAdmin";
@@ -16,8 +15,8 @@ export const Route = createFileRoute("/_authenticated/processes/dependencies")({
 });
 
 function ProcessDependenciesPage() {
-  const { data: deps, isLoading: _depsLoading } = useProcessDependencies();
-  const { data: processes, isLoading: _processesLoading } = useProcesses();
+  const { data: _deps, isLoading: _depsLoading } = useProcessDependencies();
+  const { data: _processes, isLoading: _processesLoading } = useProcesses();
   const l = "ar";
   const graph = {
     nodes: [

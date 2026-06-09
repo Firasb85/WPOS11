@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { Link } from "@tanstack/react-router";
 import { Building, GitBranch, Building2, Users, UserCircle, GitFork } from "lucide-react";
 import {
@@ -16,11 +16,11 @@ export const Route = createFileRoute("/_authenticated/organization/")({
 });
 
 function OrganizationIndexPage() {
-  const { data: companies, isLoading: _companiesLoading } = useCompanies();
-  const { data: branches } = useBranches();
-  const { data: depts } = useDepartments();
-  const { data: teams } = useTeams();
-  const { data: emps } = useEmployeesList();
+  const { data: _companies, isLoading: _companiesLoading } = useCompanies();
+  const { data: _branches } = useBranches();
+  const { data: _depts } = useDepartments();
+  const { data: _teams } = useTeams();
+  const { data: _emps } = useEmployeesList();
   const sections = [
     {
       href: "/organization/companies",

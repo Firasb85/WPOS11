@@ -1,13 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useEmployeesList } from "@/hooks/useOrganization";
 import { useCreateEvidence } from "@/hooks/useDiagnosticWorkflow";
 import { useAuth } from "@/hooks/useAuth";
-import { Save, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/evidence/new")({
   component: NewEvidencePage,

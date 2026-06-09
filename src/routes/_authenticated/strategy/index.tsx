@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Plus, Target, Eye, TrendingUp, BarChart3, Layers } from "lucide-react";
+import { Plus, Target} from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/strategy/")({ component: StrategyPage });
 function StrategyPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const strategies = [
     {

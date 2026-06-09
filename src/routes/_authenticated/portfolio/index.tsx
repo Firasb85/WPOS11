@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
-import { FolderOpen, TrendingUp } from "lucide-react";
+import { FolderOpen} from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 
 export const Route = createFileRoute("/_authenticated/portfolio/")({
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/portfolio/")({
 
 function PortfolioPage() {
   const { t, lang: l } = useLanguage();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const portfolios = [
     {

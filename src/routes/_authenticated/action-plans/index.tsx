@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { ClipboardList, Plus, User, Calendar } from "lucide-react";
+import { Plus, Calendar } from "lucide-react";
 import { useCases } from "@/hooks/useCases";
 export const Route = createFileRoute("/_authenticated/action-plans/")({
   component: ActionPlansPage,
 });
 function ActionPlansPage() {
-  const { data: cases, isLoading: _casesLoading } = useCases();
+  const { data: _cases, isLoading: _casesLoading } = useCases();
   const l = "ar";
   const plans = [
     {

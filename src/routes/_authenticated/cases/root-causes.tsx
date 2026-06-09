@@ -2,14 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { FormSelect } from "~/components/wpos/FormInput";
-import { BookOpen, Search, AlertTriangle, CheckCircle, XCircle, ArrowRight } from "lucide-react";
+import { BookOpen, Search, AlertTriangle, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useRootCauseMetrics } from "@/hooks/useAnalytics";
 export const Route = createFileRoute("/_authenticated/cases/root-causes")({
   component: RootCauseKBPage,
 });
 function RootCauseKBPage() {
-  const { data: rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
+  const { data: _rootCauses, isLoading: _rootCausesLoading } = useRootCauseMetrics();
   const l = "ar";
   const [cat, setCat] = useState("all");
   const causes = [

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/processes/library")({
   component: ProcessLibraryPage,
 });
 function ProcessLibraryPage() {
-  const { data: processesData, isLoading: _processesDataLoading } = useProcesses();
+  const { data: _processesData, isLoading: _processesDataLoading } = useProcesses();
   const [selected, setSelected] = useState<string | null>("1");
   const processes = [
     {

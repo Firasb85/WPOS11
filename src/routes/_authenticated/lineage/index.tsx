@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/lineage/")({
 
 function DataLineagePage() {
   const { t, lang: l } = useLanguage();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const lineageEntries = [
     {

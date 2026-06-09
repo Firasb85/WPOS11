@@ -3,15 +3,15 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
 import { KpiTreeView } from "~/components/wpos/visualizations/KpiTreeView";
-import { Share2, Search, ArrowDown, AlertTriangle, TrendingUp } from "lucide-react";
+import { Share2, Search, ArrowDown, AlertTriangle} from "lucide-react";
 import { useKpis } from "@/hooks/useKpis";
 import { useKpiRelationships } from "@/hooks/useAdmin";
 export const Route = createFileRoute("/_authenticated/kpis/dependency")({
   component: KpiDependencyPage,
 });
 function KpiDependencyPage() {
-  const { data: relationships, isLoading: _relLoading } = useKpiRelationships();
-  const { data: kpis, isLoading: _kpisLoading } = useKpis();
+  const { data: _relationships, isLoading: _relLoading } = useKpiRelationships();
+  const { data: _kpis, isLoading: _kpisLoading } = useKpis();
   const l = "ar";
   const tree = {
     kpi: {

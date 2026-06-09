@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { GitBranch, Play, Save, Settings, ArrowRight, CheckCircle } from "lucide-react";
+import { GitBranch, Play, Settings, ArrowRight} from "lucide-react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/workflow-studio/")({
   component: WorkflowStudioPage,
 });
 function WorkflowStudioPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const workflows = [
     { code: "DIAG_REVIEW", nE: "Diagnostic Review", nA: "مراجعة التشخيص", steps: 3, st: "active" },

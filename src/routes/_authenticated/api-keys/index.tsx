@@ -2,14 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { ForbiddenPage } from "@/components/errors/ForbiddenPage";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { Card} from "~/components/wpos/Card";
 import { StatusBadge } from "~/components/wpos/StatusBadge";
-import { Plus, Key, Copy, Clock, Shield, Eye, EyeOff } from "lucide-react";
+import { Plus, Key, Copy, Clock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 export const Route = createFileRoute("/_authenticated/api-keys/")({ component: ApiKeysPage });
 function ApiKeysPage() {
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
   const l = "ar";
   const [showKey, setShowKey] = useState<string | null>(null);
   const keys = [

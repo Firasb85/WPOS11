@@ -24,8 +24,8 @@ export const Route = createFileRoute("/_authenticated/advanced/")({
 });
 
 function AdvancedIndexPage() {
-  const { t, lang: l } = useLanguage();
-  const { data: metrics, isLoading: _metricsLoading } = useCeoDashboard();
+  const { lang: l } = useLanguage();
+  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const sections = [
     {
