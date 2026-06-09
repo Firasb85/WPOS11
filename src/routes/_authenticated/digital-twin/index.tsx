@@ -18,9 +18,8 @@ export const Route = createFileRoute("/_authenticated/digital-twin/")({
   component: DigitalTwinPage,
 });
 function DigitalTwinPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const entities = [
     {
       name: "Companies",

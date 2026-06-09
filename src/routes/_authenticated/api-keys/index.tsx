@@ -10,9 +10,8 @@ import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/api-keys/")({ component: ApiKeysPage });
 function ApiKeysPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const [showKey, setShowKey] = useState<string | null>(null);
   const keys = [
     {

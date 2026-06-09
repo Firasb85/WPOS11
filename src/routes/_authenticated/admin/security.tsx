@@ -9,9 +9,8 @@ import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/admin/security")({ component: SecurityPage });
 function SecurityPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   return (
     <PermissionGuard allowedRoles={["ADMIN", "CEO"]} fallback={<ForbiddenPage />}>
       <div>

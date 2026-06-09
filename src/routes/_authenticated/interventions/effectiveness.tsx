@@ -9,9 +9,8 @@ export const Route = createFileRoute("/_authenticated/interventions/effectivenes
   component: EffectivenessPage,
 });
 function EffectivenessPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _interventions, isLoading: _interventionsLoading } = useInterventionLibrary();
-  const l = "ar";
   const rankings = [
     { name: "One-on-One Coaching", nA: "تدريب فردي", score: 92, roi: 380, cases: 15, imp: 24.5 },
     { name: "System Upgrade", nA: "ترقية النظام", score: 90, roi: 250, cases: 3, imp: 35.2 },

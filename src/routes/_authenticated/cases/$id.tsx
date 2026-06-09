@@ -19,10 +19,9 @@ import {
 } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/cases/$id")({ component: CaseDetailPage });
 function CaseDetailPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   // Real data hook - needs route param
   // const { data: caseData, isLoading: _caseDataLoading } = useCase(id);
-  const l = "ar";
   const c = {
     num: "CAS-001",
     emp: "Ahmad Khalid",

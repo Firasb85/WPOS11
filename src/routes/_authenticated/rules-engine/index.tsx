@@ -11,9 +11,8 @@ export const Route = createFileRoute("/_authenticated/rules-engine/")({
   component: RulesEnginePage,
 });
 function RulesEnginePage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const [type, setType] = useState("all");
   const [testResult, setTestResult] = useState<string | null>(null);
   const rules = [

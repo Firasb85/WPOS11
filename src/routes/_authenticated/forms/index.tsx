@@ -7,9 +7,8 @@ import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/forms/")({ component: FormsPage });
 function FormsPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const forms = [
     {
       code: "EVIDENCE-Q-001",

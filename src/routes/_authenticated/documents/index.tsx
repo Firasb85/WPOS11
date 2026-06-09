@@ -7,9 +7,8 @@ import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/documents/")({ component: DocumentsPage });
 function DocumentsPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const types = [
     { type: "policy", tA: "سياسة", c: 3 },
     { type: "sop", tA: "إجراء تشغيلي", c: 5 },

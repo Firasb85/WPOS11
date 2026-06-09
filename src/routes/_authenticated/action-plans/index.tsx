@@ -9,9 +9,8 @@ export const Route = createFileRoute("/_authenticated/action-plans/")({
   component: ActionPlansPage,
 });
 function ActionPlansPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _cases, isLoading: _casesLoading } = useCases();
-  const l = "ar";
   const plans = [
     {
       case: "CAS-001",

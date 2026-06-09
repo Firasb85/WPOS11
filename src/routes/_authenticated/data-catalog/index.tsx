@@ -8,9 +8,8 @@ export const Route = createFileRoute("/_authenticated/data-catalog/")({
   component: DataCatalogPage,
 });
 function DataCatalogPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const entries = [
     {
       code: "DC-EMP",

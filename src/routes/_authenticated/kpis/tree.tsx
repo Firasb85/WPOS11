@@ -10,10 +10,9 @@ import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 export const Route = createFileRoute("/_authenticated/kpis/tree")({ component: KpiTreePage });
 
 function KpiTreePage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _kpis, isLoading: _kpisLoading } = useKpis();
   const { data: _cats } = useKpiCategories();
-  const l = "ar";
   const tree = {
     kpi: {
       id: "root",

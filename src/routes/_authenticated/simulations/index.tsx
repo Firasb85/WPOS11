@@ -11,9 +11,8 @@ export const Route = createFileRoute("/_authenticated/simulations/")({
   component: SimulationsPage,
 });
 function SimulationsPage() {
-  const { t } = useLanguage();
+  const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
   const scenarios = [
     {
       nE: "Data Analysis Training Impact",
