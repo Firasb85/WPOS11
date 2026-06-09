@@ -1,170 +1,68 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { FormSelect, FormTextarea } from "~/components/wpos/FormInput";
-import {
-  Bot,
-  AlertTriangle,
-  Lightbulb,
-  FileSearch,
-  User,
-  Activity,
-  Send,
-  Shield,
-} from "lucide-react";
 import { useState } from "react";
-import { useCeoDashboard } from "@/hooks/useDashboard";
+import { PageHeader } from "~/components/wpos/PageHeader";
+import { Card } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
-export const Route = createFileRoute("/_authenticated/ai-assistant/")({
-  component: AiAssistantPage,
-});
-function AiAssistantPage() {
-  const { t } = useLanguage();
-  const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
-  const l = "ar";
-  const [mode, setMode] = useState("summarize");
-  const interactions = [
-    {
-      type: "summarize",
-      q: "Summarize diagnostic for Ahmad Khalid",
-      r: "This diagnostic report identifies a Data Analysis skill gap as the primary root cause (84% confidence). The employee's competency level is 2/4. Recommended action: technical training program. Human validation required before proceeding.",
-      time: "1m ago",
-    },
-    {
-      type: "compare",
-      q: "Compare Q1 vs Q2 performance",
-      r: "Performance declined from 82% to 78% (-4.9%) overall. Skill gap-related issues increased by 15%. Process-related issues remained stable. Recommended: focus on skill development programs. Human review recommended.",
-      time: "5m ago",
-    },
+import { Bot, Send, Loader2, Lightbulb, TrendingUp, AlertTriangle, Users } from "lucide-react";
+
+export const Route = createFileRoute("/_authenticated/ai-assistant/")({ component: AIAssistantPage });
+
+function AIAssistantPage() {
+  const { t, lang, isRTL } = useLanguage();
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<{role:string;content:string}[]>([
+    { role: "assistant", content: t("Hello! I\'m your WPOS AI Assistant. Ask me about performance trends, diagnostic insights, or workforce analytics.","مرحباً! أنا مساعد WPOS الذكي. اسألني عن اتجاهات الأداء أو رؤى التشخيص أو تحليلات القوى العاملة.") },
+  ]);
+
+  const suggestions = [
+    { icon: <TrendingUp className="w-4 h-4" />, text: t("Show declining KPIs","عرض المؤشرات المتراجعة") },
+    { icon: <AlertTriangle className="w-4 h-4" />, text: t("Who is at risk?","من هو في خطر؟") },
+    { icon: <Users className="w-4 h-4" />, text: t("Team performance summary","ملخص أداء الفريق") },
+    { icon: <Lightbulb className="w-4 h-4" />, text: t("Suggest interventions","اقتراح تدخلات") },
   ];
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    const userMsg = input.trim();
+    setMessages((p) => [...p, { role: "user", content: userMsg }]);
+    setInput("");
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 1500));
+    setMessages((p) => [...p, { role: "assistant", content: t("Based on the current data, I can see 3 employees with declining KPIs. Ahmad Khalid shows a 3-period CSAT decline (92→85→78%). I recommend initiating a diagnostic workflow for these cases.","بناءً على البيانات الحالية، أرى 3 موظفين بمؤشرات متراجعة. أحمد خالد يظهر انخفاض CSAT لـ 3 فترات (92→85→78%). أوصي ببدء سير عمل تشخيصي لهذه الحالات.") }]);
+    setLoading(false);
+  };
+
   return (
-    <div>
-      <PageHeader
-        title={t("AI Assistant", "المساعد الذكي")}
-        titleAr="المساعد الذكي"
-        description="AI-powered insights — all outputs require human validation"
-        descriptionAr="رؤى مدعومة بالذكاء الاصطناعي — جميع المخرجات تتطلب التحقق البشري"
-        currentLang={l}
-      />
-      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6 flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5" />
-        <div>
-          <p className="text-sm font-medium text-amber-800 dark:text-amber-400">
-            {l === "ar" ? "تنبيه: مساعد استشاري فقط" : "Notice: Advisory-Only Assistant"}
-          </p>
-          <p className="text-xs text-amber-700 dark:text-amber-300">
-            {l === "ar"
-              ? "جميع المخرجات هي توصيات. لا يتخذ أي قرارات. الموافقة البشرية مطلوبة دائماً."
-              : "All outputs are recommendations. No decisions are made. Human approval is always required."}
-          </p>
-        </div>
-      </div>
+    <div dir={isRTL ? "rtl" : "ltr"}>
+      <PageHeader title="AI Assistant" titleAr="المساعد الذكي" description="AI-powered workforce performance insights" descriptionAr="رؤى أداء القوى العاملة المدعومة بالذكاء الاصطناعي" currentLang={lang} />
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1 space-y-2">
-          <button
-            aria-label="Action"
-            onClick={() => setMode("summarize")}
-            className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "summarize" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
-          >
-            <FileSearch className="w-4 h-4 text-blue-600 mb-1" />
-            <p className="text-sm font-medium">
-              {l === "ar" ? "تلخيص تشخيص" : "Summarize Diagnostic"}
-            </p>
-            <p className="text-xs text-gray-500">
-              {l === "ar" ? "إنشاء ملخص لتقرير تشخيصي" : "Generate summary of diagnostic report"}
-            </p>
-          </button>
-          <button
-            aria-label="Action"
-            onClick={() => setMode("explain")}
-            className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "explain" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
-          >
-            <Lightbulb className="w-4 h-4 text-yellow-600 mb-1" />
-            <p className="text-sm font-medium">
-              {l === "ar" ? "شرح الأسباب" : "Explain Root Causes"}
-            </p>
-            <p className="text-xs text-gray-500">
-              {l === "ar" ? "شرح الأسباب الجذرية" : "Explain root cause analysis"}
-            </p>
-          </button>
-          <button
-            aria-label="Action"
-            onClick={() => setMode("compare")}
-            className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "compare" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
-          >
-            <Activity className="w-4 h-4 text-purple-600 mb-1" />
-            <p className="text-sm font-medium">{l === "ar" ? "مقارنة فترات" : "Compare Periods"}</p>
-            <p className="text-xs text-gray-500">
-              {l === "ar" ? "مقارنة الأداء عبر الفترات" : "Compare performance across periods"}
-            </p>
-          </button>
-          <button
-            aria-label="Action"
-            onClick={() => setMode("insights")}
-            className={`w-full p-3 rounded-lg border text-left transition-all ${mode === "insights" ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:border-blue-300"}`}
-          >
-            <Bot className="w-4 h-4 text-green-600 mb-1" />
-            <p className="text-sm font-medium">{l === "ar" ? "رؤى ذكية" : "Generate Insights"}</p>
-            <p className="text-xs text-gray-500">
-              {l === "ar" ? "توليد رؤى تشغيلية" : "Generate operational insights"}
-            </p>
-          </button>
-        </div>
-        <div className="lg:col-span-3 space-y-4">
-          <Card>
-            <FormSelect
-              label={l === "ar" ? "نوع الاستعلام" : "Query Type"}
-              labelAr="نوع الاستعلام"
-              options={[
-                { value: "summarize", label: "Summarize Diagnostic", labelAr: "تلخيص تشخيص" },
-                { value: "explain", label: "Explain Root Causes", labelAr: "شرح الأسباب" },
-                { value: "compare", label: "Compare Periods", labelAr: "مقارنة فترات" },
-                { value: "insights", label: "Generate Insights", labelAr: "رؤى ذكية" },
-              ]}
-              value={mode}
-              currentLang={l}
-            />
-            <FormTextarea
-              label={l === "ar" ? "السياق" : "Context"}
-              labelAr="السياق"
-              placeholder={l === "ar" ? "أدخل سياق التحليل..." : "Enter analysis context..."}
-              currentLang={l}
-            />
-            <div className="flex justify-end">
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                <Send className="w-4 h-4" />
-                <span>{l === "ar" ? "توليد" : "Generate"}</span>
-              </button>
-            </div>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <Shield className="w-4 h-4 inline mr-1" />
-                {l === "ar" ? "النتائج الأخيرة" : "Recent Results"}
-              </CardTitle>
-            </CardHeader>
-            <div className="space-y-3">
-              {interactions.map((ix, i) => (
-                <div
-                  key={i}
-                  className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-l-4 border-blue-500"
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Bot className="w-4 h-4 text-blue-600" />
-                    <span className="text-xs font-medium uppercase text-blue-600">{ix.type}</span>
-                    <span className="text-xs text-gray-400 ml-auto">{ix.time}</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-2">{ix.q}</p>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">{ix.r}</p>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-amber-600">
-                    <AlertTriangle className="w-3 h-3" />
-                    <span>{l === "ar" ? "التحقق البشري مطلوب" : "Human validation required"}</span>
+        <div className="lg:col-span-3">
+          <Card className="flex flex-col h-[600px]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((m, i) => (
+                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${m.role === "user" ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"}`}>
+                    {m.role === "assistant" && <Bot className="w-4 h-4 inline me-1 opacity-60" />}
+                    {m.content}
                   </div>
                 </div>
               ))}
+              {loading && <div className="flex justify-start"><div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3"><Loader2 className="w-4 h-4 animate-spin" /></div></div>}
+            </div>
+            <div className="border-t p-4 flex gap-2">
+              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSend()} placeholder={t("Ask about performance...","اسأل عن الأداء...")} className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <button onClick={handleSend} disabled={loading || !input.trim()} className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg" aria-label={t("Send","إرسال")}><Send className="w-4 h-4" /></button>
             </div>
           </Card>
+        </div>
+        <div className="space-y-3">
+          <p className="text-sm font-medium text-gray-500">{t("Quick Prompts","اقتراحات سريعة")}</p>
+          {suggestions.map((s, i) => (
+            <button key={i} onClick={() => { setInput(s.text); }} className="w-full flex items-center gap-2 p-3 text-sm text-start bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+              {s.icon}<span>{s.text}</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>

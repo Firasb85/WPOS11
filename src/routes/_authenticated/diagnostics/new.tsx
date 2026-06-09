@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/diagnostics/new")({
 });
 
 function NewDiagnosticPage() {
-  const { t, lang: l } = useLanguage();
+  const { t, lang: l, isRTL } = useLanguage();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: employeesData, isLoading: _employeesDataLoading } = useEmployeesList({
@@ -256,16 +256,25 @@ function NewDiagnosticPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("Source", "المصدر")} *
                 </label>
-                <input
+                <select
                   required
                   value={evidenceForm.source}
                   onChange={(e) => setEvidenceForm({ ...evidenceForm, source: e.target.value })}
-                  placeholder={t(
-                    "e.g. KPI System, Manager observation",
-                    "مثال: نظام المؤشرات، ملاحظة المدير",
-                  )}
-                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm"
-                />
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm"
+                >
+                  <option value="">{t("Select source", "اختر المصدر")}</option>
+                  <option value="KPI System">{t("KPI System", "نظام المؤشرات")}</option>
+                  <option value="CRM System">{t("CRM System", "نظام إدارة العملاء")}</option>
+                  <option value="HR System">{t("HR System", "نظام الموارد البشرية")}</option>
+                  <option value="Manager Observation">{t("Manager Observation", "ملاحظة المدير")}</option>
+                  <option value="Attendance System">{t("Attendance System", "نظام الحضور")}</option>
+                  <option value="Quality Audit">{t("Quality Audit", "تدقيق الجودة")}</option>
+                  <option value="Client Feedback">{t("Client Feedback", "ملاحظات العملاء")}</option>
+                  <option value="Peer Review">{t("Peer Review", "مراجعة الزملاء")}</option>
+                  <option value="Training Records">{t("Training Records", "سجلات التدريب")}</option>
+                  <option value="Production Dashboard">{t("Production Dashboard", "لوحة الإنتاج")}</option>
+                  <option value="Other">{t("Other", "أخرى")}</option>
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

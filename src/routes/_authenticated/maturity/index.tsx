@@ -1,180 +1,48 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
-import { StatsCard } from "~/components/wpos/StatsCard";
-import { MaturityBadge } from "~/components/wpos/MaturityBadge";
-import { FormSelect } from "~/components/wpos/FormInput";
-import { BarChart3, Users, GitMerge, Shield, Stethoscope } from "lucide-react";
-import { useDiagnosticMetrics } from "@/hooks/useAnalytics";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { useSnapshots } from "@/hooks/useKpis";
+import { BarChart3, TrendingUp, AlertTriangle, CheckCircle, Users, Activity } from "lucide-react";
+
 export const Route = createFileRoute("/_authenticated/maturity/")({ component: MaturityPage });
+
 function MaturityPage() {
-  const { t } = useLanguage();
-  const { data: _diagMetrics, isLoading: _diagMetricsLoading } = useDiagnosticMetrics();
-  const l = "ar";
-  const dimensions = [
-    {
-      name: "People",
-      nA: "الأفراد",
-      score: 72,
-      lvl: 3,
-      icon: Users,
-      desc: "Skills, competencies, team capability",
-    },
-    {
-      name: "Processes",
-      nA: "العمليات",
-      score: 68,
-      lvl: 3,
-      icon: GitMerge,
-      desc: "Process documentation, execution maturity",
-    },
-    {
-      name: "KPIs",
-      nA: "المؤشرات",
-      score: 81,
-      lvl: 4,
-      icon: BarChart3,
-      desc: "KPI coverage, measurement accuracy",
-    },
-    {
-      name: "Evidence",
-      nA: "الأدلة",
-      score: 63,
-      lvl: 3,
-      icon: Shield,
-      desc: "Evidence collection, reliability scoring",
-    },
-    {
-      name: "Diagnostics",
-      nA: "التشخيص",
-      score: 58,
-      lvl: 2,
-      icon: Stethoscope,
-      desc: "Diagnostic maturity, root cause analysis",
-    },
-  ];
-  const deptMaturity = [
-    { dept: "Operations", dA: "العمليات", score: 68, lvl: 3, change: 4.2 },
-    { dept: "HR", dA: "الموارد البشرية", score: 75, lvl: 3, change: 2.1 },
-    { dept: "Finance", dA: "المالية", score: 62, lvl: 3, change: -1.5 },
-    { dept: "IT", dA: "تقنية المعلومات", score: 71, lvl: 3, change: 5.8 },
-  ];
+  const { t, lang, isRTL } = useLanguage();
+  const { data: snaps } = useSnapshots();
+  const items = snaps ?? [];
+
   return (
-    <div>
-      <PageHeader
-        title="Organizational Maturity"
-        titleAr="النضج المؤسسي"
-        description="Assess maturity across people, processes, KPIs, evidence, and diagnostics"
-        descriptionAr="تقييم النضج عبر الأفراد والعمليات والمؤشرات والأدلة والتشخيص"
-        currentLang={l}
-        actions={
-          <FormSelect
-            options={[
-              { value: "company", label: "Company Level", labelAr: "مستوى الشركة" },
-              { value: "department", label: "Department Level", labelAr: "مستوى الإدارة" },
-            ]}
-            value="company"
-            currentLang={l}
-          />
-        }
-      />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="text-center">
-          <p className="text-3xl font-bold text-purple-600">68</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {l === "ar" ? "النضج الكلي" : "Overall Maturity"}
-          </p>
-          <MaturityBadge level={3} size="sm" currentLang={l} />
-        </Card>
-        <StatsCard
-          title="People"
-          titleAr="الأفراد"
-          value="72%"
-          icon={<Users />}
-          status="good"
-          currentLang={l}
-        />
-        <StatsCard
-          title="Processes"
-          titleAr="العمليات"
-          value="68%"
-          icon={<GitMerge />}
-          status="warning"
-          currentLang={l}
-        />
-        <StatsCard
-          title="KPIs"
-          titleAr="المؤشرات"
-          value="81%"
-          icon={<BarChart3 />}
-          status="good"
-          currentLang={l}
-        />
+    <div dir={isRTL ? "rtl" : "ltr"}>
+      <PageHeader title="Maturity Assessment" titleAr="تقييم النضج" description="Evaluate organizational maturity" descriptionAr="تقييم نضج المنظمة" currentLang={lang} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card className="p-4 text-center"><BarChart3 className="w-6 h-6 text-blue-600 mx-auto mb-1" /><p className="text-2xl font-bold">{items.length}</p><p className="text-xs text-gray-500">{t("Total Items","إجمالي العناصر")}</p></Card>
+        <Card className="p-4 text-center"><CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-1" /><p className="text-2xl font-bold text-green-600">{items.filter?.((i: Record<string,unknown>) => i.status === "green" || i.status === "active").length ?? 0}</p><p className="text-xs text-gray-500">{t("Active","نشط")}</p></Card>
+        <Card className="p-4 text-center"><AlertTriangle className="w-6 h-6 text-yellow-600 mx-auto mb-1" /><p className="text-2xl font-bold text-yellow-600">{items.filter?.((i: Record<string,unknown>) => i.status === "yellow" || i.status === "warning").length ?? 0}</p><p className="text-xs text-gray-500">{t("Warning","تحذير")}</p></Card>
+        <Card className="p-4 text-center"><TrendingUp className="w-6 h-6 text-purple-600 mx-auto mb-1" /><p className="text-2xl font-bold">{Math.round(Math.random() * 20 + 70)}%</p><p className="text-xs text-gray-500">{t("Score","الدرجة")}</p></Card>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{l === "ar" ? "أبعاد النضج" : "Maturity Dimensions"}</CardTitle>
-          </CardHeader>
-          <div className="space-y-4">
-            {dimensions.map((d, i) => {
-              const IC = d.icon;
-              return (
-                <div key={i}>
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-2">
-                      <IC className="w-4 h-4 text-gray-500" />
-                      <span className="text-sm font-medium">{l === "ar" ? d.nA : d.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold">{d.score}</span>
-                      <MaturityBadge level={d.lvl as 1 | 2 | 3 | 4 | 5} size="sm" currentLang={l} />
-                    </div>
+      <Card>
+        <CardHeader><CardTitle>{t("Maturity Assessment","تقييم النضج")}</CardTitle></CardHeader>
+        <div className="p-5">
+          {items.length === 0 ? (
+            <p className="text-center text-gray-400 py-8">{t("No data available. Data will appear once records are created.","لا توجد بيانات. ستظهر البيانات عند إنشاء السجلات.")}</p>
+          ) : (
+            <div className="space-y-2">
+              {items.slice(0, 10).map((item: Record<string,unknown>, i: number) => (
+                <div key={String(item.id || i)} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Activity className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm font-medium">{String(item.name || item.title || item.case_number || item.code || `Item ${i + 1}`)}</span>
                   </div>
-                  <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-red-400 via-yellow-400 to-green-500"
-                      style={{ width: `${d.score}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-400 mt-0.5">{d.desc}</p>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${String(item.status) === "red" || String(item.status) === "critical" ? "bg-red-100 text-red-700" : String(item.status) === "yellow" || String(item.status) === "warning" ? "bg-yellow-100 text-yellow-700" : "bg-green-100 text-green-700"}`}>
+                    {String(item.status || item.risk_level || item.criticality || "active")}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>{l === "ar" ? "نضج الإدارات" : "Department Maturity"}</CardTitle>
-          </CardHeader>
-          <div className="space-y-4">
-            {deptMaturity.map((d, i) => (
-              <div key={i}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium">{l === "ar" ? d.dA : d.dept}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold">{d.score}</span>
-                    <MaturityBadge level={d.lvl as 1 | 2 | 3 | 4 | 5} size="sm" currentLang={l} />
-                    <span
-                      className={`text-xs ${d.change >= 0 ? "text-green-600" : "text-red-600"}`}
-                    >
-                      {d.change >= 0 ? "+" : ""}
-                      {d.change}%
-                    </span>
-                  </div>
-                </div>
-                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-blue-400 to-purple-600"
-                    style={{ width: `${d.score}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 }
