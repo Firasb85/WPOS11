@@ -48,10 +48,10 @@ export function DataTable({
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+      <div className="bg-white dark:bg-[#111822] rounded-lg border border-gray-200 dark:border-[#1e2836] overflow-hidden">
         <div className="animate-pulse p-6 space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-10 bg-gray-100 dark:bg-gray-800 rounded" />
+            <div key={i} className="h-10 bg-gray-100 dark:bg-[#0d1117] rounded" />
           ))}
         </div>
       </div>
@@ -61,10 +61,10 @@ export function DataTable({
   const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 1;
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+    <div className="bg-white dark:bg-[#111822] rounded-lg border border-gray-200 dark:border-[#1e2836] overflow-hidden shadow-sm">
       {/* Search bar */}
       {searchable && (
-        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+        <div className="px-4 py-3 border-b border-gray-100 dark:border-[#1e2836]">
           <div className="relative max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
@@ -72,7 +72,7 @@ export function DataTable({
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search…"
-              className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-[#0d1117] border border-gray-200 dark:border-[#1e2836] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
             />
           </div>
         </div>
@@ -82,7 +82,7 @@ export function DataTable({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 dark:bg-gray-800/50">
+            <tr className="bg-gray-50 dark:bg-[#0d1117]/50">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -103,7 +103,7 @@ export function DataTable({
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
             {data.map((row, rowIdx) => (
-              <tr key={row.id ?? rowIdx} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/5 transition-colors">
+              <tr key={row.id ?? rowIdx} className="hover:bg-blue-50/30 dark:hover:bg-white/[0.03] transition-colors">
                 {columns.map((col) => (
                   <td key={col.key} className={`px-4 py-3 text-gray-700 dark:text-gray-300 ${col.className ?? ""}`}>
                     {col.render ? col.render(row) : String(row[col.key] ?? "—")}
@@ -124,7 +124,7 @@ export function DataTable({
 
       {/* Pagination */}
       {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-[#1e2836] bg-gray-50/50 dark:bg-[#0d1117]/30">
           <p className="text-xs text-gray-500">
             {(pagination.page - 1) * pagination.pageSize + 1}–{Math.min(pagination.page * pagination.pageSize, pagination.total)} of {pagination.total}
           </p>
@@ -137,7 +137,7 @@ export function DataTable({
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
+            <span className="px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-[#0d1117] border border-gray-200 dark:border-[#1e2836] rounded-md">
               {pagination.page} / {totalPages}
             </span>
             <button

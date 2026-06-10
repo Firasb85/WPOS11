@@ -213,8 +213,8 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
 
     const cls = `flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] cursor-pointer transition-all no-underline ${
       active
-        ? "bg-blue-600 text-white font-medium shadow-sm"
-        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+        ? "bg-blue-600 text-white font-medium shadow-sm dark:bg-blue-600 dark:shadow-blue-900/30"
+        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"
     }`;
 
     return (
@@ -270,13 +270,13 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
         />
       )}
       <aside
-        className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} z-50 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${isOpen ? "w-60" : "w-0 lg:w-[52px]"} overflow-hidden lg:overflow-visible`}
+        className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} z-50 flex flex-col bg-white dark:bg-[#0d1117] border-r border-gray-200 dark:border-[#1b2230] transition-all duration-300 ${isOpen ? "w-60" : "w-0 lg:w-[52px]"} overflow-hidden lg:overflow-visible`}
         role="navigation"
         aria-label="Main navigation"
       >
         {/* Header */}
-        <div className="h-16 flex items-center gap-2 px-4 border-b border-gray-200 dark:border-gray-800">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
+        <div className="h-16 flex items-center gap-2 px-4 border-b border-gray-200 dark:border-[#1b2230]">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
             <span className="text-white font-bold text-sm">W</span>
           </div>
           {isOpen && (
@@ -285,7 +285,7 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
           {isOpen && (
             <button
               onClick={onToggle}
-              className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden ml-auto"
+              className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 lg:hidden ml-auto"
               aria-label="Close sidebar"
             >
               <X className="w-5 h-5 text-gray-500" />
@@ -296,7 +296,7 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
         {/* Collapse toggle */}
         <button
           onClick={onToggle}
-          className={`hidden lg:flex absolute top-4 ${isRTL ? "-left-3" : "-right-3"} w-6 h-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full items-center justify-center shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 z-10`}
+          className={`hidden lg:flex absolute top-4 ${isRTL ? "-left-3" : "-right-3"} w-6 h-6 bg-white dark:bg-[#161d27] border border-gray-200 dark:border-[#1b2230] rounded-full items-center justify-center shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 z-10`}
           aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
           {isOpen ? (
@@ -308,7 +308,7 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
 
         {/* Role badge */}
         {isOpen && (
-          <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
+          <div className="px-4 py-2 border-b border-gray-200 dark:border-[#1b2230] flex items-center gap-2">
             <span
               className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge[userRole] || badge.USER}`}
             >
@@ -325,10 +325,10 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
 
         {/* Footer */}
         {isOpen && (
-          <div className="border-t border-gray-200 dark:border-gray-800 p-3">
+          <div className="border-t border-gray-200 dark:border-[#1b2230] p-3">
             <button
               onClick={() => signOut()}
-              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-sm text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 text-sm text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
             >
               <LogOut className="w-4 h-4" />
               {t("Sign Out", "تسجيل الخروج")}

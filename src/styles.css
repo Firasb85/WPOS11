@@ -5,10 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * WPOS Corporate Premium Design System
- * 
- * Professional blue/gray palette inspired by SAP Fiori & Salesforce Lightning.
- * All colors in oklch format.
+ * WPOS Premium Design System
+ * Light: Corporate SAP Fiori / Salesforce style
+ * Dark:  Premium deep-space dark inspired by Linear, Vercel, Arc
  */
 
 @theme inline {
@@ -54,78 +53,104 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ═══════════════════════════════════════════
+   LIGHT MODE — Corporate Professional
+   ═══════════════════════════════════════════ */
 :root {
   --radius: 0.5rem;
-  /* Corporate light theme — professional blue-gray */
   --background: oklch(0.975 0.004 250);
-  --foreground: oklch(0.16 0.03 260);
+  --foreground: oklch(0.145 0.03 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.16 0.03 260);
+  --card-foreground: oklch(0.145 0.03 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.16 0.03 260);
+  --popover-foreground: oklch(0.145 0.03 260);
   --primary: oklch(0.45 0.18 260);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.955 0.008 250);
   --secondary-foreground: oklch(0.25 0.03 260);
-  --muted: oklch(0.955 0.008 250);
-  --muted-foreground: oklch(0.52 0.03 255);
+  --muted: oklch(0.96 0.006 250);
+  --muted-foreground: oklch(0.50 0.03 255);
   --accent: oklch(0.94 0.015 250);
   --accent-foreground: oklch(0.25 0.03 260);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.91 0.01 255);
-  --input: oklch(0.91 0.01 255);
+  --border: oklch(0.915 0.008 255);
+  --input: oklch(0.915 0.008 255);
   --ring: oklch(0.45 0.18 260);
-  /* Charts — SAP-inspired palette */
   --chart-1: oklch(0.45 0.18 260);
   --chart-2: oklch(0.62 0.15 160);
   --chart-3: oklch(0.72 0.16 55);
   --chart-4: oklch(0.55 0.20 310);
   --chart-5: oklch(0.60 0.22 30);
-  /* Sidebar — slightly darker for hierarchy */
-  --sidebar: oklch(0.98 0.003 250);
+  --sidebar: oklch(0.985 0.003 250);
   --sidebar-foreground: oklch(0.25 0.03 260);
   --sidebar-primary: oklch(0.45 0.18 260);
   --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.94 0.015 260);
+  --sidebar-accent: oklch(0.94 0.012 260);
   --sidebar-accent-foreground: oklch(0.25 0.03 260);
-  --sidebar-border: oklch(0.92 0.008 255);
+  --sidebar-border: oklch(0.92 0.006 255);
   --sidebar-ring: oklch(0.45 0.18 260);
 }
 
+/* ═══════════════════════════════════════════
+   DARK MODE — Premium Deep-Space
+   Inspired by Linear, Vercel, Arc Browser
+   ═══════════════════════════════════════════ */
 .dark {
-  --background: oklch(0.13 0.02 260);
-  --foreground: oklch(0.96 0.005 250);
-  --card: oklch(0.18 0.02 260);
-  --card-foreground: oklch(0.96 0.005 250);
-  --popover: oklch(0.18 0.02 260);
-  --popover-foreground: oklch(0.96 0.005 250);
-  --primary: oklch(0.60 0.18 255);
+  /* Page background — near-black with slight blue warmth */
+  --background: oklch(0.105 0.015 265);
+  /* Text — bright but not pure white (reduces eye strain) */
+  --foreground: oklch(0.93 0.006 250);
+
+  /* Cards — elevated surface, subtle separation from bg */
+  --card: oklch(0.145 0.015 265);
+  --card-foreground: oklch(0.93 0.006 250);
+
+  /* Popover — slightly brighter than card for hierarchy */
+  --popover: oklch(0.16 0.015 265);
+  --popover-foreground: oklch(0.93 0.006 250);
+
+  /* Primary — vivid blue that pops on dark backgrounds */
+  --primary: oklch(0.65 0.20 255);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.22 0.025 260);
-  --secondary-foreground: oklch(0.96 0.005 250);
-  --muted: oklch(0.22 0.025 260);
-  --muted-foreground: oklch(0.62 0.03 255);
-  --accent: oklch(0.22 0.025 260);
-  --accent-foreground: oklch(0.96 0.005 250);
-  --destructive: oklch(0.65 0.20 22);
+
+  /* Secondary — subtle surface for grouped elements */
+  --secondary: oklch(0.18 0.012 265);
+  --secondary-foreground: oklch(0.88 0.008 250);
+
+  /* Muted — dimmed text and subtle backgrounds */
+  --muted: oklch(0.18 0.012 265);
+  --muted-foreground: oklch(0.58 0.02 255);
+
+  /* Accent — hover/active backgrounds */
+  --accent: oklch(0.19 0.015 265);
+  --accent-foreground: oklch(0.93 0.006 250);
+
+  /* Destructive — vivid red, not too bright */
+  --destructive: oklch(0.60 0.22 20);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.26 0.015 260);
-  --input: oklch(0.26 0.015 260);
-  --ring: oklch(0.60 0.18 255);
-  --chart-1: oklch(0.55 0.20 260);
-  --chart-2: oklch(0.65 0.15 165);
-  --chart-3: oklch(0.75 0.16 55);
-  --chart-4: oklch(0.60 0.20 310);
-  --chart-5: oklch(0.65 0.22 30);
-  --sidebar: oklch(0.16 0.02 260);
-  --sidebar-foreground: oklch(0.96 0.005 250);
-  --sidebar-primary: oklch(0.55 0.20 260);
+
+  /* Borders — very subtle, 1px lines visible but not harsh */
+  --border: oklch(0.22 0.012 265);
+  --input: oklch(0.20 0.012 265);
+  --ring: oklch(0.65 0.20 255);
+
+  /* Charts — brighter, more saturated for visibility on dark */
+  --chart-1: oklch(0.65 0.22 255);
+  --chart-2: oklch(0.70 0.18 165);
+  --chart-3: oklch(0.78 0.18 65);
+  --chart-4: oklch(0.65 0.22 310);
+  --chart-5: oklch(0.70 0.24 30);
+
+  /* Sidebar — darker than main content for depth */
+  --sidebar: oklch(0.115 0.015 265);
+  --sidebar-foreground: oklch(0.85 0.008 250);
+  --sidebar-primary: oklch(0.65 0.20 255);
   --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.22 0.025 260);
-  --sidebar-accent-foreground: oklch(0.96 0.005 250);
-  --sidebar-border: oklch(0.26 0.015 260);
-  --sidebar-ring: oklch(0.55 0.20 260);
+  --sidebar-accent: oklch(0.17 0.015 265);
+  --sidebar-accent-foreground: oklch(0.88 0.008 250);
+  --sidebar-border: oklch(0.20 0.012 265);
+  --sidebar-ring: oklch(0.65 0.20 255);
 }
 
 @layer base {
@@ -142,7 +167,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Scrollbar styling — corporate subtle */
+  /* ── Scrollbar — adapts to theme ────────────────────── */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -151,25 +176,81 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.8 0.01 255);
+    background: oklch(0.82 0.008 255);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.7 0.01 255);
+    background: oklch(0.72 0.008 255);
   }
   .dark ::-webkit-scrollbar-thumb {
-    background: oklch(0.3 0.01 255);
+    background: oklch(0.25 0.01 265);
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.35 0.01 265);
   }
 
-  /* Focus ring — consistent blue */
+  /* ── Focus ring ─────────────────────────────────────── */
   *:focus-visible {
-    outline: 2px solid oklch(0.45 0.18 260);
+    outline: 2px solid var(--color-ring);
     outline-offset: 2px;
     border-radius: 4px;
   }
 
-  /* Selection — brand blue */
+  /* ── Selection ──────────────────────────────────────── */
   ::selection {
     background: oklch(0.45 0.18 260 / 20%);
   }
+  .dark ::selection {
+    background: oklch(0.65 0.20 255 / 25%);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   DARK MODE REFINEMENTS
+   Extra polish for premium feel
+   ═══════════════════════════════════════════ */
+
+/* Subtle glow on primary buttons in dark mode */
+.dark .shadow-sm {
+  box-shadow: 0 1px 2px oklch(0 0 0 / 40%);
+}
+.dark .shadow {
+  box-shadow: 0 1px 3px oklch(0 0 0 / 50%), 0 1px 2px oklch(0 0 0 / 30%);
+}
+.dark .shadow-md {
+  box-shadow: 0 4px 6px oklch(0 0 0 / 45%), 0 2px 4px oklch(0 0 0 / 25%);
+}
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px oklch(0 0 0 / 50%), 0 4px 6px oklch(0 0 0 / 30%);
+}
+
+/* Smoother transitions for theme switching */
+.dark * {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+/* Dark mode input fields — slightly raised */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: oklch(0.14 0.012 265);
+  border-color: oklch(0.24 0.012 265);
+}
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: oklch(0.50 0.15 255);
+  box-shadow: 0 0 0 3px oklch(0.50 0.15 255 / 15%);
+}
+
+/* Dark mode hover glow on interactive cards */
+.dark .hover\:shadow-md:hover {
+  box-shadow: 0 4px 12px oklch(0 0 0 / 50%), 0 0 0 1px oklch(0.30 0.015 265);
+}
+
+/* Dark mode table row hover */
+.dark tr:hover {
+  background-color: oklch(0.16 0.012 265);
 }

@@ -46,7 +46,7 @@ export function DashboardLayout() {
     : isRTL ? "lg:mr-[52px]" : "lg:ml-[52px]";
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-gray-50 dark:bg-[#090d14] transition-colors duration-200" dir={isRTL ? "rtl" : "ltr"}>
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} isDark={isDark} />
       <div className={`transition-all duration-200 ease-out ${sidebarMargin}`}>
         <Header onMenuToggle={toggleSidebar} />

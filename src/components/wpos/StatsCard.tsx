@@ -13,14 +13,14 @@ interface StatsCardProps {
 }
 
 const statusColors = {
-  good: { border: "border-l-emerald-500", icon: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400", value: "text-emerald-700 dark:text-emerald-400" },
-  warning: { border: "border-l-amber-500", icon: "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400", value: "text-amber-700 dark:text-amber-400" },
-  critical: { border: "border-l-red-500", icon: "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400", value: "text-red-700 dark:text-red-400" },
+  good: { border: "border-l-emerald-500", icon: "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400", value: "text-emerald-700 dark:text-emerald-400" },
+  warning: { border: "border-l-amber-500", icon: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400", value: "text-amber-700 dark:text-amber-400" },
+  critical: { border: "border-l-red-500", icon: "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400", value: "text-red-700 dark:text-red-400" },
 };
 
 const defaultColors = {
   border: "border-l-blue-600",
-  icon: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+  icon: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
   value: "text-gray-900 dark:text-white",
 };
 
@@ -29,7 +29,7 @@ export function StatsCard({ title, value, change, icon, status, size = "md" }: S
   const compact = size === "sm";
 
   return (
-    <div className={`bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 border-l-4 ${colors.border} ${compact ? "p-3" : "p-4"} flex items-center gap-3 shadow-sm hover:shadow transition-shadow`}>
+    <div className={`bg-white dark:bg-[#111822] rounded-lg border border-gray-200 dark:border-[#1e2836] border-l-4 ${colors.border} ${compact ? "p-3" : "p-4"} flex items-center gap-3 shadow-sm hover:shadow transition-shadow`}>
       {icon && (
         <div className={`${compact ? "w-9 h-9" : "w-11 h-11"} rounded-lg flex items-center justify-center flex-shrink-0 ${colors.icon}`}>
           {icon}

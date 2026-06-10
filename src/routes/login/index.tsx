@@ -200,12 +200,12 @@ function LoginPage() {
             <h1 className="text-xl font-bold text-white">{APP_NAME}</h1>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-xl p-8">
+          <div className="bg-white dark:bg-[#111822] rounded-lg border border-gray-200 dark:border-[#1e2836] shadow-xl p-8">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Welcome back</h2>
             <p className="text-sm text-gray-500 mb-6">Sign in to your workspace</p>
 
             {error && (
-              <div className="flex items-start gap-2 p-3 mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+              <div className="flex items-start gap-2 p-3 mb-4 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-md">
                 <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-red-600 dark:text-red-400 break-all font-mono">{error}</p>
               </div>
@@ -214,7 +214,7 @@ function LoginPage() {
             <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
-                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@wpos.com" required autoComplete="email" className="w-full px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-all" />
+                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@wpos.com" required autoComplete="email" className="w-full px-4 py-3 rounded-md border border-gray-300 dark:border-[#1e2836] bg-white dark:bg-[#0d1117] text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-all" />
               </div>
               <div>
                 <label htmlFor="password" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
@@ -266,7 +266,7 @@ function LoginPage() {
             {debugLog.length > 0 && (
               <details className="mt-4">
                 <summary className="text-[10px] text-gray-400 cursor-pointer hover:text-blue-300/50">Auth Debug Log ({debugLog.length})</summary>
-                <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg max-h-32 overflow-y-auto">
+                <div className="mt-1 p-2 bg-gray-50 dark:bg-[#0d1117] rounded-lg max-h-32 overflow-y-auto">
                   {debugLog.map((log, i) => (
                     <p key={i} className="text-[10px] text-gray-500 dark:text-gray-400 font-mono leading-relaxed">{log}</p>
                   ))}

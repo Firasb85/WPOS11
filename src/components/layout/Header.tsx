@@ -62,12 +62,12 @@ export function Header({ onMenuToggle }: HeaderProps) {
   ];
 
   return (
-    <header className="h-14 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-gray-800/60 flex items-center justify-between px-4 lg:px-5 sticky top-0 z-30" role="banner">
+    <header className="h-14 bg-white/80 dark:bg-[#0d1117]/90 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#1b2230]/80 flex items-center justify-between px-4 lg:px-5 sticky top-0 z-30" role="banner">
       <div className="flex items-center gap-3">
         <button onClick={onMenuToggle} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden transition-colors" aria-label="Toggle menu">
           <Menu className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         </button>
-        <div className="hidden md:flex items-center gap-2 bg-gray-100/80 dark:bg-gray-800/80 rounded-lg px-3 py-2 w-64 transition-all focus-within:ring-2 focus-within:ring-primary/30 focus-within:bg-white dark:focus-within:bg-gray-800">
+        <div className="hidden md:flex items-center gap-2 bg-gray-100/80 dark:bg-white/5 rounded-lg px-3 py-2 w-64 transition-all focus-within:ring-2 focus-within:ring-primary/30 focus-within:bg-white dark:focus-within:bg-gray-800">
           <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
           <input type="text" placeholder={t("Search…", "بحث…")} className="bg-transparent border-none outline-none text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 w-full" />
         </div>
@@ -93,7 +93,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           {showThemeMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowThemeMenu(false)} />
-              <div className="absolute end-0 top-full mt-1 z-50 w-36 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1">
+              <div className="absolute end-0 top-full mt-1 z-50 w-36 bg-white dark:bg-[#161d27] border border-gray-200 dark:border-[#1b2230] rounded-lg shadow-lg py-1">
                 {themeOptions.map((opt) => {
                   const Icon = opt.icon;
                   const isActive = currentTheme === opt.value;
@@ -101,7 +101,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
                     <button
                       key={opt.value}
                       onClick={() => handleThemeChange(opt.value)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${isActive ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"}`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${isActive ? "bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 font-medium" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"}`}
                     >
                       <Icon className="w-4 h-4" />
                       {lang === "ar" ? opt.labelAr : opt.label}
@@ -117,10 +117,10 @@ export function Header({ onMenuToggle }: HeaderProps) {
         {/* Notifications */}
         <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label={t("Notifications", "الإشعارات")}>
           <Bell className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-          <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-900" />
+          <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-[#0d1117]" />
         </button>
 
-        <div className="w-px h-7 bg-gray-200 dark:bg-gray-700 mx-1" />
+        <div className="w-px h-7 bg-gray-200 dark:bg-[#1b2230] mx-1" />
 
         {/* User */}
         <button onClick={() => navigate({ to: "/profile" })} className="flex items-center gap-2.5 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" aria-label="Profile">

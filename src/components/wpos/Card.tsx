@@ -19,7 +19,7 @@ const accentStyles = {
 export function Card({ children, className = "", padding = "md", accent = "none", ...props }: CardProps) {
   return (
     <div
-      className={`bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm ${accentStyles[accent]} ${paddingStyles[padding]} ${className}`}
+      className={`bg-white dark:bg-[#111822] rounded-lg border border-gray-200 dark:border-[#1e2836] shadow-sm ${accentStyles[accent]} ${paddingStyles[padding]} ${className}`}
       {...props}
     >
       {children}
@@ -29,7 +29,7 @@ export function Card({ children, className = "", padding = "md", accent = "none"
 
 export function CardHeader({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`flex items-center justify-between pb-4 mb-4 border-b border-gray-100 dark:border-gray-800 ${className}`}>
+    <div className={`flex items-center justify-between pb-4 mb-4 border-b border-gray-100 dark:border-[#1e2836] ${className}`}>
       {children}
     </div>
   );
