@@ -25,15 +25,14 @@ function LoginPage() {
     }
   }, [user, authLoading, navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const signInWithCredentials = async (nextEmail: string, nextPassword: string) => {
     setError(null);
     setLoading(true);
 
     try {
       const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
+        email: nextEmail.trim(),
+        password: nextPassword,
       });
 
       if (authError) {
@@ -54,6 +53,11 @@ function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await signInWithCredentials(email, password);
   };
 
   if (authLoading) {
@@ -169,7 +173,9 @@ function LoginPage() {
                   onClick={() => {
                     setEmail(acc.e);
                     setPassword(acc.p);
+                    void signInWithCredentials(acc.e, acc.p);
                   }}
+                  disabled={loading}
                   className="text-xs py-1.5 px-2 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
                 >
                   {acc.label}
