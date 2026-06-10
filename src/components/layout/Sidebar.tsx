@@ -130,7 +130,6 @@ interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   isDark?: boolean;
-  onThemeToggle?: () => void;
 }
 
 /* ── Role-based + admin-controlled filtering ─────────── */
@@ -159,7 +158,7 @@ function filterNav(items: SecureNavItem[], userRole: Role): SecureNavItem[] {
 
 /* ── Sidebar Component ───────────────────────────────── */
 
-export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProps) {
+export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
   const location = useLocation();
   const { lang, t, isRTL } = useLanguage();
   const { role, signOut } = useAuth();
@@ -326,20 +325,13 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
 
         {/* Footer */}
         {isOpen && (
-          <div className="border-t border-gray-200 dark:border-gray-800 p-3 space-y-2">
-            <button
-              onClick={onThemeToggle}
-              className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-gray-600 dark:text-gray-400"
-            >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              {isDark ? t("Light Mode", "الوضع الفاتح") : t("Dark Mode", "الوضع الداكن")}
-            </button>
+          <div className="border-t border-gray-200 dark:border-gray-800 p-3">
             <button
               onClick={() => signOut()}
-              className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-red-500 dark:text-red-400"
+              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-sm text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              {t("Logout", "تسجيل الخروج")}
+              {t("Sign Out", "تسجيل الخروج")}
             </button>
           </div>
         )}

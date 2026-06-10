@@ -4,8 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { APP_NAME, APP_NAME_FULL } from "@/lib/constants";
 import { clientEnv } from "@/config/env";
+import { initTheme, getResolvedTheme, getStoredTheme, setTheme, type Theme } from "@/lib/stores/theme";
 import {
-  Eye, EyeOff, LogIn, AlertCircle, Shield, Users, BarChart3,
+  Eye, EyeOff, LogIn, AlertCircle, Moon, Sun, Shield, Users, BarChart3,
   Loader2, CheckCircle, Zap, Globe, ArrowRight,
 } from "lucide-react";
 
@@ -42,6 +43,16 @@ function LoginPage() {
     const ts = new Date().toLocaleTimeString();
     setDebugLog((p) => [...p.slice(-9), `[${ts}] ${msg}`]);
     console.log(`[WPOS Auth] ${msg}`);
+  };
+
+  // Initialize theme
+  useEffect(() => { initTheme(); }, []);
+  const [theme, setThemeState] = useState<Theme>(getStoredTheme);
+  const isDark = getResolvedTheme(theme) === "dark";
+  const toggleTheme = () => {
+    const next: Theme = isDark ? "light" : "dark";
+    setTheme(next);
+    setThemeState(next);
   };
 
   /* Redirect if already logged in — route by role */
@@ -169,7 +180,19 @@ function LoginPage() {
       {/* Right panel — sign-in */}
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md">
-          {/* Mobile logo */}
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            className="absolute top-4 end-4 p-2.5 rounded-lg bg-white/10 dark:bg-gray-800 hover:bg-white/20 dark:hover:bg-gray-700 transition-colors z-10"
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {isDark
+              ? <Sun className="w-4 h-4 text-yellow-400" />
+              : <Moon className="w-4 h-4 text-gray-300" />
+            }
+          </button>
+
+      {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
             <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-800 rounded-lg flex items-center justify-center mx-auto mb-3 shadow-lg shadow-blue-500/25">
               <span className="text-white font-bold text-2xl">W</span>

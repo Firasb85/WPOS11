@@ -3,27 +3,31 @@ import { Outlet, useLocation } from "@tanstack/react-router";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { initTheme, getResolvedTheme, getStoredTheme } from "@/lib/stores/theme";
 
-const DARK_KEY = "wpos_dark_mode";
 const SIDEBAR_KEY = "wpos_sidebar_open";
 
 export function DashboardLayout() {
   const { isRTL } = useLanguage();
 
+  // Initialize theme on mount
+  useEffect(() => { initTheme(); }, []);
+
+  // Track dark mode for sidebar prop
+  const [isDark, setIsDark] = useState(() => getResolvedTheme() === "dark");
+  const onThemeChanged = useCallback(() => {
+    setIsDark(getResolvedTheme(getStoredTheme()) === "dark");
+  }, []);
+  useEffect(() => {
+    window.addEventListener("wpos:theme-changed", onThemeChanged);
+    return () => window.removeEventListener("wpos:theme-changed", onThemeChanged);
+  }, [onThemeChanged]);
+
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (typeof window === "undefined") return true;
     try { return window.localStorage.getItem(SIDEBAR_KEY) !== "false"; } catch { return true; }
   });
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try { return window.localStorage.getItem(DARK_KEY) === "true"; } catch { return false; }
-  });
   const location = useLocation();
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark);
-    try { window.localStorage.setItem(DARK_KEY, String(isDark)); } catch {}
-  }, [isDark]);
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((prev) => {
@@ -42,8 +46,8 @@ export function DashboardLayout() {
     : isRTL ? "lg:mr-[52px]" : "lg:ml-[52px]";
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950" dir={isRTL ? "rtl" : "ltr"}>
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} isDark={isDark} onThemeToggle={() => setIsDark(!isDark)} />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200" dir={isRTL ? "rtl" : "ltr"}>
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} isDark={isDark} />
       <div className={`transition-all duration-200 ease-out ${sidebarMargin}`}>
         <Header onMenuToggle={toggleSidebar} />
         <main className="p-4 lg:p-5 max-w-[1440px] mx-auto">
