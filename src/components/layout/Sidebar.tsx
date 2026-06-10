@@ -67,6 +67,7 @@ import { navigation, type SecureNavItem, type Role } from "@/lib/wpos/constants/
 import { APP_NAME } from "@/lib/constants";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
+import { ROLE_LABELS } from "@/routes/_authenticated";
 import { isModuleVisible } from "@/lib/stores/module-visibility";
 
 const iconMap: Record<string, LucideIcon> = {
