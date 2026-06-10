@@ -12,66 +12,41 @@ export function DashboardLayout() {
 
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (typeof window === "undefined") return true;
-    try {
-      return window.localStorage.getItem(SIDEBAR_KEY) !== "false";
-    } catch {
-      return true;
-    }
+    try { return window.localStorage.getItem(SIDEBAR_KEY) !== "false"; } catch { return true; }
   });
   const [isDark, setIsDark] = useState(() => {
     if (typeof window === "undefined") return false;
-    try {
-      return window.localStorage.getItem(DARK_KEY) === "true";
-    } catch {
-      return false;
-    }
+    try { return window.localStorage.getItem(DARK_KEY) === "true"; } catch { return false; }
   });
   const location = useLocation();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
-    try {
-      window.localStorage.setItem(DARK_KEY, String(isDark));
-    } catch {
-      /* noop */
-    }
+    try { window.localStorage.setItem(DARK_KEY, String(isDark)); } catch {}
   }, [isDark]);
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen((prev) => {
       const next = !prev;
-      try {
-        window.localStorage.setItem(SIDEBAR_KEY, String(next));
-      } catch {
-        /* noop */
-      }
+      try { window.localStorage.setItem(SIDEBAR_KEY, String(next)); } catch {}
       return next;
     });
   }, []);
 
-  // Auto-close on mobile after navigation
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      setSidebarOpen(false);
-    }
+    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
   }, [location.pathname]);
 
-  // RTL layout: sidebar goes to the right, content margin flips
   const sidebarMargin = sidebarOpen
-    ? isRTL ? "lg:mr-64" : "lg:ml-64"
-    : isRTL ? "lg:mr-16" : "lg:ml-16";
+    ? isRTL ? "lg:mr-60" : "lg:ml-60"
+    : isRTL ? "lg:mr-[52px]" : "lg:ml-[52px]";
 
   return (
-    <div className="min-h-screen bg-gray-50/80 dark:bg-gray-950" dir={isRTL ? "rtl" : "ltr"}>
-      <Sidebar
-        isOpen={sidebarOpen}
-        onToggle={toggleSidebar}
-        isDark={isDark}
-        onThemeToggle={() => setIsDark(!isDark)}
-      />
-      <div className={`transition-all duration-300 ease-in-out ${sidebarMargin}`}>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950" dir={isRTL ? "rtl" : "ltr"}>
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} isDark={isDark} onThemeToggle={() => setIsDark(!isDark)} />
+      <div className={`transition-all duration-200 ease-out ${sidebarMargin}`}>
         <Header onMenuToggle={toggleSidebar} />
-        <main className="p-4 lg:p-6 max-w-[1600px] mx-auto">
+        <main className="p-4 lg:p-5 max-w-[1440px] mx-auto">
           <Outlet />
         </main>
       </div>

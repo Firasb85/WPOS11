@@ -212,9 +212,9 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
     const open = expanded.includes(item.href);
     const label = lang === "ar" ? item.labelAr : item.label;
 
-    const cls = `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer transition-all no-underline ${
+    const cls = `flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] cursor-pointer transition-all no-underline ${
       active
-        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+        ? "bg-blue-600 text-white font-medium shadow-sm"
         : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
     }`;
 
@@ -231,19 +231,19 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
             }}
             aria-expanded={open}
           >
-            <Icon className="w-5 h-5 flex-shrink-0" />
+            <Icon className="w-4 h-4 flex-shrink-0" />
             {isOpen && (
               <>
                 <span className="flex-1 truncate text-left">{label}</span>
                 <ChevronDown
-                  className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
+                  className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
                 />
               </>
             )}
           </button>
         ) : (
           <Link to={item.href} className={cls} style={{ paddingLeft: `${depth * 12 + 12}px` }}>
-            <Icon className="w-5 h-5 flex-shrink-0" />
+            <Icon className="w-4 h-4 flex-shrink-0" />
             {isOpen && <span className="flex-1 truncate">{label}</span>}
           </Link>
         )}
@@ -271,14 +271,14 @@ export function Sidebar({ isOpen, onToggle, isDark, onThemeToggle }: SidebarProp
         />
       )}
       <aside
-        className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} z-50 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${isOpen ? "w-64" : "w-0 lg:w-16"} overflow-hidden lg:overflow-visible`}
+        className={`fixed top-0 bottom-0 ${isRTL ? "right-0" : "left-0"} z-50 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 ${isOpen ? "w-60" : "w-0 lg:w-[52px]"} overflow-hidden lg:overflow-visible`}
         role="navigation"
         aria-label="Main navigation"
       >
         {/* Header */}
         <div className="h-16 flex items-center gap-2 px-4 border-b border-gray-200 dark:border-gray-800">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-sm">WP</span>
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
+            <span className="text-white font-bold text-sm">W</span>
           </div>
           {isOpen && (
             <span className="font-bold text-gray-900 dark:text-white text-lg">{APP_NAME}</span>

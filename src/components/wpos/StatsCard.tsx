@@ -8,56 +8,43 @@ interface StatsCardProps {
   icon?: ReactNode;
   status?: "good" | "warning" | "critical";
   currentLang?: string;
+  size?: "sm" | "md";
   [key: string]: unknown;
 }
 
-const statusStyles = {
-  good: "from-green-50 to-emerald-50 border-green-100 dark:from-green-900/10 dark:to-emerald-900/10 dark:border-green-800/30",
-  warning:
-    "from-yellow-50 to-amber-50 border-yellow-100 dark:from-yellow-900/10 dark:to-amber-900/10 dark:border-yellow-800/30",
-  critical:
-    "from-red-50 to-rose-50 border-red-100 dark:from-red-900/10 dark:to-rose-900/10 dark:border-red-800/30",
+const statusColors = {
+  good: { border: "border-l-emerald-500", icon: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400", value: "text-emerald-700 dark:text-emerald-400" },
+  warning: { border: "border-l-amber-500", icon: "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400", value: "text-amber-700 dark:text-amber-400" },
+  critical: { border: "border-l-red-500", icon: "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400", value: "text-red-700 dark:text-red-400" },
 };
 
-const iconStyles = {
-  good: "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30",
-  warning: "text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30",
-  critical: "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30",
+const defaultColors = {
+  border: "border-l-blue-600",
+  icon: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+  value: "text-gray-900 dark:text-white",
 };
 
-export function StatsCard({ title, value, change, icon, status }: StatsCardProps) {
-  const bgClass = status
-    ? statusStyles[status]
-    : "from-white to-gray-50/50 border-gray-100 dark:from-gray-900 dark:to-gray-800/50 dark:border-gray-800";
-  const iconClass = status
-    ? iconStyles[status]
-    : "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30";
+export function StatsCard({ title, value, change, icon, status, size = "md" }: StatsCardProps) {
+  const colors = status ? statusColors[status] : defaultColors;
+  const compact = size === "sm";
 
   return (
-    <div
-      className={`bg-gradient-to-br ${bgClass} rounded-2xl border p-5 transition-shadow hover:shadow-md`}
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-            {title}
-          </p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{value}</p>
+    <div className={`bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 border-l-4 ${colors.border} ${compact ? "p-3" : "p-4"} flex items-center gap-3 shadow-sm hover:shadow transition-shadow`}>
+      {icon && (
+        <div className={`${compact ? "w-9 h-9" : "w-11 h-11"} rounded-lg flex items-center justify-center flex-shrink-0 ${colors.icon}`}>
+          {icon}
+        </div>
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider truncate">{title}</p>
+        <div className="flex items-baseline gap-2">
+          <p className={`${compact ? "text-xl" : "text-2xl"} font-bold ${colors.value} tracking-tight leading-tight`}>{value}</p>
           {change !== undefined && change !== 0 && (
-            <p
-              className={`text-xs font-medium mt-1.5 ${change > 0 ? "text-green-600" : "text-red-600"}`}
-            >
-              {change > 0 ? "↑" : "↓"} {Math.abs(change)}%
-            </p>
+            <span className={`text-xs font-semibold ${change > 0 ? "text-emerald-600" : "text-red-600"}`}>
+              {change > 0 ? "▲" : "▼"} {Math.abs(change)}%
+            </span>
           )}
         </div>
-        {icon && (
-          <div
-            className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${iconClass}`}
-          >
-            {icon}
-          </div>
-        )}
       </div>
     </div>
   );

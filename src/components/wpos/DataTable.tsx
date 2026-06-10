@@ -1,222 +1,153 @@
 import { useState } from "react";
-import { ChevronUp, ChevronDown, Search } from "lucide-react";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
+import { Search, ChevronLeft, ChevronRight, ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 
-export interface Column<T = Record<string, unknown>> {
+interface Column {
   key: string;
   label: string;
-  labelAr?: string;
   sortable?: boolean;
-  searchable?: boolean;
-  /** Render callback receives the full row object */
-  render?: (row: T) => React.ReactNode;
-  width?: string;
+  render?: (row: any) => React.ReactNode;
+  className?: string;
 }
 
-interface DataTableProps<T extends { id: string }> {
-  columns: Column<T>[];
-  data: T[];
+interface PaginationConfig {
+  total: number;
+  page: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}
+
+interface DataTableProps {
+  columns: Column[];
+  data: Record<string, any>[];
   isLoading?: boolean;
   searchable?: boolean;
-  selectable?: boolean;
-  pageSize?: number;
-  currentLang?: string;
-  onRowClick?: (row: T) => void;
-  onSort?: (key: string, direction: "asc" | "desc") => void;
   onSearch?: (query: string) => void;
-  onSelectionChange?: (selectedIds: string[]) => void;
-  pagination?: {
-    total: number;
-    page: number;
-    pageSize: number;
-    onPageChange: (page: number) => void;
-  };
+  onSort?: (key: string, direction: "asc" | "desc") => void;
+  pagination?: PaginationConfig;
+  emptyMessage?: string;
 }
 
-export function DataTable<T extends { id: string }>({
-  columns,
-  data,
-  isLoading = false,
-  searchable = true,
-  selectable = false,
-  onSort,
-  onSearch,
-  onSelectionChange,
-  pagination,
-}: DataTableProps<T>) {
-  const [sortKey, setSortKey] = useState<string | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+export function DataTable({
+  columns, data, isLoading, searchable, onSearch, onSort, pagination, emptyMessage = "No data available",
+}: DataTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    onSearch?.(value);
+  };
 
   const handleSort = (key: string) => {
-    if (sortKey === key) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortKey(key);
-      setSortDirection("asc");
-    }
-    onSort?.(key, sortDirection === "asc" ? "desc" : "asc");
+    const newDir = sortKey === key && sortDir === "asc" ? "desc" : "asc";
+    setSortKey(key);
+    setSortDir(newDir);
+    onSort?.(key, newDir);
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    onSearch?.(query);
-  };
+  if (isLoading) {
+    return (
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="animate-pulse p-6 space-y-3">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-10 bg-gray-100 dark:bg-gray-800 rounded" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
-  const toggleSelectAll = () => {
-    if (selectedIds.length === data.length) {
-      setSelectedIds([]);
-      onSelectionChange?.([]);
-    } else {
-      const allIds = data.map((row) => row.id);
-      setSelectedIds(allIds);
-      onSelectionChange?.(allIds);
-    }
-  };
-
-  const toggleSelect = (id: string) => {
-    const newSelection = selectedIds.includes(id)
-      ? selectedIds.filter((sid) => sid !== id)
-      : [...selectedIds, id];
-    setSelectedIds(newSelection);
-    onSelectionChange?.(newSelection);
-  };
+  const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 1;
 
   return (
-    <div className="space-y-4">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+      {/* Search bar */}
       {searchable && (
-        <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
-          <label htmlFor="datatable-search" className="sr-only">
-            Search
-          </label>
-          <Input
-            id="datatable-search"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10"
-          />
+        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+          <div className="relative max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Search…"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+            />
+          </div>
         </div>
       )}
 
-      <div className="border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {selectable && (
-                <TableHead className="w-12">
-                  <Checkbox
-                    checked={selectedIds.length === data.length && data.length > 0}
-                    onCheckedChange={toggleSelectAll}
-                    aria-label="Select all rows"
-                  />
-                </TableHead>
-              )}
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-50 dark:bg-gray-800/50">
               {columns.map((col) => (
-                <TableHead key={String(col.key)} className={col.width}>
-                  <div
-                    className={col.sortable ? "cursor-pointer flex items-center gap-2" : ""}
-                    onClick={() => col.sortable && handleSort(String(col.key))}
-                    role={col.sortable ? "button" : undefined}
-                    tabIndex={col.sortable ? 0 : undefined}
-                    onKeyDown={(e) => {
-                      if (col.sortable && (e.key === "Enter" || e.key === " ")) {
-                        handleSort(String(col.key));
-                      }
-                    }}
-                  >
+                <th
+                  key={col.key}
+                  className={`px-4 py-3 text-start text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider ${col.sortable ? "cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200" : ""} ${col.className ?? ""}`}
+                  onClick={() => col.sortable && handleSort(col.key)}
+                >
+                  <span className="flex items-center gap-1">
                     {col.label}
-                    {col.sortable && sortKey === String(col.key) && (
-                      <>
-                        {sortDirection === "asc" ? (
-                          <ChevronUp className="h-4 w-4" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4" />
-                        )}
-                      </>
-                    )}
-                  </div>
-                </TableHead>
+                    {col.sortable && sortKey === col.key ? (
+                      sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
+                    ) : col.sortable ? (
+                      <ArrowUpDown className="w-3 h-3 opacity-30" />
+                    ) : null}
+                  </span>
+                </th>
               ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length + (selectable ? 1 : 0)}
-                  className="text-center py-8"
-                >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : data.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length + (selectable ? 1 : 0)}
-                  className="text-center py-8"
-                >
-                  No data found
-                </TableCell>
-              </TableRow>
-            ) : (
-              data.map((row) => (
-                <TableRow key={row.id}>
-                  {selectable && (
-                    <TableCell>
-                      <Checkbox
-                        checked={selectedIds.includes(row.id)}
-                        onCheckedChange={() => toggleSelect(row.id)}
-                        aria-label={`Select row ${row.id}`}
-                      />
-                    </TableCell>
-                  )}
-                  {columns.map((col) => (
-                    <TableCell key={String(col.key)}>
-                      {col.render
-                        ? col.render(row)
-                        : String((row as Record<string, unknown>)[col.key] ?? "")}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            {data.map((row, rowIdx) => (
+              <tr key={row.id ?? rowIdx} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/5 transition-colors">
+                {columns.map((col) => (
+                  <td key={col.key} className={`px-4 py-3 text-gray-700 dark:text-gray-300 ${col.className ?? ""}`}>
+                    {col.render ? col.render(row) : String(row[col.key] ?? "—")}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {pagination && (
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">
-            Showing {(pagination.page - 1) * pagination.pageSize + 1} to{" "}
-            {Math.min(pagination.page * pagination.pageSize, pagination.total)} of{" "}
-            {pagination.total}
-          </span>
-          <div className="space-x-2">
-            <Button
-              disabled={pagination.page === 1}
+      {/* Empty state */}
+      {data.length === 0 && (
+        <div className="py-12 text-center">
+          <p className="text-sm text-gray-400">{emptyMessage}</p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {pagination && totalPages > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30">
+          <p className="text-xs text-gray-500">
+            {(pagination.page - 1) * pagination.pageSize + 1}–{Math.min(pagination.page * pagination.pageSize, pagination.total)} of {pagination.total}
+          </p>
+          <div className="flex items-center gap-1">
+            <button
+              aria-label="Previous page"
+              disabled={pagination.page <= 1}
               onClick={() => pagination.onPageChange(pagination.page - 1)}
+              className="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              Previous
-            </Button>
-            <Button
-              disabled={pagination.page >= Math.ceil(pagination.total / pagination.pageSize)}
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
+              {pagination.page} / {totalPages}
+            </span>
+            <button
+              aria-label="Next page"
+              disabled={pagination.page >= totalPages}
               onClick={() => pagination.onPageChange(pagination.page + 1)}
+              className="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              Next
-            </Button>
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}
