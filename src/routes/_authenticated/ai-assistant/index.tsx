@@ -1,68 +1,165 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PageHeader } from "~/components/wpos/PageHeader";
-import { Card } from "~/components/wpos/Card";
+import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
-import { Bot, Send, Loader2, Lightbulb, TrendingUp, AlertTriangle, Users } from "lucide-react";
+import { analyzeWithAI, getOpenAIKey, setOpenAIKey, clearOpenAIKey, type AIAnalysisRequest } from "@/lib/ai/openai-client";
+import { Bot, Send, Loader2, Lightbulb, TrendingUp, AlertTriangle, Users, Key, CheckCircle, Trash2, Brain, Shield, Settings } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/ai-assistant/")({ component: AIAssistantPage });
+
+interface Message { role: "user" | "assistant"; content: string; model?: string; confidence?: number; suggestions?: string[] }
 
 function AIAssistantPage() {
   const { t, lang, isRTL } = useLanguage();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState<{role:string;content:string}[]>([
-    { role: "assistant", content: t("Hello! I\'m your WPOS AI Assistant. Ask me about performance trends, diagnostic insights, or workforce analytics.","مرحباً! أنا مساعد WPOS الذكي. اسألني عن اتجاهات الأداء أو رؤى التشخيص أو تحليلات القوى العاملة.") },
+  const [apiKey, setApiKey] = useState(getOpenAIKey() || "");
+  const [showSettings, setShowSettings] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<Message[]>([
+    { role: "assistant", content: t("Hello! I'm your WPOS AI Assistant. I can help you analyze performance, diagnose issues, predict trends, and recommend interventions. Ask me anything!", "مرحباً! أنا مساعد WPOS الذكي. يمكنني مساعدتك في تحليل الأداء وتشخيص المشكلات والتنبؤ بالاتجاهات واقتراح التدخلات. اسألني أي شيء!"), model: "system" },
   ]);
 
+  useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }); }, [messages]);
+
   const suggestions = [
-    { icon: <TrendingUp className="w-4 h-4" />, text: t("Show declining KPIs","عرض المؤشرات المتراجعة") },
-    { icon: <AlertTriangle className="w-4 h-4" />, text: t("Who is at risk?","من هو في خطر؟") },
-    { icon: <Users className="w-4 h-4" />, text: t("Team performance summary","ملخص أداء الفريق") },
-    { icon: <Lightbulb className="w-4 h-4" />, text: t("Suggest interventions","اقتراح تدخلات") },
+    { icon: <TrendingUp className="w-4 h-4" />, text: t("Analyze declining KPIs", "تحليل المؤشرات المتراجعة"), type: "diagnose" as const },
+    { icon: <AlertTriangle className="w-4 h-4" />, text: t("Predict at-risk employees", "توقع الموظفين المعرضين للخطر"), type: "predict" as const },
+    { icon: <Users className="w-4 h-4" />, text: t("Recommend interventions for skill gaps", "اقتراح تدخلات لفجوات المهارات"), type: "recommend" as const },
+    { icon: <Lightbulb className="w-4 h-4" />, text: t("Executive performance summary", "ملخص تنفيذي للأداء"), type: "summarize" as const },
+    { icon: <Brain className="w-4 h-4" />, text: t("Why is Ahmad's CSAT declining?", "لماذا تنخفض مؤشرات أحمد؟"), type: "diagnose" as const },
+    { icon: <Shield className="w-4 h-4" />, text: t("Root cause analysis for Operations", "تحليل الأسباب الجذرية للعمليات"), type: "diagnose" as const },
   ];
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
-    const userMsg = input.trim();
-    setMessages((p) => [...p, { role: "user", content: userMsg }]);
+  const handleSend = async (text?: string, type?: AIAnalysisRequest["type"]) => {
+    const msg = (text || input).trim();
+    if (!msg) return;
+    setMessages((p) => [...p, { role: "user", content: msg }]);
     setInput("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setMessages((p) => [...p, { role: "assistant", content: t("Based on the current data, I can see 3 employees with declining KPIs. Ahmad Khalid shows a 3-period CSAT decline (92→85→78%). I recommend initiating a diagnostic workflow for these cases.","بناءً على البيانات الحالية، أرى 3 موظفين بمؤشرات متراجعة. أحمد خالد يظهر انخفاض CSAT لـ 3 فترات (92→85→78%). أوصي ببدء سير عمل تشخيصي لهذه الحالات.") }]);
-    setLoading(false);
+
+    try {
+      const request: AIAnalysisRequest = {
+        type: type || "chat",
+        context: { employeeName: "Ahmad Khalid", kpiName: "Customer Satisfaction", currentValue: 78, targetValue: 95, gapPercentage: -17.9, trend: "declining", evidenceItems: ["Response time increased from 2h to 6h", "Missed 3 training sessions", "4 late arrivals this month"], rootCause: "skill_gap" },
+        userMessage: msg,
+        language: lang,
+      };
+
+      const response = await analyzeWithAI(request);
+      setMessages((p) => [...p, {
+        role: "assistant",
+        content: response.content,
+        model: response.model,
+        confidence: response.confidence,
+        suggestions: response.suggestions,
+      }]);
+    } catch {
+      setMessages((p) => [...p, { role: "assistant", content: t("Sorry, I encountered an error. Please try again.", "عذراً، حدث خطأ. يرجى المحاولة مرة أخرى.") }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveKey = () => {
+    if (apiKey.trim()) { setOpenAIKey(apiKey.trim()); toast.success(t("API key saved", "تم حفظ المفتاح")); }
+    else { clearOpenAIKey(); toast.success(t("API key removed — using local AI", "تم حذف المفتاح — يُستخدم الذكاء المحلي")); }
+    setShowSettings(false);
   };
 
   return (
     <div dir={isRTL ? "rtl" : "ltr"}>
-      <PageHeader title="AI Assistant" titleAr="المساعد الذكي" description="AI-powered workforce performance insights" descriptionAr="رؤى أداء القوى العاملة المدعومة بالذكاء الاصطناعي" currentLang={lang} />
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <PageHeader title="AI Assistant" titleAr="المساعد الذكي" description="AI-powered workforce performance analysis (OpenAI + local fallback)" descriptionAr="تحليل أداء القوى العاملة بالذكاء الاصطناعي" currentLang={lang} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+        {/* Chat */}
         <div className="lg:col-span-3">
-          <Card className="flex flex-col h-[600px]">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <Card padding="none" className="flex flex-col h-[calc(100vh-200px)] min-h-[500px]">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-[#1e2836]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><Bot className="w-4 h-4 text-white" /></div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t("WPOS AI", "ذكاء WPOS")}</p>
+                  <p className="text-[10px] text-gray-400">{getOpenAIKey() ? "OpenAI GPT-4o-mini" : t("Local Analysis Engine", "محرك التحليل المحلي")}</p>
+                </div>
+              </div>
+              <button onClick={() => setShowSettings(!showSettings)} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Settings"><Settings className="w-4 h-4 text-gray-400" /></button>
+            </div>
+
+            {/* API Key Settings */}
+            {showSettings && (
+              <div className="px-4 py-3 border-b border-gray-200 dark:border-[#1e2836] bg-gray-50 dark:bg-[#0d1117]">
+                <p className="text-xs font-medium text-gray-500 mb-2">{t("OpenAI API Key (optional)", "مفتاح OpenAI API (اختياري)")}</p>
+                <div className="flex gap-2">
+                  <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="sk-..." className="flex-1 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-[#1e2836] bg-white dark:bg-[#111822] focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                  <button onClick={handleSaveKey} className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"><CheckCircle className="w-4 h-4" /></button>
+                </div>
+                <p className="text-[10px] text-gray-400 mt-1">{t("Without a key, the local analysis engine is used (no API calls).", "بدون مفتاح، يُستخدم محرك التحليل المحلي (بدون اتصال بـ API).")}</p>
+              </div>
+            )}
+
+            {/* Messages */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${m.role === "user" ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"}`}>
-                    {m.role === "assistant" && <Bot className="w-4 h-4 inline me-1 opacity-60" />}
-                    {m.content}
+                  <div className={`max-w-[85%] ${m.role === "user" ? "bg-blue-600 text-white rounded-2xl rounded-br-md" : "bg-gray-100 dark:bg-[#161d27] text-gray-800 dark:text-gray-200 rounded-2xl rounded-bl-md"} px-4 py-3 text-sm leading-relaxed`}>
+                    {m.role === "assistant" && <Bot className="w-3.5 h-3.5 inline me-1 opacity-50 -mt-0.5" />}
+                    <span className="whitespace-pre-wrap">{m.content}</span>
+                    {m.model && m.model !== "system" && (
+                      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200/30 dark:border-white/10">
+                        <span className="text-[10px] opacity-50">Model: {m.model}</span>
+                        {m.confidence && <span className="text-[10px] opacity-50">• {m.confidence}% confidence</span>}
+                      </div>
+                    )}
+                    {m.suggestions && m.suggestions.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-gray-200/30 dark:border-white/10 space-y-1">
+                        {m.suggestions.map((s, j) => (
+                          <p key={j} className="text-[11px] opacity-70">→ {s}</p>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
-              {loading && <div className="flex justify-start"><div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3"><Loader2 className="w-4 h-4 animate-spin" /></div></div>}
+              {loading && (
+                <div className="flex justify-start"><div className="bg-gray-100 dark:bg-[#161d27] rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin text-blue-500" /><span className="text-xs text-gray-400">{t("Analyzing…", "جاري التحليل…")}</span></div></div>
+              )}
             </div>
-            <div className="border-t p-4 flex gap-2">
-              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSend()} placeholder={t("Ask about performance...","اسأل عن الأداء...")} className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-              <button onClick={handleSend} disabled={loading || !input.trim()} className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg" aria-label={t("Send","إرسال")}><Send className="w-4 h-4" /></button>
+
+            {/* Input */}
+            <div className="border-t border-gray-200 dark:border-[#1e2836] p-3 flex gap-2">
+              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder={t("Ask about performance, predictions, interventions…", "اسأل عن الأداء والتوقعات والتدخلات…")} className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#1e2836] bg-white dark:bg-[#0d1117] text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <button onClick={() => handleSend()} disabled={loading || !input.trim()} className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white rounded-lg transition-colors" aria-label={t("Send", "إرسال")}><Send className="w-4 h-4" /></button>
             </div>
           </Card>
         </div>
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-gray-500">{t("Quick Prompts","اقتراحات سريعة")}</p>
-          {suggestions.map((s, i) => (
-            <button key={i} onClick={() => { setInput(s.text); }} className="w-full flex items-center gap-2 p-3 text-sm text-start bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-              {s.icon}<span>{s.text}</span>
-            </button>
-          ))}
+
+        {/* Sidebar */}
+        <div className="space-y-4">
+          <Card>
+            <CardHeader><CardTitle>{t("Quick Prompts", "اقتراحات سريعة")}</CardTitle></CardHeader>
+            <div className="space-y-2">
+              {suggestions.map((s, i) => (
+                <button key={i} onClick={() => handleSend(s.text, s.type)} disabled={loading} className="w-full flex items-center gap-2.5 p-2.5 text-start text-sm rounded-lg bg-gray-50 dark:bg-[#0d1117] hover:bg-blue-50 dark:hover:bg-blue-500/10 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-40">
+                  <span className="text-blue-500">{s.icon}</span>
+                  <span className="text-xs">{s.text}</span>
+                </button>
+              ))}
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>{t("AI Capabilities", "قدرات الذكاء")}</CardTitle></CardHeader>
+            <div className="space-y-2 text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex items-start gap-2"><Brain className="w-3.5 h-3.5 text-purple-500 mt-0.5 flex-shrink-0" /><span>{t("Root cause diagnosis with confidence scoring", "تشخيص الأسباب الجذرية مع تقييم الثقة")}</span></div>
+              <div className="flex items-start gap-2"><TrendingUp className="w-3.5 h-3.5 text-blue-500 mt-0.5 flex-shrink-0" /><span>{t("Performance prediction & breach forecasting", "توقع الأداء والتنبؤ بالانتهاكات")}</span></div>
+              <div className="flex items-start gap-2"><Lightbulb className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" /><span>{t("Targeted intervention recommendations", "توصيات بتدخلات مستهدفة")}</span></div>
+              <div className="flex items-start gap-2"><Shield className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" /><span>{t("Executive report summarization", "تلخيص التقارير التنفيذية")}</span></div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
