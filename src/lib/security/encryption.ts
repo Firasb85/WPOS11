@@ -11,11 +11,17 @@ const ALGORITHM = "AES-GCM";
 const KEY_LENGTH = 256;
 const IV_LENGTH = 12;
 
+function toCryptoBytes(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  return copy;
+}
+
 /** Derive encryption key from passphrase using PBKDF2 */
 async function deriveKey(passphrase: string, salt: Uint8Array): Promise<CryptoKey> {
   const encoder = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey("raw", encoder.encode(passphrase), "PBKDF2", false, ["deriveBits", "deriveKey"]);
-  return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 310000, hash: "SHA-256" }, keyMaterial, { name: ALGORITHM, length: KEY_LENGTH }, false, ["encrypt", "decrypt"]);
+  const keyMaterial = await crypto.subtle.importKey("raw", toCryptoBytes(encoder.encode(passphrase)), "PBKDF2", false, ["deriveBits", "deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt: toCryptoBytes(salt), iterations: 310000, hash: "SHA-256" }, keyMaterial, { name: ALGORITHM, length: KEY_LENGTH }, false, ["encrypt", "decrypt"]);
 }
 
 /** Encrypt plaintext → Base64 string (IV + salt + ciphertext) */
@@ -24,7 +30,7 @@ export async function encryptField(plaintext: string, passphrase: string): Promi
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const key = await deriveKey(passphrase, salt);
-  const ciphertext = await crypto.subtle.encrypt({ name: ALGORITHM, iv }, key, encoder.encode(plaintext));
+  const ciphertext = await crypto.subtle.encrypt({ name: ALGORITHM, iv: toCryptoBytes(iv) }, key, toCryptoBytes(encoder.encode(plaintext)));
   const combined = new Uint8Array(salt.length + iv.length + new Uint8Array(ciphertext).length);
   combined.set(salt, 0);
   combined.set(iv, salt.length);
@@ -40,14 +46,14 @@ export async function decryptField(encrypted: string, passphrase: string): Promi
   const iv = data.slice(16, 16 + IV_LENGTH);
   const ciphertext = data.slice(16 + IV_LENGTH);
   const key = await deriveKey(passphrase, salt);
-  const plaintext = await crypto.subtle.decrypt({ name: ALGORITHM, iv }, key, ciphertext);
+  const plaintext = await crypto.subtle.decrypt({ name: ALGORITHM, iv: toCryptoBytes(iv) }, key, toCryptoBytes(ciphertext));
   return decoder.decode(plaintext);
 }
 
 /** Hash sensitive data for comparison (one-way) */
 export async function hashField(value: string): Promise<string> {
   const encoder = new TextEncoder();
-  const hash = await crypto.subtle.digest("SHA-256", encoder.encode(value));
+  const hash = await crypto.subtle.digest("SHA-256", toCryptoBytes(encoder.encode(value)));
   return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
