@@ -30,8 +30,8 @@ const TEST_ACCOUNTS = [
 function LoginPage() {
   const navigate = useNavigate();
   const { user, role, isLoading: authLoading } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(TEST_ACCOUNTS[0].email);
+  const [password, setPassword] = useState(TEST_ACCOUNTS[0].pw);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
