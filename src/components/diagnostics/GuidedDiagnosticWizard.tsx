@@ -331,105 +331,214 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
         {/* Content */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {/* Step 1: Select Employee */}
-          {step === 1 && (
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold mb-1">
-                  {t("Select Underperforming Employee", "اختر الموظف ذو الأداء المنخفض")}
-                </h3>
-                <p className="text-xs text-gray-500 mb-3">
+          {step === 1 && (() => {
+            // Sort underperformers by severity (most red KPIs first)
+            const sortedUnderperformers = [...underperformers].sort((a, b) => {
+              const aRed = (snapshots ?? []).filter(
+                (s) => s.employee_id === a.id && s.status === "red",
+              ).length;
+              const bRed = (snapshots ?? []).filter(
+                (s) => s.employee_id === b.id && s.status === "red",
+              ).length;
+              return bRed - aRed;
+            });
+            return (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold mb-1">
+                    {t("Select Underperforming Employee", "اختر الموظف ذو الأداء المنخفض")}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-3">
+                    {t(
+                      "Employees with RED KPI status are highlighted. Sorted by severity (most RED KPIs first).",
+                      "الموظفون ذوو حالة مؤشرات حمراء مميزون. مرتبون حسب الخطورة (الأكثر مؤشرات حمراء أولاً).",
+                    )}
+                  </p>
+                </div>
+
+                {sortedUnderperformers.length > 0 ? (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-semibold text-red-700 dark:text-red-300 flex items-center gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5" />
+                        {t(
+                          `${sortedUnderperformers.length} employees at risk`,
+                          `${sortedUnderperformers.length} موظفين في خطر`,
+                        )}
+                      </p>
+                      <span className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider font-medium">
+                        {t("Sorted by severity", "مرتب حسب الخطورة")}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {sortedUnderperformers.map((emp) => {
+                        const redCount = (snapshots ?? []).filter(
+                          (s) => s.employee_id === emp.id && s.status === "red",
+                        ).length;
+                        const yellowCount = (snapshots ?? []).filter(
+                          (s) => s.employee_id === emp.id && s.status === "yellow",
+                        ).length;
+                        const isSelected = selectedEmployee === emp.id;
+                        // Severity badge (Critical if >=3 RED, Elevated if 1-2 RED)
+                        const severity =
+                          redCount >= 3
+                            ? {
+                                badge: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+                                label: t("Critical", "حرج"),
+                              }
+                            : redCount > 0
+                              ? {
+                                  badge:
+                                    "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
+                                  label: t("Elevated", "مرتفع"),
+                                }
+                              : {
+                                  badge:
+                                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+                                  label: t("Watch", "مراقبة"),
+                                };
+
+                        return (
+                          <button
+                            aria-label="Action"
+                            key={emp.id}
+                            onClick={() => setSelectedEmployee(emp.id)}
+                            className={`relative flex items-start gap-3 p-3 rounded-lg border text-left transition-all ${
+                              isSelected
+                                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30 ring-1 ring-blue-500"
+                                : "border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-900/10 hover:border-red-300"
+                            }`}
+                          >
+                            <div
+                              className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                isSelected
+                                  ? "bg-blue-100 dark:bg-blue-900/40"
+                                  : "bg-red-100 dark:bg-red-900/40"
+                              }`}
+                            >
+                              <UserCircle
+                                className={`w-5 h-5 ${isSelected ? "text-blue-600 dark:text-blue-300" : "text-red-600 dark:text-red-300"}`}
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-sm font-medium truncate">
+                                  {emp.first_name} {emp.last_name}
+                                </p>
+                                <span
+                                  className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider whitespace-nowrap ${severity.badge}`}
+                                >
+                                  {severity.label}
+                                </span>
+                              </div>
+                              {emp.employee_code && (
+                                <p className="text-[10px] text-gray-500 font-mono">
+                                  {emp.employee_code}
+                                </p>
+                              )}
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[10px] text-red-600 dark:text-red-300 font-semibold tabular-nums">
+                                  🔴 {redCount}
+                                </span>
+                                {yellowCount > 0 && (
+                                  <span className="text-[10px] text-yellow-600 dark:text-yellow-300 font-semibold tabular-nums">
+                                    🟡 {yellowCount}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-green-50 dark:bg-green-900/15 border border-green-200 dark:border-green-900/50 rounded-lg flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-green-900 dark:text-green-200">
+                        {t("No RED KPIs right now", "لا توجد مؤشرات حمراء حالياً")}
+                      </p>
+                      <p className="text-xs text-green-700 dark:text-green-300 mt-0.5">
+                        {t(
+                          "All employees are at or above target. You can still open a diagnostic for any employee below.",
+                          "جميع الموظفون عند الهدف أو فوقه. لا يزال بإمكانك فتح تشخيص لأي موظف.",
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">
+                    {t("Or select any employee", "أو اختر أي موظف")}
+                  </label>
+                  <select
+                    value={selectedEmployee}
+                    onChange={(e) => setSelectedEmployee(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm"
+                  >
+                    <option value="">{t("Select employee...", "اختر الموظف...")}</option>
+                    {employees.map((e) => (
+                      <option key={e.id} value={e.id}>
+                        {e.first_name} {e.last_name}{" "}
+                        {e.employee_code ? `(${e.employee_code})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {selectedEmployee && redSnaps.length > 0 && (
+                  <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-lg overflow-hidden">
+                    <div className="px-3 py-2 border-b border-red-200 dark:border-red-900/50 bg-red-100/50 dark:bg-red-900/20">
+                      <p className="text-xs font-semibold text-red-900 dark:text-red-200 flex items-center gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5" />
+                        {t("Performance Issues Detected", "مشاكل أداء مكتشفة")} ·{" "}
+                        {redSnaps.length}
+                      </p>
+                    </div>
+                    <table className="w-full text-xs">
+                      <tbody className="divide-y divide-red-200/70 dark:divide-red-900/30">
+                        {redSnaps.map((s) => {
+                          const kpi = (s as Record<string, unknown>).kpis as Record<
+                            string,
+                            unknown
+                          > | null;
+                          const gap =
+                            s.gap_percentage != null ? Number(s.gap_percentage) : null;
+                          return (
+                            <tr key={s.id}>
+                              <td className="px-3 py-1.5 text-red-800 dark:text-red-200 font-medium">
+                                {(kpi?.name as string) ?? "KPI"}
+                              </td>
+                              <td className="px-3 py-1.5 text-right font-mono tabular-nums">
+                                <span
+                                  className={
+                                    gap !== null && gap < -25
+                                      ? "text-red-700 font-bold"
+                                      : "text-red-600"
+                                  }
+                                >
+                                  {gap !== null ? `${gap.toFixed(1)}%` : "N/A"}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 text-center pt-2">
                   {t(
-                    "Employees with RED KPI status are highlighted",
-                    "الموظفون ذوو حالة مؤشرات حمراء مميزون",
+                    "Tip: a well-scoped diagnostic starts with one underperforming employee, not a department-wide review.",
+                    "نصيحة: التشخيص الجيد يبدأ بموظف واحد، وليس مراجعة على مستوى الإدارة.",
                   )}
                 </p>
               </div>
-
-              {underperformers.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-xs font-medium text-red-600 mb-2 flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" />
-                    {t(
-                      `${underperformers.length} employees at risk`,
-                      `${underperformers.length} موظفين في خطر`,
-                    )}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {underperformers.map((emp) => (
-                      <button
-                        aria-label="Action"
-                        key={emp.id}
-                        onClick={() => setSelectedEmployee(emp.id)}
-                        className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${selectedEmployee === emp.id ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20" : "border-red-200 bg-red-50/50 hover:border-red-300"}`}
-                      >
-                        <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                          <UserCircle className="w-5 h-5 text-red-600" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">
-                            {emp.first_name} {emp.last_name}
-                          </p>
-                          <p className="text-xs text-red-500">
-                            {
-                              (snapshots ?? []).filter(
-                                (s) => s.employee_id === emp.id && s.status === "red",
-                              ).length
-                            }{" "}
-                            RED KPIs
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
-                  {t("Or select any employee", "أو اختر أي موظف")}
-                </label>
-                <select
-                  value={selectedEmployee}
-                  onChange={(e) => setSelectedEmployee(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm"
-                >
-                  <option value="">{t("Select employee...", "اختر الموظف...")}</option>
-                  {employees.map((e) => (
-                    <option key={e.id} value={e.id}>
-                      {e.first_name} {e.last_name} {e.employee_code ? `(${e.employee_code})` : ""}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {selectedEmployee && redSnaps.length > 0 && (
-                <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 rounded-lg p-3">
-                  <p className="text-xs font-medium text-red-700 mb-2">
-                    {t("Performance Issues Detected:", "مشاكل أداء مكتشفة:")}
-                  </p>
-                  <div className="space-y-1">
-                    {redSnaps.map((s) => {
-                      const kpi = (s as Record<string, unknown>).kpis as Record<
-                        string,
-                        unknown
-                      > | null;
-                      return (
-                        <div key={s.id} className="flex items-center justify-between text-xs">
-                          <span className="text-red-600">{(kpi?.name as string) ?? "KPI"}</span>
-                          <span className="font-mono text-red-700">
-                            Gap:{" "}
-                            {s.gap_percentage != null
-                              ? `${Number(s.gap_percentage).toFixed(1)}%`
-                              : "N/A"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+            );
+          })()}
 
           {/* Step 2: Attach Evidence */}
           {step === 2 && (
