@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guided Diagnostic Wizard — Polished Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+    
+    :root {
+      --primary: #2563eb;
+    }
+    
+    body {
+      font-family: 'Inter', system_ui, sans-serif;
+    }
+    
+    .font-display {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-weight: 600;
+    }
+
+    .wizard-container {
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    }
+
+    .step-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .employee-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .employee-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    .severity-badge {
+      font-size: 9px;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-card {
+      transition: transform 0.2s ease;
+    }
+
+    .category-card {
+      transition: all 0.2s ease;
+    }
+
+    .evidence-card {
+      transition: all 0.2s ease;
+    }
+
+    .nav-dot {
+      transition: all 0.2s ease;
+    }
+
+    .demo-badge {
+      font-size: 10px;
+      padding: 1px 7px;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+  <div class="max-w-[1280px] mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-8 pt-8 pb-6">
+      <div class="flex items-center gap-x-4">
+        <div class="w-11 h-11 bg-blue-600 rounded-2xl flex items-center justify-center shadow-inner">
+          <i class="fa-solid fa-stethoscope text-white text-3xl"></i>
+        </div>
+        <div>
+          <h1 class="font-display text-3xl font-semibold tracking-tighter">Guided Diagnostic</h1>
+          <p class="text-zinc-400 text-sm">WPOS • Pilot Tier</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-x-3">
+        <div class="px-3 py-1.5 bg-zinc-900 rounded-2xl flex items-center gap-x-2 text-sm">
+          <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+          <span class="text-emerald-300 font-medium text-xs">LIVE PREVIEW</span>
+        </div>
+        <div class="text-xs px-3 py-1 bg-zinc-900 rounded-2xl text-zinc-400">
+          v4.2.1
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Wizard Modal -->
+    <div class="px-8">
+      <div class="wizard-container bg-zinc-900 border border-zinc-800 rounded-3xl max-w-3xl mx-auto shadow-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <div class="px-7 py-5 border-b border-zinc-800 flex items-center justify-between bg-zinc-950">
+          <div class="flex items-center gap-x-3">
+            <div>
+              <span class="font-semibold text-lg">Guided Diagnostic</span>
+              <span class="ml-2 px-2 py-px text-[10px] bg-zinc-800 text-zinc-400 rounded font-mono">Step <span id="step-number">1</span> of 4</span>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-x-2">
+            <button onclick="closePreview()" 
+                    class="px-3 py-1.5 text-sm flex items-center gap-x-1.5 hover:bg-zinc-800 transition-colors rounded-2xl text-zinc-400 hover:text-zinc-200">
+              <i class="fa-solid fa-times"></i>
+              <span class="text-xs">Close</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="px-7 pt-5 pb-1 bg-zinc-900">
+          <div class="flex items-center gap-2" id="progress-bar">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-7 max-h-[620px] overflow-y-auto" id="wizard-content">
+          <!-- Step content injected by JS -->
+        </div>
+
+        <!-- Footer -->
+        <div class="px-7 py-4 border-t border-zinc-800 bg-zinc-950 flex items-center justify-between">
+          <button onclick="prevStep()" id="btn-back"
+                  class="flex items-center gap-x-2 px-5 py-2.5 text-sm font-medium hover:bg-zinc-800 transition-colors rounded-2xl border border-zinc-700">
+            <i class="fa-solid fa-chevron-left text-xs"></i>
+            <span id="btn-back-text">Back</span>
+          </button>
+          
+          <button onclick="nextStep()" id="btn-next"
+                  class="flex items-center gap-x-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 transition-all font-medium text-sm rounded-2xl shadow-inner">
+            <span id="btn-next-text">Next</span>
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Info -->
+    <div class="max-w-3xl mx-auto px-8 pt-6 pb-10">
+      <div class="flex items-center justify-between text-xs text-zinc-500">
+        <div>
+          <span class="font-medium">Demo data:</span> 
+          <span class="font-mono">Ahmad Khalid • 4 RED KPIs • 7 evidence items</span>
+        </div>
+        <div class="flex items-center gap-x-1">
+          <i class="fa-solid fa-info-circle"></i>
+          <span>Standalone preview • No backend</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tailwind script
+    function initializeTailwind() {
+      document.documentElement.style.setProperty('--accent', '#2563eb');
+    }
+    
+    let currentStep = 1;
+    let selectedEmployee = null;
+    let evidenceItems = [];
+    let selectedCategories = [];
+    let title = "Q2 Performance Gap — Ahmad Khalid";
+    let summary = "";
+
+    const employees = [
+      { id: "emp1", first_name: "Ahmad", last_name: "Khalid", employee_code: "EMP-204", red: 4, yellow: 2 },
+      { id: "emp2", first_name: "Sara", last_name: "Al-Mansouri", employee_code: "EMP-187", red: 3, yellow: 1 },
+      { id: "emp3", first_name: "Omar", last_name: "Hassan", employee_code: "EMP-219", red: 2, yellow: 4 },
+      { id: "emp4", first_name: "Layla", last_name: "Fahad", employee_code: "EMP-156", red: 1, yellow: 3 }
+    ];
+
+    const categories = [
+      { id: "skill_gap", en: "Skill Gap", ar: "فجوة مهارية", icon: "🎯", points: 45 },
+      { id: "knowledge_gap", en: "Knowledge Gap", ar: "فجوة معرفية", icon: "📚", points: 30 },
+      { id: "process_issue", en: "Process Issue", ar: "مشكلة إجرائية", icon: "⚙️", points: 25 },
+      { id: "workload_issue", en: "Workload", ar: "مشكلة عبء عمل", icon: "⚖️", points: 20 },
+      { id: "tool_issue", en: "Tool Issue", ar: "مشكلة أدوات", icon: "🔧", points: 15 }
+    ];
+
+    const evidenceTypes = ["quantitative", "qualitative", "behavioral", "system_generated"];
+
+    function renderProgressBar() {
+      const container = document.getElementById('progress-bar');
+      container.innerHTML = '';
+      
+      const steps = [
+        { num: 1, label: 'Employee' },
+        { num: 2, label: 'Evidence' },
+        { num: 3, label: 'Categories' },
+        { num: 4, label: 'Review' }
+      ];
+      
+      steps.forEach((step, index) => {
+        const isActive = currentStep === step.num;
+        const isCompleted = currentStep > step.num;
+        
+        const div = document.createElement('div');
+        div.className = `flex-1 flex items-center gap-2`;
+        
+        div.innerHTML = `
+          <div class="flex items-center gap-2 flex-1">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all
+              ${isActive ? 'bg-blue-600 text-white' : isCompleted ? 'bg-emerald-500 text-white' : 'bg-zinc-800 text-zinc-400'}">
+              ${isCompleted ? '<i class="fa-solid fa-check text-xs"></i>' : step.num}
+            </div>
+            <span class="text-xs font-medium hidden sm:block ${isActive || isCompleted ? 'text-white' : 'text-zinc-500'}">${step.label}</span>
+          </div>
+          ${index < 3 ? `<div class="flex-1 h-px ${isCompleted ? 'bg-emerald-500' : 'bg-zinc-800'}"></div>` : ''}
+        `;
+        
+        container.appendChild(div);
+      });
+    }
+
+    function renderStep1() {
+      const content = document.getElementById('wizard-content');
+      content.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <h3 class="font-semibold text-lg">Select Underperforming Employee</h3>
+            <p class="text-xs text-zinc-400 mt-1">Employees with RED KPI status are highlighted. Sorted by severity (most RED KPIs first).</p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            ${employees.map(emp => {
+              const isSelected = selectedEmployee === emp.id;
+              const severity = emp.red >= 3 ? 'Critical' : emp.red > 0 ? 'Elevated' : 'Watch';
+              const severityColor = emp.red >= 3 ? 'bg-red-900/60 text-red-300' : 
+                                   emp.red > 0 ? 'bg-orange-900/60 text-orange-300' : 'bg-yellow-900/60 text-yellow-300';
+              
+              return `
+                <div onclick="selectEmployee('${emp.id}')" 
+                     class="employee-card cursor-pointer border ${isSelected ? 'border-blue-500 bg-blue-950/30 ring-1 ring-blue-500' : 'border-zinc-700 hover:border-zinc-600'} rounded-2xl p-4">
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-blue-600' : 'bg-red-900/40'}">
+                      <i class="fa-solid fa-user text-lg ${isSelected ? 'text-white' : 'text-red-400'}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <div class="font-semibold">${emp.first_name} ${emp.last_name}</div>
+                          <div class="font-mono text-xs text-zinc-400">${emp.employee_code}</div>
+                        </div>
+                        <div class="px-2 py-px text-[9px] font-bold rounded ${severityColor}">${severity}</div>
+                      </div>
+                      
+                      <div class="flex items-center gap-3 mt-3 text-xs">
+                        <div class="flex items-center gap-1 text-red-400">
+                          <i class="fa-solid fa-exclamation-circle"></i>
+                          <span class="font-semibold">${emp.red} RED</span>
+                        </div>
+                        ${emp.yellow > 0 ? `
+                          <div class="flex items-center gap-1 text-yellow-400">
+                            <i class="fa-solid fa-exclamation-triangle"></i>
+                            <span class="font-semibold">${emp.yellow} YELLOW</span>
+                          </div>
+                        ` : ''}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
+          <div class="pt-1">
+            <div class="text-xs px-4 py-3 bg-emerald-950/40 border border-emerald-900/60 rounded-2xl flex gap-3">
+              <i class="fa-solid fa-check-circle text-emerald-400 mt-0.5"></i>
+              <div>
+                <div class="font-medium text-emerald-300 text-sm">All employees are at or above target</div>
+                <div class="text-emerald-400 text-xs">You can still open a diagnostic for any employee below.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="pt-2">
+            <label class="block text-xs font-medium text-zinc-400 mb-1.5">Or select any employee</label>
+            <select class="w-full bg-zinc-950 border border-zinc-700 px-4 py-3 text-sm rounded-2xl" onchange="selectEmployee(this.value)">
+              <option value="">Select employee...</option>
+              ${employees.map(emp => `<option value="${emp.id}">${emp.first_name} ${emp.last_name} (${emp.employee_code})</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('step-number').innerText = '1';
+      document.getElementById('btn-next-text').innerHTML = `Next <i class="fa-solid fa-chevron-right ml-1.5 text-xs"></i>`;
+      document.getElementById('btn-back-text').innerText = 'Cancel';
+    }
+
+    function selectEmployee(id) {
+      selectedEmployee = id;
+      renderStep1();
+    }
+
+    function renderStep2() {
+      const content = document.getElementById('wizard-content');
+      
+      content.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <h3 class="font-semibold text-lg">Attach Evidence</h3>
+            <p class="text-xs text-zinc-400 mt-1">Add at least 1 evidence item. More evidence = better diagnosis.</p>
+          </div>
+          
+          <!-- Evidence Form -->
+          <div class="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-zinc-400 mb-1.5">Type</label>
+                <select id="ev-type" class="w-full bg-zinc-900 border border-zinc-700 px-4 py-3 text-sm rounded-2xl">
+                  ${evidenceTypes.map(t => `<option value="${t}">${t.replace('_', ' ')}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-zinc-400 mb-1.5">Source</label>
+                <input id="ev-source" type="text" value="Performance Review — Jan 2026" 
+                       class="w-full bg-zinc-900 border border-zinc-700 px-4 py-3 text-sm rounded-2xl" placeholder="e.g. HR System">
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5">Description</label>
+              <textarea id="ev-desc" rows="2" class="w-full bg-zinc-900 border border-zinc-700 px-4 py-3 text-sm rounded-2xl resize-y">Employee missed 3 key deadlines in Q1. Client feedback mentioned lack of process knowledge.</textarea>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div class="w-48">
+                <label class="block text-xs font-medium text-zinc-400 mb-1.5">Reliability</label>
+                <select id="ev-reliability" class="w-full bg-zinc-900 border border-zinc-700 px-4 py-3 text-sm rounded-2xl">
+                  <option value="high">High — verified source</option>
+                  <option value="medium" selected>Medium — reliable</option>
+                  <option value="low">Low — anecdotal</option>
+                </select>
+              </div>
+              <button onclick="addEvidence()" 
+                      class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 transition-colors flex items-center gap-x-2 text-sm font-medium rounded-2xl">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Evidence</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Evidence List -->
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <div class="text-xs font-medium text-zinc-400">${evidenceItems.length} evidence item${evidenceItems.length !== 1 ? 's' : ''}</div>
+              ${evidenceItems.length > 0 ? 
+                `<button onclick="clearAllEvidence()" class="text-xs flex items-center gap-x-1 text-red-400 hover:text-red-300">
+                  <i class="fa-solid fa-trash"></i> <span>Clear all</span>
+                </button>` : ''}
+            </div>
+            
+            <div class="space-y-2">
+              ${evidenceItems.length > 0 ? 
+                evidenceItems.map((ev, i) => {
+                  const relColor = ev.reliability === 'high' ? 'emerald' : ev.reliability === 'medium' ? 'amber' : 'slate';
+                  return `
+                    <div class="evidence-card flex items-start gap-3 bg-zinc-950 border border-zinc-800 rounded-2xl p-4">
+                      <div class="w-8 h-8 bg-blue-900/50 flex-shrink-0 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-clipboard-check text-blue-400"></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-x-2 mb-1">
+                          <span class="px-2 py-px text-xs rounded bg-blue-900/40 text-blue-300">${ev.type}</span>
+                          <span class="text-xs text-zinc-400">${ev.source}</span>
+                          <span class="px-1.5 py-px text-[10px] font-bold uppercase tracking-wider bg-${relColor}-900/50 text-${relColor}-300 rounded">${ev.reliability}</span>
+                        </div>
+                        <p class="text-sm text-zinc-200">${ev.description}</p>
+                      </div>
+                      <button onclick="removeEvidence(${i})" class="text-red-400 hover:text-red-300 transition-colors p-1">
+                        <i class="fa-solid fa-trash text-sm"></i>
+                      </button>
+                    </div>
+                  `;
+                }).join('') : `
+                <div class="border border-dashed border-zinc-700 rounded-3xl p-8 text-center">
+                  <div class="mx-auto w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center mb-3">
+                    <i class="fa-solid fa-clipboard-check text-zinc-400 text-xl"></i>
+                  </div>
+                  <div class="text-sm text-zinc-400">No evidence added yet</div>
+                  <div class="text-xs text-zinc-500 mt-1">Add evidence to improve diagnosis quality</div>
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('step-number').innerText = '2';
+      document.getElementById('btn-next-text').innerHTML = `Next <i class="fa-solid fa-chevron-right ml-1.5 text-xs"></i>`;
+      document.getElementById('btn-back-text').innerText = 'Back';
+    }
+
+    function addEvidence() {
+      const type = document.getElementById('ev-type').value;
+      const source = document.getElementById('ev-source').value;
+      const desc = document.getElementById('ev-desc').value;
+      const reliability = document.getElementById('ev-reliability').value;
+      
+      if (!source.trim() || !desc.trim()) {
+        alert("Please fill Source and Description");
+        return;
+      }
+      
+      evidenceItems.push({ type, source, description: desc, reliability });
+      renderStep2();
+    }
+    
+    function removeEvidence(index) {
+      evidenceItems.splice(index, 1);
+      renderStep2();
+    }
+    
+    function clearAllEvidence() {
+      evidenceItems = [];
+      renderStep2();
+    }
+
+    function renderStep3() {
+      const content = document.getElementById('wizard-content');
+      
+      const totalPoints = selectedCategories.length > 0 ? 
+        selectedCategories.reduce((sum, catId) => {
+          const cat = categories.find(c => c.id === catId);
+          return sum + (cat?.points || 0);
+        }, 0) : 65;
+      
+      content.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <h3 class="font-semibold text-lg">Suspected Root Cause Categories</h3>
+            <p class="text-xs text-zinc-400 mt-1">Categories are ranked by their match score — top scorers first.</p>
+          </div>
+          
+          <!-- Stats row -->
+          <div class="grid grid-cols-3 gap-3">
+            <div class="metric-card p-4 bg-gradient-to-br from-blue-950 to-zinc-900 border border-blue-900/40 rounded-2xl text-center">
+              <div class="text-3xl font-bold text-blue-400 tabular-nums">${totalPoints}</div>
+              <div class="text-xs font-semibold text-blue-300 tracking-wider">TOTAL POINTS</div>
+            </div>
+            <div class="metric-card p-4 bg-gradient-to-br from-emerald-950 to-zinc-900 border border-emerald-900/40 rounded-2xl text-center">
+              <div class="text-3xl font-bold text-emerald-400 tabular-nums">${evidenceItems.length}</div>
+              <div class="text-xs font-semibold text-emerald-300 tracking-wider">MATCHES</div>
+            </div>
+            <div class="metric-card p-4 bg-gradient-to-br from-amber-950 to-zinc-900 border border-amber-900/40 rounded-2xl text-center">
+              <div class="text-3xl font-bold text-amber-400 tabular-nums">${selectedCategories.length}/5</div>
+              <div class="text-xs font-semibold text-amber-300 tracking-wider">CATEGORIES</div>
+            </div>
+          </div>
+          
+          <!-- Category cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            ${categories.map(cat => {
+              const isSelected = selectedCategories.includes(cat.id);
+              const isRecommended = cat.points > 20;
+              
+              return `
+                <div onclick="toggleCategory('${cat.id}')" 
+                     class="category-card cursor-pointer border ${isSelected ? 'border-blue-500 bg-blue-950/40 ring-1 ring-blue-500' : isRecommended ? 'border-emerald-700 bg-emerald-950/30 hover:border-emerald-600' : 'border-zinc-700 hover:border-zinc-600'} rounded-2xl p-4 flex items-center gap-3">
+                  <div class="w-9 h-9 flex-shrink-0 flex items-center justify-center text-3xl">
+                    ${cat.icon}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <div class="font-semibold">${cat.en}</div>
+                      ${isRecommended && !isSelected ? `<span class="text-xs px-2 py-px bg-emerald-900 text-emerald-300 rounded">Recommended</span>` : ''}
+                    </div>
+                    <div class="text-xs text-zinc-400">
+                      ${isSelected || isRecommended ? 
+                        `<span class="font-medium text-emerald-400">${cat.points} pts</span> · ${Math.floor(cat.points / 15)} matches` : 
+                        'No matches yet'}
+                    </div>
+                  </div>
+                  <div class="flex-shrink-0">
+                    ${isSelected ? 
+                      `<i class="fa-solid fa-check-circle text-blue-400 text-xl"></i>` : 
+                      `<div class="w-6 h-6 rounded-full border-2 ${isRecommended ? 'border-emerald-400' : 'border-zinc-600'}"></div>`}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
+          <div class="pt-2">
+            <button onclick="showBreakdown()" 
+                    class="w-full flex items-center justify-center gap-x-2 text-xs py-3 border border-zinc-700 hover:bg-zinc-900 transition-colors rounded-2xl text-zinc-400">
+              <i class="fa-solid fa-brain"></i>
+              <span>View scoring breakdown</span>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('step-number').innerText = '3';
+    }
+
+    function toggleCategory(catId) {
+      if (selectedCategories.includes(catId)) {
+        selectedCategories = selectedCategories.filter(c => c !== catId);
+      } else {
+        selectedCategories.push(catId);
+      }
+      renderStep3();
+    }
+
+    function showBreakdown() {
+      const modal = document.createElement('div');
+      modal.className = `fixed inset-0 bg-black/70 flex items-center justify-center z-[100]`;
+      modal.innerHTML = `
+        <div class="bg-zinc-900 border border-zinc-700 max-w-md w-full mx-4 rounded-3xl overflow-hidden">
+          <div class="px-5 py-4 border-b border-zinc-700 flex justify-between items-center">
+            <div class="font-semibold">Scoring Breakdown</div>
+            <button onclick="this.closest('.fixed').remove()" class="text-zinc-400 hover:text-white">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+          <div class="p-5 space-y-4 text-sm">
+            ${selectedCategories.length > 0 ? 
+              selectedCategories.map(catId => {
+                const cat = categories.find(c => c.id === catId);
+                return `
+                  <div class="flex items-center justify-between border-b border-zinc-800 pb-3 last:border-none last:pb-0">
+                    <div class="flex items-center gap-x-2">
+                      <span class="text-xl">${cat.icon}</span>
+                      <span>${cat.en}</span>
+                    </div>
+                    <div class="font-mono text-blue-400 font-bold">${cat.points} pts</div>
+                  </div>
+                `;
+              }).join('') : 
+              `<div class="text-center py-4 text-zinc-400">No categories selected yet.</div>`}
+          </div>
+          <div class="px-5 py-4 bg-zinc-950 text-xs text-zinc-400">
+            Points are calculated from evidence keyword matches weighted by reliability.
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function renderStep4() {
+      const content = document.getElementById('wizard-content');
+      const emp = employees.find(e => e.id === selectedEmployee) || employees[0];
+      const confidence = Math.min(Math.floor(Math.random() * 25) + 65, 95);
+      
+      content.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <h3 class="font-semibold text-lg">Review &amp; Generate Report</h3>
+            <p class="text-xs text-zinc-400 mt-1">Review your selections before generating the diagnostic.</p>
+          </div>
+          
+          <!-- Confidence -->
+          <div class="bg-gradient-to-br from-blue-950/60 to-zinc-900 border border-blue-900/60 rounded-3xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="text-xs uppercase tracking-[1px] font-bold text-blue-400">PRE-SUBMIT ESTIMATE</div>
+                <div class="text-5xl font-bold tabular-nums text-blue-300 mt-1">${confidence}<span class="text-2xl font-medium">%</span></div>
+              </div>
+              <div class="text-right">
+                <div class="text-blue-300 text-sm font-medium">Strong confidence</div>
+                <div class="text-xs text-blue-400">Ready for manager review</div>
+              </div>
+            </div>
+            
+            <div class="text-xs text-blue-300">${evidenceItems.length} evidence items • ${selectedCategories.length} categories scored</div>
+          </div>
+          
+          <!-- Manager Approval -->
+          <div class="border border-amber-700/60 bg-amber-950/20 rounded-3xl p-5">
+            <div class="flex items-center gap-x-3">
+              <div class="w-10 h-10 bg-amber-600 flex-shrink-0 rounded-2xl flex items-center justify-center">
+                <i class="fa-solid fa-shield-halved text-white"></i>
+              </div>
+              <div class="flex-1">
+                <div class="font-bold text-amber-300">Manager Approval Required</div>
+                <div class="text-xs text-amber-400">Final diagnosis must be approved before becoming a case.</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Title & Summary -->
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5">Report Title</label>
+              <input id="report-title" type="text" value="${title}" 
+                     class="w-full px-4 py-3 bg-zinc-950 border border-zinc-700 rounded-2xl text-sm" />
+            </div>
+            
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5">Summary Notes (optional)</label>
+              <textarea id="report-summary" rows="2" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-700 rounded-2xl text-sm resize-y">${summary}</textarea>
+            </div>
+          </div>
+          
+          <!-- Summary Card -->
+          <div class="bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden">
+            <div class="px-5 py-3 bg-zinc-900 text-xs font-medium text-zinc-400">REVIEW SUMMARY</div>
+            <div class="px-5 py-5 space-y-3 text-sm">
+              <div class="flex justify-between"><span class="text-zinc-400">Employee</span> <span class="font-semibold">${emp.first_name} ${emp.last_name}</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">Evidence Items</span> <span class="font-semibold">${evidenceItems.length}</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">Categories</span> <span class="font-semibold">${selectedCategories.length}</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('step-number').innerText = '4';
+      document.getElementById('btn-next-text').innerHTML = `<i class="fa-solid fa-magic mr-2"></i> Generate Diagnostic`;
+      document.getElementById('btn-back-text').innerText = 'Back';
+    }
+
+    function nextStep() {
+      if (currentStep === 4) {
+        // Submit action
+        const titleInput = document.getElementById('report-title');
+        if (titleInput) title = titleInput.value;
+        
+        const summaryInput = document.getElementById('report-summary');
+        if (summaryInput) summary = summaryInput.value;
+        
+        showSuccessModal();
+        return;
+      }
+      
+      if (currentStep === 1 && !selectedEmployee) {
+        alert("Please select an employee first.");
+        return;
+      }
+      
+      if (currentStep === 2 && evidenceItems.length === 0) {
+        alert("Please add at least one evidence item.");
+        return;
+      }
+      
+      currentStep++;
+      updateUI();
+    }
+    
+    function prevStep() {
+      if (currentStep === 1) {
+        closePreview();
+        return;
+      }
+      currentStep--;
+      updateUI();
+    }
+    
+    function updateUI() {
+      renderProgressBar();
+      
+      const btnNext = document.getElementById('btn-next');
+      const btnBack = document.getElementById('btn-back');
+      
+      if (currentStep === 1) {
+        renderStep1();
+        btnBack.style.display = 'flex';
+      } else if (currentStep === 2) {
+        renderStep2();
+      } else if (currentStep === 3) {
+        renderStep3();
+      } else if (currentStep === 4) {
+        renderStep4();
+      }
+      
+      if (currentStep === 4) {
+        btnNext.classList.add('!bg-emerald-600', 'hover:!bg-emerald-700');
+      } else {
+        btnNext.classList.remove('!bg-emerald-600', 'hover:!bg-emerald-700');
+      }
+    }
+    
+    function showSuccessModal() {
+      const modal = document.createElement('div');
+      modal.className = `fixed inset-0 bg-black/80 flex items-center justify-center z-[200]`;
+      modal.innerHTML = `
+        <div class="bg-zinc-900 border border-zinc-700 max-w-sm w-full mx-4 rounded-3xl p-8 text-center">
+          <div class="mx-auto w-16 h-16 bg-emerald-500/10 flex items-center justify-center rounded-full mb-5">
+            <i class="fa-solid fa-check text-emerald-400 text-4xl"></i>
+          </div>
+          <div class="font-semibold text-xl">Diagnostic Created!</div>
+          <p class="text-sm text-zinc-400 mt-2">Report has been submitted for manager review.</p>
+          
+          <div class="mt-8 flex flex-col gap-y-2">
+            <button onclick="location.reload()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 transition-colors font-medium rounded-2xl text-sm">
+              Start New Diagnostic
+            </button>
+            <button onclick="this.closest('.fixed').remove()" class="px-6 py-3 text-sm text-zinc-400 hover:text-white">
+              Close Preview
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    function closePreview() {
+      if (confirm('Close the wizard preview?')) {
+        window.location.reload();
+      }
+    }
+    
+    function initializeDemo() {
+      // Pre-select first employee and some evidence
+      selectedEmployee = "emp1";
+      
+      evidenceItems = [
+        { type: "qualitative", source: "Performance Review — Jan 2026", description: "Employee missed 3 key deadlines in Q1. Client feedback mentioned lack of process knowledge.", reliability: "high" },
+        { type: "quantitative", source: "KPI Dashboard", description: "Productivity score dropped 28% compared to Q4 average.", reliability: "medium" }
+      ];
+      
+      selectedCategories = ["skill_gap", "process_issue", "workload_issue"];
+      
+      // Start at step 1
+      currentStep = 1;
+      renderProgressBar();
+      renderStep1();
+      
+      // Auto-advance hint
+      setTimeout(() => {
+        const hint = document.createElement('div');
+        hint.className = `fixed bottom-8 left-1/2 -translate-x-1/2 text-xs px-3 py-1 bg-zinc-900 border border-zinc-700 rounded-full text-zinc-400 flex items-center gap-x-2`;
+        hint.innerHTML = `<span>Click on employee cards to select</span>`;
+        document.body.appendChild(hint);
+        
+        setTimeout(() => {
+          if (hint.parentNode) hint.parentNode.removeChild(hint);
+        }, 3500);
+      }, 4500);
+    }
+    
+    // Boot
+    function boot() {
+      initializeTailwind();
+      initializeDemo();
+      
+      // Keyboard support
+      document.addEventListener('keydown', function(e) {
+        if (e.key === "Escape") {
+          const modals = document.querySelectorAll('.fixed');
+          if (modals.length > 0) modals[modals.length - 1].remove();
+          else closePreview();
+        }
+        if (e.key === "Enter" && currentStep < 4) {
+          nextStep();
+        }
+      });
+      
+      console.log('%c[Preview] Guided Diagnostic Wizard ready', 'color:#52525b');
+    }
+    
+    window.onload = boot;
+  </script>
+</body>
+</html>
