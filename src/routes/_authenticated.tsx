@@ -29,7 +29,7 @@ function AuthenticatedLayout() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      console.log("[WPOS Auth] No user session — redirecting to /login");
+      if (import.meta.env.DEV) console.log("[WPOS Auth] No user session — redirecting to /login");
       navigate({ to: "/login", replace: true });
     }
   }, [user, isLoading, navigate]);
@@ -37,7 +37,7 @@ function AuthenticatedLayout() {
   // Log role for debugging
   useEffect(() => {
     if (user && role) {
-      console.log(`[WPOS Auth] Authenticated: ${user.email} | Role: ${role} | Default route: ${ROLE_DEFAULT_ROUTE[role] ?? "/dashboard/ceo"}`);
+      if (import.meta.env.DEV) console.log(`[WPOS Auth] Authenticated: ${user.email} | Role: ${role} | Default route: ${ROLE_DEFAULT_ROUTE[role] ?? "/dashboard/ceo"}`);
     }
   }, [user, role]);
 
