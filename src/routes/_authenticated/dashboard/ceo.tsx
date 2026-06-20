@@ -76,8 +76,8 @@ function CEODashboardPage() {
         currentLang={l}
       />
 
-      {/* Top Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Top Stats — Premium polished row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatsCard
           title={t("Total Employees", "إجمالي الموظفين")}
           value={String(m.totalEmployees)}
@@ -106,98 +106,101 @@ function CEODashboardPage() {
         />
       </div>
 
-      {/* Second Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      {/* Second Row — Polished 3-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* KPI Status — segmented horizontal bar + counts */}
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <Gauge className="w-4 h-4 inline mr-2" />
+        <Card className="border border-gray-200 dark:border-gray-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center text-base">
+              <Gauge className="w-4 h-4 mr-2" />
               {t("KPI Status Overview", "نظرة عامة على حالة المؤشرات")}
             </CardTitle>
           </CardHeader>
-          <KpiStatusBar
-            green={m.kpiStatus.green}
-            yellow={m.kpiStatus.yellow}
-            red={m.kpiStatus.red}
-            total={m.totalKpis}
-            labels={{
-              good: t("Good", "جيد"),
-              warning: t("Warning", "تحذير"),
-              critical: t("Critical", "حرج"),
-              total: t("Total KPIs defined", "إجمالي المؤشرات المعرفة"),
-            }}
-          />
+          <div className="px-6 pb-6">
+            <KpiStatusBar
+              green={m.kpiStatus.green}
+              yellow={m.kpiStatus.yellow}
+              red={m.kpiStatus.red}
+              total={m.totalKpis}
+              labels={{
+                good: t("Good", "جيد"),
+                warning: t("Warning", "تحذير"),
+                critical: t("Critical", "حرج"),
+                total: t("Total KPIs defined", "إجمالي المؤشرات المعرفة"),
+              }}
+            />
+          </div>
         </Card>
 
-        {/* Diagnostic Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <Stethoscope className="w-4 h-4 inline mr-2" />
+        {/* Diagnostic Status — Cleaner cards */}
+        <Card className="border border-gray-200 dark:border-gray-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center text-base">
+              <Stethoscope className="w-4 h-4 mr-2" />
               {t("Diagnostics Overview", "نظرة عامة على التشخيصات")}
             </CardTitle>
           </CardHeader>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">{t("Total Reports", "إجمالي التقارير")}</span>
-              <span className="text-lg font-bold">{m.totalDiagnostics}</span>
+          <div className="px-6 pb-6 space-y-4 text-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-500">{t("Total Reports", "إجمالي التقارير")}</span>
+              <span className="font-bold text-xl tabular-nums">{m.totalDiagnostics}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">{t("Draft", "مسودة")}</span>
-              <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
-                {m.diagnosticsByStatus.draft}
-              </span>
+            
+            <div className="pt-2 border-t border-gray-100 dark:border-gray-700 space-y-2.5">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">{t("Draft", "مسودة")}</span>
+                <span className="px-2.5 py-px text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 rounded-full">
+                  {m.diagnosticsByStatus.draft}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">{t("Under Review", "قيد المراجعة")}</span>
+                <span className="px-2.5 py-px text-xs font-medium bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 rounded-full">
+                  {m.diagnosticsByStatus.under_review}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">{t("Approved", "معتمدة")}</span>
+                <span className="px-2.5 py-px text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-full">
+                  {m.diagnosticsByStatus.approved}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">{t("Under Review", "قيد المراجعة")}</span>
-              <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded text-xs font-medium">
-                {m.diagnosticsByStatus.under_review}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">{t("Approved", "معتمدة")}</span>
-              <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
-                {m.diagnosticsByStatus.approved}
-              </span>
-            </div>
-            <div className="flex items-center justify-between pt-2 border-t">
-              <span className="text-sm text-gray-500">{t("Avg Maturity", "متوسط النضج")}</span>
-              <span className="text-lg font-bold text-blue-600">{m.avgMaturity}</span>
+
+            <div className="pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+              <span className="text-gray-500">{t("Avg Maturity", "متوسط النضج")}</span>
+              <span className="font-bold text-blue-600 tabular-nums text-lg">{m.avgMaturity}</span>
             </div>
           </div>
         </Card>
 
-        {/* Quick Stats */}
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <FileText className="w-4 h-4 inline mr-2" />
+        {/* Quick Stats — System Summary */}
+        <Card className="border border-gray-200 dark:border-gray-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center text-base">
+              <FileText className="w-4 h-4 mr-2" />
               {t("System Summary", "ملخص النظام")}
             </CardTitle>
           </CardHeader>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">{t("Total Evidence", "إجمالي الأدلة")}</span>
-              <span className="font-semibold">{m.totalEvidence}</span>
+          <div className="px-6 pb-6 space-y-3 text-sm">
+            <div className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-700">
+              <span className="text-gray-500">{t("Total Evidence", "إجمالي الأدلة")}</span>
+              <span className="font-semibold tabular-nums">{m.totalEvidence}</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">{t("Active KPIs", "المؤشرات النشطة")}</span>
-              <span className="font-semibold">{m.totalKpis}</span>
+            <div className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-700">
+              <span className="text-gray-500">{t("Active KPIs", "المؤشرات النشطة")}</span>
+              <span className="font-semibold tabular-nums">{m.totalKpis}</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">
-                {t("Snapshots Recorded", "اللقطات المسجلة")}
-              </span>
-              <span className="font-semibold">
+            <div className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-700">
+              <span className="text-gray-500">{t("Snapshots Recorded", "اللقطات المسجلة")}</span>
+              <span className="font-semibold tabular-nums">
                 {m.kpiStatus.green + m.kpiStatus.yellow + m.kpiStatus.red}
               </span>
             </div>
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm text-gray-500">{t("System Health", "صحة النظام")}</span>
-              <span className="font-semibold text-green-600">
-                {m.performanceIndex >= 80 ? "✅" : m.performanceIndex >= 60 ? "⚠️" : "🔴"}{" "}
-                {m.performanceIndex}%
+            <div className="flex justify-between pt-2 items-center">
+              <span className="text-gray-500">{t("System Health", "صحة النظام")}</span>
+              <span className="font-semibold text-emerald-600 flex items-center gap-1">
+                {m.performanceIndex >= 80 ? "✅" : m.performanceIndex >= 60 ? "⚠️" : "🔴"} {m.performanceIndex}%
               </span>
             </div>
           </div>
