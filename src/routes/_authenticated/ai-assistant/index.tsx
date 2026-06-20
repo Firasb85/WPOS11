@@ -4,14 +4,14 @@ import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { analyzeWithAI, getOpenAIKey, setOpenAIKey, clearOpenAIKey, type AIAnalysisRequest } from "@/lib/ai/openai-client";
-import { Bot, Send, Loader2, Lightbulb, TrendingUp, AlertTriangle, Users, Key, CheckCircle, Trash2, Brain, Shield, Settings } from "lucide-react";
+import { Lightbulb, Send, Loader2, TrendingUp, AlertTriangle, Users, CheckCircle, BookOpen, Shield, Settings } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/ai-assistant/")({ component: AIAssistantPage });
+export const Route = createFileRoute("/_authenticated/ai-assistant/")({ component: InsightsAssistantPage });
 
 interface Message { role: "user" | "assistant"; content: string; model?: string; confidence?: number; suggestions?: string[] }
 
-function AIAssistantPage() {
+function InsightsAssistantPage() {
   const { t, lang, isRTL } = useLanguage();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,17 +19,17 @@ function AIAssistantPage() {
   const [showSettings, setShowSettings] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: t("Hello! I'm your WPOS AI Assistant. I can help you analyze performance, diagnose issues, predict trends, and recommend interventions. Ask me anything!", "مرحباً! أنا مساعد WPOS الذكي. يمكنني مساعدتك في تحليل الأداء وتشخيص المشكلات والتنبؤ بالاتجاهات واقتراح التدخلات. اسألني أي شيء!"), model: "system" },
+    { role: "assistant", content: t("Hello! I'm the WPOS Insights Assistant. I can help you query performance data, walk through diagnostics, and surface relevant evidence. Ask me anything!", "مرحباً! أنا مساعد الرؤى في WPOS. يمكنني مساعدتك في استعلام بيانات الأداء وشرح التشخيصات وعرض الأدلة ذات الصلة. اسألني أي شيء!"), model: "system" },
   ]);
 
   useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }); }, [messages]);
 
   const suggestions = [
-    { icon: <TrendingUp className="w-4 h-4" />, text: t("Analyze declining KPIs", "تحليل المؤشرات المتراجعة"), type: "diagnose" as const },
-    { icon: <AlertTriangle className="w-4 h-4" />, text: t("Predict at-risk employees", "توقع الموظفين المعرضين للخطر"), type: "predict" as const },
-    { icon: <Users className="w-4 h-4" />, text: t("Recommend interventions for skill gaps", "اقتراح تدخلات لفجوات المهارات"), type: "recommend" as const },
+    { icon: <TrendingUp className="w-4 h-4" />, text: t("Show declining KPIs", "اعرض المؤشرات المتراجعة"), type: "diagnose" as const },
+    { icon: <AlertTriangle className="w-4 h-4" />, text: t("List at-risk employees", "اعرض الموظفين المعرضين للخطر"), type: "predict" as const },
+    { icon: <Users className="w-4 h-4" />, text: t("Suggest interventions for skill gaps", "اقترح تدخلات لفجوات المهارات"), type: "recommend" as const },
     { icon: <Lightbulb className="w-4 h-4" />, text: t("Executive performance summary", "ملخص تنفيذي للأداء"), type: "summarize" as const },
-    { icon: <Brain className="w-4 h-4" />, text: t("Why is Ahmad's CSAT declining?", "لماذا تنخفض مؤشرات أحمد؟"), type: "diagnose" as const },
+    { icon: <BookOpen className="w-4 h-4" />, text: t("Walk me through Ahmad's diagnostic", "اشرح لي تشخيص أحمد"), type: "diagnose" as const },
     { icon: <Shield className="w-4 h-4" />, text: t("Root cause analysis for Operations", "تحليل الأسباب الجذرية للعمليات"), type: "diagnose" as const },
   ];
 
@@ -65,13 +65,13 @@ function AIAssistantPage() {
 
   const handleSaveKey = () => {
     if (apiKey.trim()) { setOpenAIKey(apiKey.trim()); toast.success(t("API key saved", "تم حفظ المفتاح")); }
-    else { clearOpenAIKey(); toast.success(t("API key removed — using local AI", "تم حذف المفتاح — يُستخدم الذكاء المحلي")); }
+    else { clearOpenAIKey(); toast.success(t("API key removed — using built-in analysis engine", "تم حذف المفتاح — يُستخدم محرك التحليل المدمج")); }
     setShowSettings(false);
   };
 
   return (
     <div dir={isRTL ? "rtl" : "ltr"}>
-      <PageHeader title="AI Assistant" titleAr="المساعد الذكي" description="AI-powered workforce performance analysis (OpenAI + local fallback)" descriptionAr="تحليل أداء القوى العاملة بالذكاء الاصطناعي" currentLang={lang} />
+      <PageHeader title="Insights Assistant" titleAr="مساعد الرؤى" description="Structured Q&A over your WPOS performance data — explainable, evidence-backed answers" descriptionAr="استعلام منظم لبيانات أداء WPOS — إجابات قابلة للتفسير ومبنية على الأدلة" currentLang={lang} />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         {/* Chat */}
@@ -80,10 +80,10 @@ function AIAssistantPage() {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-[#1e2836]">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><Bot className="w-4 h-4 text-white" /></div>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"><Lightbulb className="w-4 h-4 text-white" /></div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t("WPOS AI", "ذكاء WPOS")}</p>
-                  <p className="text-[10px] text-gray-400">{getOpenAIKey() ? "OpenAI GPT-4o-mini" : t("Local Analysis Engine", "محرك التحليل المحلي")}</p>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t("WPOS Insights", "رؤى WPOS")}</p>
+                  <p className="text-[10px] text-gray-400">{getOpenAIKey() ? "OpenAI GPT-4o-mini (optional)" : t("Built-in Analysis Engine", "محرك التحليل المدمج")}</p>
                 </div>
               </div>
               <button onClick={() => setShowSettings(!showSettings)} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5" aria-label="Settings"><Settings className="w-4 h-4 text-gray-400" /></button>
@@ -106,7 +106,7 @@ function AIAssistantPage() {
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[85%] ${m.role === "user" ? "bg-blue-600 text-white rounded-2xl rounded-br-md" : "bg-gray-100 dark:bg-[#161d27] text-gray-800 dark:text-gray-200 rounded-2xl rounded-bl-md"} px-4 py-3 text-sm leading-relaxed`}>
-                    {m.role === "assistant" && <Bot className="w-3.5 h-3.5 inline me-1 opacity-50 -mt-0.5" />}
+                    {m.role === "assistant" && <Lightbulb className="w-3.5 h-3.5 inline me-1 opacity-50 -mt-0.5" />}
                     <span className="whitespace-pre-wrap">{m.content}</span>
                     {m.model && m.model !== "system" && (
                       <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200/30 dark:border-white/10">
@@ -152,10 +152,10 @@ function AIAssistantPage() {
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>{t("AI Capabilities", "قدرات الذكاء")}</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{t("Capabilities", "الإمكانات")}</CardTitle></CardHeader>
             <div className="space-y-2 text-xs text-gray-500 dark:text-gray-400">
-              <div className="flex items-start gap-2"><Brain className="w-3.5 h-3.5 text-purple-500 mt-0.5 flex-shrink-0" /><span>{t("Root cause diagnosis with confidence scoring", "تشخيص الأسباب الجذرية مع تقييم الثقة")}</span></div>
-              <div className="flex items-start gap-2"><TrendingUp className="w-3.5 h-3.5 text-blue-500 mt-0.5 flex-shrink-0" /><span>{t("Performance prediction & breach forecasting", "توقع الأداء والتنبؤ بالانتهاكات")}</span></div>
+              <div className="flex items-start gap-2"><BookOpen className="w-3.5 h-3.5 text-purple-500 mt-0.5 flex-shrink-0" /><span>{t("Scored diagnostic with explainable evidence breakdown", "تشخيص مُحرَّز مع تفصيل أدلة قابل للتفسير")}</span></div>
+              <div className="flex items-start gap-2"><TrendingUp className="w-3.5 h-3.5 text-blue-500 mt-0.5 flex-shrink-0" /><span>{t("Performance trend analysis & breach forecasting", "تحليل اتجاهات الأداء وتوقع الانتهاكات")}</span></div>
               <div className="flex items-start gap-2"><Lightbulb className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" /><span>{t("Targeted intervention recommendations", "توصيات بتدخلات مستهدفة")}</span></div>
               <div className="flex items-start gap-2"><Shield className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" /><span>{t("Executive report summarization", "تلخيص التقارير التنفيذية")}</span></div>
             </div>

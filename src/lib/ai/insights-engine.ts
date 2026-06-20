@@ -1,7 +1,10 @@
 /**
- * AI Insights Engine.
- * Generates intelligent suggestions from WPOS data patterns.
- * Uses rule-based analysis (no external AI API required).
+ * WPOS Insights Engine.
+ * Generates structured suggestions from WPOS data patterns.
+ * Uses rule-based analysis (no external LLM API required).
+ *
+ * NOTE: Framed in product copy as the "Insights" capability. Deterministic
+ * SQL queries + thresholds — fully explainable, no black box.
  */
 import { supabase } from "@/integrations/supabase/client";
 

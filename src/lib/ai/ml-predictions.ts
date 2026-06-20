@@ -1,9 +1,12 @@
 /**
- * WPOS ML Prediction Engine.
+ * WPOS Prediction Engine.
  *
  * Statistical forecasting for workforce performance.
  * Uses linear regression, moving averages, and anomaly detection.
  * No external ML libraries required — pure TypeScript math.
+ *
+ * NOTE: Framed in product copy as the "Predictive Insights" capability.
+ * Deterministic, explainable, and does NOT depend on any LLM.
  */
 
 export interface PredictionResult {

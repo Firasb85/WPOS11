@@ -1,12 +1,19 @@
 /**
- * WPOS AI Client — OpenAI / Claude integration.
+ * WPOS Insights Client — optional OpenAI / Claude integration for the
+ * Insights Assistant module.
  *
- * Provides workforce performance analysis using LLM APIs.
- * Falls back to local rule-based analysis when no API key is configured.
+ * Provides structured Q&A over WPOS data using LLM APIs.
+ * Falls back to a local rule-based analysis engine when no API key is
+ * configured. Both paths produce the same explainable output shape.
  *
  * Configuration:
  *   Set VITE_OPENAI_API_KEY in your environment (or use Supabase Edge Functions).
  *   Model defaults to gpt-4o-mini for cost efficiency.
+ *
+ * NOTE: This module is framed as the "Insights Assistant" in product copy.
+ * The optional LLM is only enabled when an org's plan explicitly allows it.
+ * All structured insights / predictions / scoring logic elsewhere in the
+ * codebase is deterministic and does NOT require this module to function.
  */
 
 export interface AIAnalysisRequest {
@@ -35,25 +42,26 @@ export interface AIAnalysisResponse {
   cached: boolean;
 }
 
-// System prompts per analysis type
+// System prompts per analysis type — framed as the WPOS Insights Assistant,
+// not as an "AI". The LLM is positioned as a Q&A layer over structured data.
 const SYSTEM_PROMPTS: Record<string, string> = {
-  diagnose: `You are WPOS AI Diagnostic Analyst. Analyze workforce performance data and identify root causes.
+  diagnose: `You are the WPOS Insights Assistant, helping managers understand a diagnostic report.
 Given KPI data, evidence, and trends, provide:
 1. Most likely root cause (from: skill_gap, knowledge_gap, process_issue, tool_issue, environmental, resource, management, motivation, workload, policy)
-2. Confidence level (0-100%)
-3. Supporting reasoning
-4. Recommended interventions
-Be concise and actionable. Use data to support every claim.`,
+2. Confidence level (0-100%) — and the evidence items that contributed to it
+3. Supporting reasoning — cite specific evidence by ID or short label
+4. Recommended interventions — tied to the diagnosed root cause
+Be concise and actionable. Always cite the evidence used.`,
 
-  predict: `You are WPOS AI Prediction Engine. Forecast workforce performance trends.
+  predict: `You are the WPOS Insights Assistant, helping managers understand performance forecasts.
 Given historical KPI snapshots, predict:
 1. Next period's likely performance value
 2. Breach probability (0-100%)
-3. Risk factors driving the prediction
-4. Early warning indicators
-Use statistical reasoning. Be specific with numbers.`,
+3. Risk factors driving the prediction — cite snapshot IDs
+4. Early warning indicators — cite which KPIs trend downward
+Use statistical reasoning. Be specific with numbers and sources.`,
 
-  recommend: `You are WPOS AI Intervention Advisor. Recommend targeted interventions for performance issues.
+  recommend: `You are the WPOS Insights Assistant, helping managers pick the right intervention.
 Given a diagnosed root cause and employee context, recommend:
 1. Top 3 interventions ranked by effectiveness
 2. Expected timeline for improvement
@@ -61,19 +69,19 @@ Given a diagnosed root cause and employee context, recommend:
 4. Potential risks of each intervention
 Be specific — no generic advice.`,
 
-  summarize: `You are WPOS AI Report Writer. Create executive summaries of workforce performance.
+  summarize: `You are the WPOS Insights Assistant, helping executives read a performance report.
 Given performance data across employees and departments, create:
 1. Executive summary (3-4 sentences)
-2. Key findings (bullet points)
-3. Critical action items
+2. Key findings (bullet points) — cite source data
+3. Critical action items — tied to specific cases or employees
 4. Positive trends to maintain
 Write for C-level executives. Be data-driven and concise.`,
 
-  chat: `You are WPOS AI Assistant for workforce performance management.
-You help HR professionals, managers, and executives understand performance data.
-Answer questions about KPIs, diagnostics, interventions, and workforce trends.
-Always reference specific data when available. Be concise and actionable.
-If asked in Arabic, respond in Arabic.`,
+  chat: `You are the WPOS Insights Assistant — a Q&A layer over the customer's own
+workforce performance data. You help HR professionals, managers, and executives
+understand performance data, walk through diagnostics, and surface relevant
+evidence. Always reference specific evidence or data when available. Be concise
+and actionable. If asked in Arabic, respond in Arabic.`,
 };
 
 // Response cache to avoid repeated API calls
@@ -125,7 +133,7 @@ export async function analyzeWithAI(request: AIAnalysisRequest): Promise<AIAnaly
     });
 
     if (!response.ok) {
-      console.warn(`[WPOS AI] OpenAI API error: ${response.status}. Falling back to local.`);
+      console.warn(`[WPOS Insights] OpenAI API error: ${response.status}. Falling back to local.`);
       return localAnalysis(request);
     }
 
@@ -147,7 +155,7 @@ export async function analyzeWithAI(request: AIAnalysisRequest): Promise<AIAnaly
 
     return result;
   } catch (error) {
-    console.warn("[WPOS AI] API call failed, using local analysis:", error);
+    console.warn("[WPOS Insights] API call failed, using built-in analysis:", error);
     return localAnalysis(request);
   }
 }
@@ -283,8 +291,8 @@ function localAnalysis(request: AIAnalysisRequest): AIAnalysisResponse {
       break;
     default:
       content = isAr
-        ? `مرحباً! أنا مساعد WPOS الذكي. يمكنني مساعدتك في تحليل الأداء وتشخيص المشكلات واقتراح التدخلات.`
-        : `Hello! I'm the WPOS AI Assistant. I can help you analyze performance, diagnose issues, and recommend interventions.`;
+        ? `مرحباً! أنا مساعد الرؤى في WPOS. يمكنني مساعدتك في استعلام بيانات الأداء وشرح التشخيصات واقتراح التدخلات، مع الاستشهاد بالأدلة دائماً.`
+        : `Hello! I'm the WPOS Insights Assistant. I can help you query performance data, walk through diagnostics, and surface interventions — always with cited evidence.`;
       confidence = 95;
   }
 

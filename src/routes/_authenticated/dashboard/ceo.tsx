@@ -25,7 +25,7 @@ function CEODashboardPage() {
   const { t, lang: l } = useLanguage();
   const { data: metrics, isLoading } = useCeoDashboard();
   useDashboardRealtime(); // Live updates
-  const { data: insights } = useAIInsights(); // AI insights
+  const { data: insights } = useAIInsights(); // structured insights
 
   if (isLoading) {
     return (
@@ -210,7 +210,7 @@ function CEODashboardPage() {
           <CardHeader>
             <CardTitle>
               <span className="mr-2">🧠</span>
-              {t("AI Insights", "رؤى ذكية")}
+              {t("Insights", "الرؤى")}
               <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
                 {(insights ?? []).length}
               </span>

@@ -50,7 +50,7 @@
 | **Admin Panel** (Security) | ✅ | ✅ | ❌ | ❌ | MFA, sessions, rate limits — admin/CEO only |
 | **Admin Panel** (Settings) | ✅ | ✅ | ❌ | ❌ | System configuration — admin/CEO only |
 | **API Keys** | ✅ | ✅ | ❌ | ❌ | Integration management — admin/CEO only |
-| **AI Assistant** | ✅ | ✅ | ✅ | ❌ | AI-powered insights — manager+ |
+| **Insights Assistant** | ✅ | ✅ | ✅ | ❌ | Q&A over your data — manager+ |
 | **Command Center** | ✅ | ✅ | ✅ | ❌ | Operational overview — manager+ |
 | **Notifications** | ✅ | ✅ | ✅ | ✅ | Everyone gets notifications |
 
@@ -126,7 +126,7 @@
 | 4 | Wizard Step 3 | Root cause hypothesis generation | **5 Why / Fishbone** methodology built in |
 | 5 | Wizard Step 4 | Confidence scoring + final diagnosis | Statistical confidence, not opinion |
 | 6 | `/diagnostics/root-cause` | Root cause categorization | Systematic root cause taxonomy |
-| 7 | `/dashboards/diagnostic-intelligence` | AI diagnostic intelligence | Pattern recognition across all diagnostics |
+| 7 | `/dashboards/diagnostic-intelligence` | Diagnostic intelligence | Pattern recognition across all diagnostics |
 
 **Key Talking Points:**
 - "The wizard ensures no diagnostic shortcuts — every step is mandatory"

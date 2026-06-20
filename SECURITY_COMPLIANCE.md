@@ -141,7 +141,7 @@ intervention.completed — Intervention completed
 | Category | Files | Tests | Coverage |
 |----------|-------|-------|----------|
 | Security (encryption, rate-limit) | 3 | 9 | Encryption, hashing, config |
-| AI Engine (local analysis) | 1 | 7 | Diagnose, predict, recommend, cache |
+| Insights Engine (local deterministic analysis) | 1 | 7 | Diagnose, predict, recommend, cache |
 | ML Predictions | 1 | 8 | Regression, trends, forecasting |
 | Auth Smoke Tests | 1 | 7 | Login, role routing, labels |
 | Diagnostic Workflow | 1 | 6 | Full pipeline |

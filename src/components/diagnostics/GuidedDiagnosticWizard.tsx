@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
@@ -14,6 +14,8 @@ import {
   Plus,
   Trash2,
   Sparkles,
+  ChevronDown,
+  ShieldCheck,
 } from "lucide-react";
 import { useEmployeesList } from "@/hooks/useOrganization";
 import { useSnapshots } from "@/hooks/useKpis";
@@ -42,6 +44,35 @@ const CATEGORIES = [
   { id: "workload_issue", en: "Workload", ar: "مشكلة عبء عمل", icon: "⚖️" },
   { id: "policy_issue", en: "Policy Issue", ar: "مشكلة سياسات", icon: "📋" },
 ];
+
+/**
+ * Keyword → category scoring rules.
+ * Mirrored verbatim from `diagnostics.service.ts → generateHypotheses`
+ * so the UI shows the user the same scoring the engine applies.
+ * Changing these constants requires updating both files in the same commit.
+ */
+const SCORING_RULES: Record<string, { keywords: string[]; points: number }> = {
+  skill_gap:           { keywords: ["skill", "training"],                   points: 15 },
+  knowledge_gap:       { keywords: ["knowledge", "understanding"],          points: 15 },
+  process_issue:       { keywords: ["process", "procedure"],                points: 15 },
+  tool_issue:          { keywords: ["tool", "system"],                      points: 15 },
+  environmental_issue: { keywords: ["environment", "workspace"],            points: 10 },
+  resource_issue:      { keywords: ["resource", "staffing"],                points: 10 },
+  management_issue:    { keywords: ["manager", "supervision"],              points: 15 },
+  motivation_issue:    { keywords: ["motivation", "engagement"],            points: 15 },
+  workload_issue:      { keywords: ["workload", "overtime"],                points: 15 },
+  policy_issue:        { keywords: ["policy", "rule"],                      points: 10 },
+};
+
+/**
+ * Reliability multiplier — high-reliability evidence counts more.
+ * Mirrored from the snapshot → maturity scoring in diagnostics.service.ts.
+ */
+const RELIABILITY_MULTIPLIER: Record<string, number> = {
+  high: 1.0,
+  medium: 0.75,
+  low: 0.5,
+};
 
 const EVIDENCE_TYPES = [
   { id: "quantitative", en: "Quantitative", ar: "كمي" },
@@ -76,6 +107,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
   const [evidenceItems, setEvidenceItems] = useState<EvidenceItem[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   // Evidence form state
   const [evType, setEvType] = useState("quantitative");
@@ -84,6 +116,47 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
   const [evReliability, setEvReliability] = useState("medium");
 
   const employees = empData?.data ?? [];
+
+  /**
+   * Explainability: compute per-category breakdown showing exactly which
+   * evidence items contribute, by which keyword, and how many points.
+   * This mirrors the backend scoring in `diagnostics.service.ts → generateHypotheses`
+   * so what the user sees here is what the engine will compute server-side.
+   */
+  const scoringBreakdown = useMemo(() => {
+    const byCategory: Record<
+      string,
+      {
+        categoryId: string;
+        points: number;
+        items: { evidenceIndex: number; keyword: string; points: number; reliability: string; source: string; description: string }[];
+      }
+    > = {};
+    for (const cat of CATEGORIES) {
+      byCategory[cat.id] = { categoryId: cat.id, points: 0, items: [] };
+    }
+    evidenceItems.forEach((ev, i) => {
+      const desc = (ev.description || "").toLowerCase();
+      const mult = RELIABILITY_MULTIPLIER[ev.reliability] ?? 0.75;
+      for (const [catId, rule] of Object.entries(SCORING_RULES)) {
+        for (const kw of rule.keywords) {
+          if (desc.includes(kw)) {
+            const pts = Math.round(rule.points * mult);
+            byCategory[catId].points += pts;
+            byCategory[catId].items.push({
+              evidenceIndex: i,
+              keyword: kw,
+              points: pts,
+              reliability: ev.reliability,
+              source: ev.source,
+              description: ev.description,
+            });
+          }
+        }
+      }
+    });
+    return byCategory;
+  }, [evidenceItems]);
 
   // Find underperforming employees (RED snapshots)
   const underperformers = employees.filter((emp) => {
@@ -478,25 +551,142 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => toggleCategory(cat.id)}
-                    className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${
-                      selectedCategories.includes(cat.id)
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-500"
-                        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span className="text-xl">{cat.icon}</span>
-                    <div>
-                      <p className="text-sm font-medium">{lang === "ar" ? cat.ar : cat.en}</p>
-                      {selectedCategories.includes(cat.id) && (
-                        <CheckCircle className="w-3 h-3 text-blue-600 inline" />
+                {CATEGORIES.map((cat) => {
+                  const catScore = scoringBreakdown[cat.id]?.points ?? 0;
+                  const catMatches = scoringBreakdown[cat.id]?.items.length ?? 0;
+                  const isSelected = selectedCategories.includes(cat.id);
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => toggleCategory(cat.id)}
+                      className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${
+                        isSelected
+                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-500"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      <span className="text-xl">{cat.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium">{lang === "ar" ? cat.ar : cat.en}</p>
+                        <p className="text-[10px] text-gray-500">
+                          {t(
+                            `${catMatches} match${catMatches === 1 ? "" : "es"} · ${catScore} pts`,
+                            `${catMatches} مطابقة · ${catScore} نقطة`,
+                          )}
+                        </p>
+                      </div>
+                      {isSelected && <CheckCircle className="w-3 h-3 text-blue-600" />}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* ── Explainability: scoring breakdown panel ── */}
+              <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowBreakdown((p) => !p)}
+                  aria-expanded={showBreakdown}
+                  className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-purple-600" />
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                      {t("View scoring breakdown", "عرض تفصيل التسجيل")}
+                    </span>
+                    <span className="text-[10px] text-gray-500">
+                      {t("Why this score?", "لماذا هذه الدرجة؟")}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-gray-500 transition-transform ${showBreakdown ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {showBreakdown && (
+                  <div className="p-4 space-y-4 bg-white dark:bg-gray-900">
+                    <p className="text-xs text-gray-500">
+                      {t(
+                        "Each point below is the contribution of a single evidence item, weighted by reliability. The total drives the confidence score shown in Step 4.",
+                        "كل نقطة أدناه هي مساهمة عنصر دليل واحد، مرجحة بالموثوقية. المجموع يحرك درجة الثقة المعروضة في الخطوة 4.",
                       )}
-                    </div>
-                  </button>
-                ))}
+                    </p>
+                    {evidenceItems.length === 0 && (
+                      <p className="text-xs text-amber-600">
+                        {t(
+                          "No evidence attached yet. Add evidence in Step 2 to see scoring.",
+                          "لا توجد أدلة مرفقة بعد. أضف أدلة في الخطوة 2 لرؤية التسجيل.",
+                        )}
+                      </p>
+                    )}
+                    {Object.values(scoringBreakdown)
+                      .filter((b) => b.items.length > 0)
+                      .sort((a, b) => b.points - a.points)
+                      .map((b) => {
+                        const cat = CATEGORIES.find((c) => c.id === b.categoryId);
+                        return (
+                          <div key={b.categoryId} className="border border-gray-100 dark:border-gray-800 rounded-md p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{cat?.icon}</span>
+                                <span className="text-sm font-semibold">
+                                  {cat ? (lang === "ar" ? cat.ar : cat.en) : b.categoryId}
+                                </span>
+                              </div>
+                              <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded">
+                                +{b.points} pts
+                              </span>
+                            </div>
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="text-gray-400 text-[10px] uppercase">
+                                  <th className="text-left pb-1 font-medium">
+                                    {t("Evidence", "الدليل")}
+                                  </th>
+                                  <th className="text-left pb-1 font-medium">
+                                    {t("Match", "مطابقة")}
+                                  </th>
+                                  <th className="text-right pb-1 font-medium">
+                                    {t("Pts", "نقاط")}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {b.items.map((it, i) => (
+                                  <tr key={i} className="border-t border-gray-100 dark:border-gray-800">
+                                    <td className="py-1.5 pr-2">
+                                      <p className="text-gray-700 dark:text-gray-300 line-clamp-1">
+                                        {it.description}
+                                      </p>
+                                      <p className="text-[10px] text-gray-400">
+                                        {it.source} · {it.reliability}
+                                      </p>
+                                    </td>
+                                    <td className="py-1.5 pr-2">
+                                      <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 rounded text-[10px] font-mono">
+                                        "{it.keyword}"
+                                      </span>
+                                    </td>
+                                    <td className="py-1.5 text-right font-mono font-semibold text-blue-700 dark:text-blue-400">
+                                      +{it.points}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        );
+                      })}
+                    {Object.values(scoringBreakdown).every((b) => b.items.length === 0) &&
+                      evidenceItems.length > 0 && (
+                        <p className="text-xs text-gray-500 italic">
+                          {t(
+                            "No keyword matches yet. Add evidence mentioning skills, processes, tools, workload, etc. to score categories.",
+                            "لا توجد مطابقات كلمات مفتاحية بعد. أضف أدلة تذكر المهارات أو العمليات أو الأدوات أو عبء العمل لتسجيل التصنيفات.",
+                          )}
+                        </p>
+                      )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -514,6 +704,51 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                     "قدم عنواناً وراجع اختياراتك قبل إنشاء التشخيص.",
                   )}
                 </p>
+              </div>
+
+              {/* ── Manager Approval — safety-feature framing ── */}
+              <div className="rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-200 text-amber-900 dark:bg-amber-800/40 dark:text-amber-200">
+                        {t("Required Safety Step", "خطوة أمان مطلوبة")}
+                      </span>
+                    </div>
+                    <h4 className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                      {t("Manager Approval", "موافقة المدير")}
+                    </h4>
+                    <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
+                      {t(
+                        "Final diagnosis requires human approval before becoming a case. No case, intervention, or HR record is created until a manager signs off.",
+                        "التشخيص النهائي يتطلب موافقة بشرية قبل أن يصبح حالة. لا تُنشأ أي حالة أو تدخل أو سجل موارد بشرية حتى يوقّع المدير.",
+                      )}
+                    </p>
+                    <ul className="text-[11px] text-amber-800 dark:text-amber-300 mt-2 space-y-0.5 list-disc list-inside">
+                      <li>
+                        {t(
+                          "This report enters 'Under Review' status after generation.",
+                          "يدخل هذا التقرير حالة 'قيد المراجعة' بعد الإنشاء.",
+                        )}
+                      </li>
+                      <li>
+                        {t(
+                          "Only an authorized manager can promote it to a Case.",
+                          "يمكن لمدير مفوض فقط ترقيته إلى حالة.",
+                        )}
+                      </li>
+                      <li>
+                        {t(
+                          "Reviewer notes are recorded in the audit log.",
+                          "تُسجل ملاحظات المراجع في سجل التدقيق.",
+                        )}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div>

@@ -69,6 +69,8 @@ import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { ROLE_LABELS } from "@/routes/_authenticated";
 import { isModuleVisible } from "@/lib/stores/module-visibility";
+import { useOrgTier, isAdvancedVisible } from "@/lib/stores/organization-tier";
+import { isFeatureEnabled } from "@/lib/security/feature-flags";
 
 const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -132,22 +134,23 @@ interface SidebarProps {
   isDark?: boolean;
 }
 
-/* ── Role-based + admin-controlled filtering ─────────── */
+/* ── Role-based + admin-controlled + tier-based filtering ─────────── */
 
-function isAllowed(item: SecureNavItem, userRole: Role): boolean {
+function isAllowed(item: SecureNavItem, userRole: Role, advancedVisible: boolean): boolean {
   if (item.allowedRoles && item.allowedRoles.length > 0) {
     if (!item.allowedRoles.includes(userRole)) return false;
   }
   if (item.moduleKey && !isModuleVisible(item.moduleKey)) return false;
+  if (item.section === "advanced" && !advancedVisible) return false;
   return true;
 }
 
-function filterNav(items: SecureNavItem[], userRole: Role): SecureNavItem[] {
+function filterNav(items: SecureNavItem[], userRole: Role, advancedVisible: boolean): SecureNavItem[] {
   const out: SecureNavItem[] = [];
   for (const item of items) {
-    if (!isAllowed(item, userRole)) continue;
+    if (!isAllowed(item, userRole, advancedVisible)) continue;
     if (item.children && item.children.length > 0) {
-      const kids = filterNav(item.children, userRole);
+      const kids = filterNav(item.children, userRole, advancedVisible);
       if (kids.length > 0) out.push({ ...item, children: kids });
     } else {
       out.push(item);
@@ -168,15 +171,24 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
     ["ADMIN", "CEO", "MANAGER", "USER"].includes(role) ? role : "USER"
   ) as Role;
 
-  /* Filter navigation based on role + module visibility */
-  const visibleNav = filterNav(navigation, userRole);
+  /* Org tier + Advanced flag determine whether Advanced modules are visible */
+  const { current: orgTier } = useOrgTier();
+  const advancedFlag = isFeatureEnabled("advanced_modules", userRole);
+  const advancedVisible = isAdvancedVisible(orgTier, advancedFlag);
 
-  /* Re-render when admin toggles module visibility */
+  /* Filter navigation based on role + module visibility + tier */
+  const visibleNav = filterNav(navigation, userRole, advancedVisible);
+
+  /* Re-render when admin toggles module visibility or org tier changes */
   const [, setTick] = useState(0);
   const onVisChange = useCallback(() => setTick((n) => n + 1), []);
   useEffect(() => {
     window.addEventListener("wpos:module-visibility-changed", onVisChange);
-    return () => window.removeEventListener("wpos:module-visibility-changed", onVisChange);
+    window.addEventListener("wpos:org-tier-changed", onVisChange);
+    return () => {
+      window.removeEventListener("wpos:module-visibility-changed", onVisChange);
+      window.removeEventListener("wpos:org-tier-changed", onVisChange);
+    };
   }, [onVisChange]);
 
   /* Auto-expand sections with active children */
@@ -318,9 +330,36 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
           </div>
         )}
 
-        {/* Navigation — FILTERED BY ROLE */}
+        {/* Navigation — FILTERED BY ROLE + TIER */}
         <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5">
-          {visibleNav.map((item) => renderItem(item))}
+          {(() => {
+            const coreItems = visibleNav.filter((i) => i.section !== "advanced");
+            const advItems = visibleNav.filter((i) => i.section === "advanced");
+            return (
+              <>
+                {coreItems.length > 0 && (
+                  <>
+                    {isOpen && (
+                      <div className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+                        {lang === "ar" ? "سير العمل الأساسي" : "Core Workflow"}
+                      </div>
+                    )}
+                    {coreItems.map((item) => renderItem(item))}
+                  </>
+                )}
+                {advItems.length > 0 && (
+                  <>
+                    {isOpen && (
+                      <div className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-[#1b2230] mt-3">
+                        {lang === "ar" ? "متقدم" : "Advanced"}
+                      </div>
+                    )}
+                    {advItems.map((item) => renderItem(item))}
+                  </>
+                )}
+              </>
+            );
+          })()}
         </nav>
 
         {/* Footer */}

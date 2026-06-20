@@ -11,7 +11,7 @@ import {
   useRejectDiagnostic,
 } from "@/hooks/useDiagnosticWorkflow";
 import { useAuth } from "@/hooks/useAuth";
-import { Stethoscope, Brain, CheckCircle, XCircle, Send, FileText } from "lucide-react";
+import { Stethoscope, Brain, CheckCircle, XCircle, Send, FileText, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { PeerComparison } from "@/components/diagnostics/PeerComparison";
 import { useCreateCaseFromDiagnostic } from "@/hooks/useCases";
@@ -262,48 +262,102 @@ function DiagnosticReportPage() {
           <div className="space-y-4">
             {hypotheses
               .sort((a, b) => ((a.rank_order as number) ?? 99) - ((b.rank_order as number) ?? 99))
-              .map((hyp, i) => (
-                <div
-                  key={hyp.id as string}
-                  className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">
-                        {i + 1}
-                      </span>
-                      <span className="text-sm font-semibold capitalize">
-                        {((hyp.category as string) ?? "").replace("_", " ")}
+              .map((hyp, i) => {
+                const conf = (hyp.confidence_score as number) ?? 0;
+                const supporting = Array.isArray(hyp.supporting_evidence)
+                  ? (hyp.supporting_evidence as string[])
+                  : [];
+                const breakdownId = `hyp-breakdown-${hyp.id ?? i}`;
+                return (
+                  <div
+                    key={hyp.id as string}
+                    className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">
+                          {i + 1}
+                        </span>
+                        <span className="text-sm font-semibold capitalize">
+                          {((hyp.category as string) ?? "").replace("_", " ")}
+                        </span>
+                      </div>
+                      <span className="text-sm font-bold text-blue-600">
+                        {conf}% {t("confidence", "ثقة")}
                       </span>
                     </div>
-                    <span className="text-sm font-bold text-blue-600">
-                      {hyp.confidence_score as number}% {t("confidence", "ثقة")}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-2">{hyp.hypothesis as string}</p>
-                  {hyp.reasoning != null && (
-                    <p className="text-xs text-gray-400 italic">{String(hyp.reasoning ?? "")}</p>
-                  )}
-                  {Array.isArray(hyp.supporting_evidence) &&
-                    (hyp.supporting_evidence as string[]).length > 0 && (
-                      <div className="mt-2">
-                        <p className="text-xs text-gray-500 font-medium mb-1">
-                          {t("Supporting Evidence:", "أدلة داعمة:")}
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {(hyp.supporting_evidence as string[]).map((e, j) => (
-                            <span
-                              key={j}
-                              className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs"
-                            >
-                              {e}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                    <p className="text-sm text-gray-600 mb-2">{hyp.hypothesis as string}</p>
+                    {hyp.reasoning != null && (
+                      <p className="text-xs text-gray-400 italic">{String(hyp.reasoning ?? "")}</p>
                     )}
-                </div>
-              ))}
+
+                    {/* Why this score? affordance */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById(breakdownId);
+                        if (el) el.classList.toggle("hidden");
+                      }}
+                      aria-expanded="false"
+                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-purple-700 dark:text-purple-300 hover:underline"
+                    >
+                      <Brain className="w-3.5 h-3.5" />
+                      {t("Why this score?", "لماذا هذه الدرجة؟")}
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                    <div id={breakdownId} className="hidden mt-2 p-3 bg-white dark:bg-gray-900 border border-purple-200 dark:border-purple-900 rounded-md">
+                      <p className="text-[11px] text-gray-500 mb-2">
+                        {t(
+                          "This score is a transparent sum of keyword-matched evidence items, weighted by reliability. There is no hidden model — only the rules you can inspect below.",
+                          "هذه الدرجة هي مجموع شفاف لعناصر الأدلة المطابقة بالكلمات المفتاحية، مرجحة بالموثوقية. لا يوجد نموذج مخفي — فقط القواعد التي يمكنك فحصها أدناه.",
+                        )}
+                      </p>
+                      {supporting.length > 0 ? (
+                        <ul className="text-xs space-y-1.5">
+                          {supporting.map((ev, k) => (
+                            <li key={k} className="flex items-start gap-2">
+                              <CheckCircle className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span className="text-gray-700 dark:text-gray-300">{ev}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-xs text-gray-500 italic">
+                          {t(
+                            "No supporting evidence was attached to this hypothesis at generation time.",
+                            "لم تُرفق أدلة داعمة بهذه الفرضية وقت التوليد.",
+                          )}
+                        </p>
+                      )}
+                      <p className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 text-[10px] text-gray-400">
+                        {t(
+                          `Score formula: min(100, sum(keyword_match_points × reliability_weight)). Each category keyword match adds 10–15 points; high-reliability evidence counts at full weight.`,
+                          `صيغة الدرجة: min(100, مجموع(نقاط مطابقة الكلمة المفتاحية × وزن الموثوقية)). كل مطابقة تضيف 10-15 نقطة؛ أدلة الموثوقية العالية تُحسب بوزن كامل.`,
+                        )}
+                      </p>
+                    </div>
+
+                    {Array.isArray(hyp.supporting_evidence) &&
+                      (hyp.supporting_evidence as string[]).length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-500 font-medium mb-1">
+                            {t("Supporting Evidence:", "أدلة داعمة:")}
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {(hyp.supporting_evidence as string[]).map((e, j) => (
+                              <span
+                                key={j}
+                                className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs"
+                              >
+                                {e}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                );
+              })}
           </div>
         )}
       </Card>

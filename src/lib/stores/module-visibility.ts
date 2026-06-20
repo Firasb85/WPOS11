@@ -39,6 +39,7 @@ const DEFAULT_VISIBILITY: ModuleVisibilityConfig = {
   advanced: true,
   profile: true,
   integrations: true,
+  "pilot-results": true,
 };
 
 export function getModuleVisibility(): ModuleVisibilityConfig {
@@ -88,7 +89,8 @@ export function getModuleLabel(key: string): string {
     risk: "Workforce Risk",
     maturity: "Maturity",
     "knowledge-graph": "Knowledge Graph",
-    "ai-assistant": "AI Assistant",
+    "ai-assistant": "Insights Assistant",
+    "pilot-results": "Pilot Results",
     analytics: "Analytics",
     reports: "Reports",
     notifications: "Notifications",

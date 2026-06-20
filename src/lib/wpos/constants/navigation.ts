@@ -2,12 +2,54 @@ import type { NavItem } from "../types";
 
 export type Role = "ADMIN" | "MANAGER" | "USER" | "CEO";
 
+/**
+ * Sidebar section. Items without a section are treated as "core".
+ * - "core":     always visible to authenticated users with role permission
+ * - "advanced": only visible when ENABLE_ADVANCED_MODULES flag is on AND
+ *                the org's tier is not "pilot" (pilot tier never shows Advanced)
+ */
+export type NavSection = "core" | "advanced";
+
 export type SecureNavItem = NavItem & {
   allowedRoles?: Role[];
   children?: SecureNavItem[];
   /** Module key used by admin to toggle visibility */
   moduleKey?: string;
+  /** Sidebar grouping: "core" (default) or "advanced" */
+  section?: NavSection;
 };
+
+/**
+ * Core module keys — the 7-step diagnostic workflow + dashboards.
+ * Used to scope Pilot-tier orgs and to drive the "Core" section header.
+ */
+export const CORE_MODULE_KEYS: ReadonlySet<string> = new Set([
+  "dashboards",
+  "kpis",
+  "snapshots",
+  "evidence",
+  "diagnostics",
+  "cases",
+  "interventions",
+  "follow-up", // follow-up lives under interventions moduleKey in nav
+]);
+
+/**
+ * Advanced module keys — feature-flagged off by default for pilot/demo accounts.
+ */
+export const ADVANCED_MODULE_KEYS: ReadonlySet<string> = new Set([
+  "jobs",
+  "competency",
+  "processes",
+  "process-engineering",
+  "maturity",
+  "risk",
+  "knowledge-graph",
+  "ai-assistant",
+  "analytics",
+  "reports",
+  "advanced",
+]);
 
 /**
  * Master navigation tree.
@@ -151,6 +193,7 @@ export const navigation: SecureNavItem[] = [
     icon: "Briefcase",
     module: "jobs",
     moduleKey: "jobs",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -187,6 +230,7 @@ export const navigation: SecureNavItem[] = [
     icon: "Brain",
     module: "competency",
     moduleKey: "competency",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -221,6 +265,7 @@ export const navigation: SecureNavItem[] = [
     icon: "GitMerge",
     module: "processes",
     moduleKey: "processes",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -255,6 +300,7 @@ export const navigation: SecureNavItem[] = [
     icon: "Play",
     module: "process-engineering",
     moduleKey: "process-engineering",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -497,6 +543,15 @@ export const navigation: SecureNavItem[] = [
 
   /* ────────────────── STANDALONE PAGES ────────────────── */
   {
+    label: "Pilot Results",
+    labelAr: "نتائج التجربة",
+    href: "/pilot-results",
+    icon: "FileBarChart",
+    module: "pilot-results",
+    moduleKey: "pilot-results",
+    allowedRoles: ["ADMIN", "CEO", "MANAGER"],
+  },
+  {
     label: "Performance Journey",
     labelAr: "رحلة الأداء",
     href: "/journey",
@@ -512,6 +567,7 @@ export const navigation: SecureNavItem[] = [
     icon: "Shield",
     module: "risk",
     moduleKey: "risk",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -537,6 +593,7 @@ export const navigation: SecureNavItem[] = [
     icon: "BarChart3",
     module: "maturity",
     moduleKey: "maturity",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
   },
   {
@@ -546,15 +603,17 @@ export const navigation: SecureNavItem[] = [
     icon: "Share2",
     module: "knowledge-graph",
     moduleKey: "knowledge-graph",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
   },
   {
-    label: "AI Assistant",
-    labelAr: "المساعد الذكي",
+    label: "Insights Assistant",
+    labelAr: "مساعد الرؤى",
     href: "/ai-assistant",
-    icon: "Bot",
+    icon: "Lightbulb",
     module: "ai-assistant",
     moduleKey: "ai-assistant",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
   },
 
@@ -566,6 +625,7 @@ export const navigation: SecureNavItem[] = [
     icon: "TrendingUp",
     module: "analytics",
     moduleKey: "analytics",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -600,6 +660,7 @@ export const navigation: SecureNavItem[] = [
     icon: "FileBarChart",
     module: "reports",
     moduleKey: "reports",
+    section: "advanced",
     allowedRoles: ["ADMIN", "CEO", "MANAGER"],
     children: [
       {
@@ -724,6 +785,7 @@ export const navigation: SecureNavItem[] = [
     icon: "Cpu",
     module: "advanced",
     moduleKey: "advanced",
+    section: "advanced",
     allowedRoles: ["ADMIN"],
     children: [
       {

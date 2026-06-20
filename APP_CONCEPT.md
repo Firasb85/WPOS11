@@ -23,7 +23,7 @@ DETECT → DIAGNOSE → DECIDE → ACT → MEASURE
   Found   Generated            /Coaching
 ```
 
-Unlike tools that just measure performance, WPOS uses an **AI-powered Diagnostic Engine** that:
+Unlike tools that just measure performance, WPOS uses a **structured Diagnostic Engine** that:
 1. Collects multi-source evidence (quantitative, qualitative, behavioral, contextual)
 2. Generates ranked root-cause hypotheses with confidence scores
 3. Detects contradictions between evidence items

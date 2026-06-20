@@ -21,7 +21,7 @@ const FLAGS: Record<string, FeatureFlag> = {
   ai_insights: {
     key: "ai_insights",
     enabled: true,
-    description: "AI Insights Engine on CEO Dashboard",
+    description: "Insights Engine on CEO Dashboard",
     rolloutPercentage: 100,
   },
   realtime_dashboard: {
@@ -41,6 +41,13 @@ const FLAGS: Record<string, FeatureFlag> = {
     enabled: true,
     description: "Guided Diagnostic Wizard modal",
     rolloutPercentage: 100,
+  },
+  advanced_modules: {
+    key: "advanced_modules",
+    enabled: false,
+    description:
+      "Show Advanced modules (Job Architecture, Process Architecture, Digital Twin, etc.). Hidden by default for pilot/demo accounts.",
+    rolloutPercentage: 0,
   },
   risk_prediction: {
     key: "risk_prediction",

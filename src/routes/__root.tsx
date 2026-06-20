@@ -16,6 +16,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ErrorBoundary } from "@/components/errors/ErrorBoundary";
 import { Toaster } from "sonner";
 import { initMonitoring } from "@/lib/monitoring/init";
+import { OrgTierProvider } from "@/lib/stores/organization-tier";
 
 function NotFoundComponent() {
   return (
@@ -136,8 +137,10 @@ function RootComponent() {
       <ErrorBoundary boundary="root_provider">
         <AuthProvider>
           <LanguageProvider>
-            <Outlet />
-            <Toaster position="top-right" richColors closeButton />
+            <OrgTierProvider>
+              <Outlet />
+              <Toaster position="top-right" richColors closeButton />
+            </OrgTierProvider>
           </LanguageProvider>
         </AuthProvider>
       </ErrorBoundary>

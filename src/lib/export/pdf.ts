@@ -125,3 +125,109 @@ export function exportDiagnosticsPDF(
   window.open(url, "_blank");
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
+
+/**
+ * Pilot Results — Before/After summary PDF.
+ * One-page artifact for the Pilot sales motion:
+ * baseline → current → % improvement per KPI, with summary stats.
+ */
+export interface PilotResultsData {
+  orgName: string;
+  pilotStart: string;
+  pilotEnd: string;
+  rows: {
+    kpi: string;
+    employee: string;
+    baseline: number;
+    current: number;
+    deltaPct: number;
+    range: string;
+  }[];
+}
+
+export function exportPilotResultsPDF(data: PilotResultsData): void {
+  const now = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const improved = data.rows.filter((r) => r.deltaPct > 0).length;
+  const declined = data.rows.filter((r) => r.deltaPct < 0).length;
+  const avgDelta = data.rows.length
+    ? data.rows.reduce((s, r) => s + r.deltaPct, 0) / data.rows.length
+    : 0;
+
+  const rowsHTML = data.rows
+    .map(
+      (r) => `
+      <tr>
+        <td>${sanitize(r.kpi)}</td>
+        <td>${sanitize(r.employee)}</td>
+        <td class="num">${sanitize(String(r.baseline))}</td>
+        <td class="num">${sanitize(String(r.current))}</td>
+        <td class="num ${r.deltaPct >= 0 ? "pos" : "neg"}">${r.deltaPct >= 0 ? "+" : ""}${sanitize(r.deltaPct.toFixed(1))}%</td>
+        <td>${sanitize(r.range)}</td>
+      </tr>`,
+    )
+    .join("");
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pilot Results — ${sanitize(data.orgName)}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #1a1a1a; padding: 40px; max-width: 900px; margin: 0 auto; }
+    .cover { text-align: center; padding: 30px 0; border-bottom: 3px solid #2563eb; margin-bottom: 24px; }
+    .cover h1 { font-size: 24px; color: #1e3a5f; }
+    .cover .subtitle { color: #6b7280; margin-top: 6px; font-size: 13px; }
+    .cover .org { font-size: 18px; font-weight: 600; color: #2563eb; margin-top: 10px; }
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+    .stat { padding: 14px; background: #f8fafc; border-radius: 8px; text-align: center; }
+    .stat .v { font-size: 22px; font-weight: 700; color: #1e3a5f; }
+    .stat .l { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { background: #f1f5f9; padding: 10px 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; color: #374151; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #166534; font-weight: 600; }
+    td.neg { color: #991b1b; font-weight: 600; }
+    tr:nth-child(even) { background: #fafafa; }
+    .footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e7eb; color: #9ca3af; font-size: 11px; text-align: center; }
+    @media print { body { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <h1>Pilot Results — Before / After</h1>
+    <p class="subtitle">Workforce Performance Operating System</p>
+    <p class="org">${sanitize(data.orgName)}</p>
+    <p style="color:#6b7280;font-size:12px;margin-top:6px;">Window: ${sanitize(data.pilotStart)} → ${sanitize(data.pilotEnd)}</p>
+  </div>
+
+  <div class="summary">
+    <div class="stat"><div class="v">${data.rows.length}</div><div class="l">KPIs tracked</div></div>
+    <div class="stat"><div class="v" style="color:#166534">${improved}</div><div class="l">Improved</div></div>
+    <div class="stat"><div class="v" style="color:#991b1b">${declined}</div><div class="l">Declined</div></div>
+    <div class="stat"><div class="v" style="color:${avgDelta >= 0 ? "#166534" : "#991b1b"}">${avgDelta >= 0 ? "+" : ""}${avgDelta.toFixed(1)}%</div><div class="l">Avg Δ</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>KPI</th><th>Employee</th><th>Baseline</th><th>Current</th><th>Δ%</th><th>Range</th></tr>
+    </thead>
+    <tbody>${rowsHTML}</tbody>
+  </table>
+
+  <p class="footer">Generated ${now} · WPOS Pilot Results</p>
+  <script>window.print();</script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}

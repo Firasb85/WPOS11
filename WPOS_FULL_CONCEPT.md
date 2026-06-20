@@ -5,10 +5,12 @@
 
 ## 🎯 What is WPOS?
 
-**WPOS** (Workforce Performance Operating System) is an **enterprise-grade SaaS platform** that transforms how organizations manage, diagnose, and optimize workforce performance. It replaces fragmented HR tools, spreadsheets, and annual review cycles with a **continuous, AI-powered diagnostic workflow** — from detecting a KPI gap to implementing a targeted intervention and measuring the outcome.
+**WPOS** (Workforce Performance Operating System) is an **enterprise-grade SaaS platform** that transforms how organizations manage, diagnose, and optimize workforce performance. It replaces fragmented HR tools, spreadsheets, and annual review cycles with a **continuous, structured diagnostic workflow** — from detecting a KPI gap to implementing a targeted intervention and measuring the outcome.
+
+The product is sold and onboarded as a **Pilot-first** platform: customers start with a 90-day evaluation scoped to a single department and the **Core 6** diagnostic workflow. Once the Pilot demonstrates measurable improvement, the org graduates to Professional / Enterprise tiers that unlock the full 22-module platform.
 
 ### The One-Line Pitch
-> **"WPOS is the operating system for workforce performance — it tells you WHO is underperforming, WHY it's happening, and WHAT to do about it, before it's too late."**
+> **"WPOS is the operating system for workforce performance — it tells you WHO is underperforming, WHY it's happening, and WHAT to do about it, with evidence and explainable scoring, before it's too late."**
 
 ---
 
@@ -37,8 +39,8 @@ WPOS:               KPI Gap Detected (automated)
                     ↓ (same day)
                     Multi-source Evidence Collected
                     ↓ (hours)
-                    AI Diagnostic: Root Cause Identified (85% confidence)
-                    ↓ (manager approves)
+                    Diagnostic Engine: Root Cause Identified (scored hypothesis)
+                    ↓ (manager approves — required safety step)
                     Targeted Intervention Assigned
                     ↓ (30/60/90 days)
                     Follow-up: KPI Re-measured → Problem Resolved ✓
@@ -62,17 +64,19 @@ This is the heart of WPOS — a structured methodology that ensures **no perform
 - **Evidence Impact Scoring**: 0-10 score based on keyword analysis across 6 themes
 - **Correlation Heatmap**: Shows co-occurrence patterns between evidence types
 
-### Step 3: DIAGNOSE — AI-Powered Root Cause Analysis
+### Step 3: DIAGNOSE — Diagnostic Engine (Explainable, Evidence-Backed)
 - **Guided 4-Step Wizard**: Select employee → Attach evidence → Choose categories → Generate hypotheses
 - **10 Root Cause Categories**: Skill Gap, Knowledge Gap, Process Issue, Tool Issue, Environmental, Resource, Management, Motivation, Workload, Policy
-- **Hypothesis Generation Engine**: Analyzes evidence keywords, scores each category, ranks top 5 by confidence
+- **Scored Hypothesis Engine**: Deterministic keyword-rule scoring against attached evidence. Each category's confidence is a transparent sum of weighted evidence matches — **not** a black box.
+- **"Why this score?" affordance**: every hypothesis exposes the exact evidence items and keyword matches that contributed to its confidence score.
 - **Confidence Score**: 0-100% based on evidence strength and alignment
 - **Maturity Level**: 1-5 based on evidence completeness
 
-### Step 4: REVIEW — Manager Approval
-- Diagnostic report submitted for manager review
+### Step 4: REVIEW — Manager Approval (Required Safety Step)
+- Diagnostic report enters "Under Review" status
+- **No case, intervention, or HR record is created until a manager signs off** — this is a designed safety feature, not an incidental workflow gate.
 - Manager can **approve** (enables case creation) or **reject with reason** (returns to analyst)
-- Full audit trail of who reviewed, when, and decision
+- Full audit trail of who reviewed, when, and decision — reviewer notes are recorded in the audit log
 
 ### Step 5: CASE — Structured Case Management
 - **Auto-created from approved diagnostic** with one click
@@ -183,11 +187,14 @@ Pain Signal:       "We do annual reviews but they don't change anything"
 
 ### SaaS Subscription (Primary)
 
-| Tier | Employees | Price/Month | Includes |
-|------|-----------|-------------|----------|
-| **Starter** | Up to 500 | $2,000 | Core workflow (Detect → Diagnose → Act), 3 dashboards, Email support |
-| **Professional** | 501 - 2,000 | $5,000 | Full platform, AI insights, HR integrations, Priority support |
-| **Enterprise** | 2,001 - 10,000 | $12,000 | Everything + Advanced tools, Custom integrations, Dedicated CSM, SLA |
+WPOS is sold **Pilot-first**. Every prospect starts with the 90-day Pilot; conversion to a paid tier is gated on measurable improvement in the Before/After results.
+
+| Tier | Scope | Price/Month | Includes |
+|------|-------|-------------|----------|
+| **Pilot** | Single department, 90-day window, Core 6 workflow only | $0 (evaluation) | KPI Management, Performance Snapshots, Evidence, Diagnostic Engine, Case Management, Interventions, Follow-Up, Pilot Results PDF |
+| **Starter** | Up to 500 employees | $2,000 | Core workflow (Detect → Diagnose → Act), 3 dashboards, Email support |
+| **Professional** | 501 - 2,000 employees | $5,000 | Full platform, Insights Assistant, HR integrations, Priority support |
+| **Enterprise** | 2,001 - 10,000 employees | $12,000 | Everything + Advanced tools (Digital Twin, Simulations, Rules Engine, Workflow Studio), Custom integrations, Dedicated CSM, SLA |
 | **Unlimited** | 10,000+ | Custom | White-label, On-premise option, Multi-tenant, Custom development |
 
 ### Additional Revenue Streams
@@ -342,12 +349,13 @@ Pain Signal:       "We do annual reviews but they don't change anything"
 
 **Demo Accounts** (Password: `Password123!` for all):
 
-| Role | Email | What You See |
-|------|-------|-------------|
-| System Admin | admin@wpos.com | Full access — all 95 pages |
-| CEO | ceo@wpos.com | Executive dashboards, analytics, admin |
-| Department Manager | manager@wpos.com | Diagnostic workflow, cases, evidence |
-| Team Member | user@wpos.com | Limited view — KPIs, notifications |
+| Role | Email | Org Tier | What You See |
+|------|-------|----------|-------------|
+| **Pilot Demo** (default) | demo@pilot.wpos.com | `pilot` | Core 6 workflow only — KPI / Snapshot / Evidence / Diagnostic / Case / Follow-up. Advanced modules hidden. Single department scope. |
+| System Admin | admin@wpos.com | `enterprise` | Full access — all 95 pages, all modules |
+| CEO | ceo@wpos.com | `enterprise` | Executive dashboards, analytics, admin |
+| Department Manager | manager@wpos.com | `enterprise` | Diagnostic workflow, cases, evidence |
+| Team Member | user@wpos.com | `enterprise` | Limited view — KPIs, notifications |
 
 **Supabase Project:** `nsbmrtohkdttsufxwzdi`
 

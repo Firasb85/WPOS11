@@ -10,10 +10,27 @@ export const Route = createFileRoute("/_authenticated/saas/")({
 });
 
 function SaasPage() {
+  // Days remaining on Pilot tier — derived from a 90-day window starting today.
+  // Real org data would come from `companies.pilot_expires_at`.
+  function pilotDaysRemaining() {
+    const remaining = 90 - Math.floor((Date.now() - Date.parse("2026-06-20")) / (1000 * 60 * 60 * 24));
+    return Math.max(0, remaining);
+  }
+
   const { t, lang: l } = useLanguage();
   const { data: _metrics, isLoading: _metricsLoading } = useCeoDashboard();
 
   const plans = [
+    {
+      name: "Pilot",
+      nameAr: "تجريبي",
+      price: 0,
+      users: 10,
+      employees: 50,
+      storage: 1,
+      features: ["Single department scope", "Core workflow only", "90-day evaluation"],
+      current: true,
+    },
     {
       name: "Starter",
       nameAr: "المبتدئ",
@@ -32,7 +49,7 @@ function SaasPage() {
       employees: 500,
       storage: 25,
       features: ["All Starter features", "Diagnostics", "Competency Framework", "Priority Support"],
-      current: true,
+      current: false,
     },
     {
       name: "Enterprise",
@@ -44,7 +61,7 @@ function SaasPage() {
       features: [
         "All Professional features",
         "Digital Twin",
-        "AI Assistant",
+        "Insights Assistant",
         "Custom Integrations",
         "Dedicated Support",
       ],
@@ -65,27 +82,27 @@ function SaasPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="text-center">
           <CreditCard className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-          <p className="text-lg font-bold">Professional</p>
+          <p className="text-lg font-bold">Pilot</p>
           <p className="text-xs text-gray-500">{t("Current Plan", "الخطة الحالية")}</p>
         </Card>
         <Card className="text-center">
           <Users className="w-6 h-6 text-green-600 mx-auto mb-2" />
-          <p className="text-lg font-bold">42 / 100</p>
+          <p className="text-lg font-bold">4 / 10</p>
           <p className="text-xs text-gray-500">{t("Users", "المستخدمون")}</p>
         </Card>
         <Card className="text-center">
           <HardDrive className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-          <p className="text-lg font-bold">12.5 / 25 GB</p>
+          <p className="text-lg font-bold">0.3 / 1 GB</p>
           <p className="text-xs text-gray-500">{t("Storage", "التخزين")}</p>
         </Card>
         <Card className="text-center">
           <Zap className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-          <p className="text-lg font-bold">28</p>
-          <p className="text-xs text-gray-500">{t("Days Remaining", "الأيام المتبقية")}</p>
+          <p className="text-lg font-bold">{pilotDaysRemaining()}</p>
+          <p className="text-xs text-gray-500">{t("Pilot Days Remaining", "أيام التجربة المتبقية")}</p>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {plans.map((plan) => (
           <Card key={plan.name} className={plan.current ? "ring-2 ring-blue-500" : ""}>
             {plan.current && (
