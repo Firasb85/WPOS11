@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
@@ -108,6 +108,18 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
+
+  /**
+   * Auto-expand the breakdown panel when the analyst has any evidence
+   * to attach — they almost always want to see how it scored.
+   * Manual toggle still available.
+   */
+  useEffect(() => {
+    if (evidenceItems.length > 0 && !showBreakdown) {
+      setShowBreakdown(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [evidenceItems.length === 1]); // only when first evidence is added
 
   // Evidence form state
   const [evType, setEvType] = useState("quantitative");
@@ -537,111 +549,198 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
           )}
 
           {/* Step 3: Select Diagnostic Categories */}
-          {step === 3 && (
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold mb-1">
-                  {t("Suspected Root Cause Categories", "تصنيفات الأسباب الجذرية المشتبهة")}
-                </h3>
-                <p className="text-xs text-gray-500 mb-3">
-                  {t(
-                    "Select categories you suspect. The engine will validate against evidence.",
-                    "اختر التصنيفات المشتبه بها. سيتحقق المحرك من الأدلة.",
-                  )}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {CATEGORIES.map((cat) => {
-                  const catScore = scoringBreakdown[cat.id]?.points ?? 0;
-                  const catMatches = scoringBreakdown[cat.id]?.items.length ?? 0;
-                  const isSelected = selectedCategories.includes(cat.id);
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => toggleCategory(cat.id)}
-                      className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${
-                        isSelected
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-500"
-                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                      }`}
-                    >
-                      <span className="text-xl">{cat.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">{lang === "ar" ? cat.ar : cat.en}</p>
-                        <p className="text-[10px] text-gray-500">
-                          {t(
-                            `${catMatches} match${catMatches === 1 ? "" : "es"} · ${catScore} pts`,
-                            `${catMatches} مطابقة · ${catScore} نقطة`,
-                          )}
-                        </p>
-                      </div>
-                      {isSelected && <CheckCircle className="w-3 h-3 text-blue-600" />}
-                    </button>
-                  );
-                })}
-              </div>
+          {step === 3 && (() => {
+            // Compute top-of-step summary stats
+            const totalPoints = Object.values(scoringBreakdown).reduce((s, b) => s + b.points, 0);
+            const totalMatches = Object.values(scoringBreakdown).reduce(
+              (s, b) => s + b.items.length,
+              0,
+            );
+            const matchedCats = CATEGORIES.filter(
+              (c) => scoringBreakdown[c.id]?.items.length,
+            ).length;
+            // Sort categories: matched (by score desc) first, then unmatched
+            const sortedCats = [...CATEGORIES].sort((a, b) => {
+              const ap = scoringBreakdown[a.id]?.points ?? 0;
+              const bp = scoringBreakdown[b.id]?.points ?? 0;
+              return bp - ap;
+            });
+            return (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold mb-1">
+                    {t("Suspected Root Cause Categories", "تصنيفات الأسباب الجذرية المشتبهة")}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-3">
+                    {t(
+                      "Categories are ranked by their match score — top scorers first. Select the ones you suspect; the engine will validate against evidence.",
+                      "التصنيفات مرتبة حسب درجة المطابقة — الأعلى أولاً. اختر ما تشتبه به؛ سيتحقق المحرك من الأدلة.",
+                    )}
+                  </p>
+                </div>
 
-              {/* ── Explainability: scoring breakdown panel ── */}
-              <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setShowBreakdown((p) => !p)}
-                  aria-expanded={showBreakdown}
-                  className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <Brain className="w-4 h-4 text-purple-600" />
-                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      {t("View scoring breakdown", "عرض تفصيل التسجيل")}
-                    </span>
-                    <span className="text-[10px] text-gray-500">
-                      {t("Why this score?", "لماذا هذه الدرجة؟")}
-                    </span>
+                {/* ── Step summary stats row ── */}
+                <div className="grid grid-cols-3 gap-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-100 dark:border-blue-900/50">
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-blue-900 dark:text-blue-200 tabular-nums">
+                      {totalPoints}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-blue-700 dark:text-blue-400 font-semibold">
+                      {t("Total points", "إجمالي النقاط")}
+                    </div>
                   </div>
-                  <ChevronDown
-                    className={`w-4 h-4 text-gray-500 transition-transform ${showBreakdown ? "rotate-180" : ""}`}
-                  />
-                </button>
-                {showBreakdown && (
-                  <div className="p-4 space-y-4 bg-white dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">
-                      {t(
-                        "Each point below is the contribution of a single evidence item, weighted by reliability. The total drives the confidence score shown in Step 4.",
-                        "كل نقطة أدناه هي مساهمة عنصر دليل واحد، مرجحة بالموثوقية. المجموع يحرك درجة الثقة المعروضة في الخطوة 4.",
-                      )}
-                    </p>
+                  <div className="text-center border-x border-blue-200/50 dark:border-blue-800/50">
+                    <div className="text-lg font-bold text-blue-900 dark:text-blue-200 tabular-nums">
+                      {totalMatches}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-blue-700 dark:text-blue-400 font-semibold">
+                      {t("Matches", "مطابقات")}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-blue-900 dark:text-blue-200 tabular-nums">
+                      {matchedCats}/{CATEGORIES.length}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-wider text-blue-700 dark:text-blue-400 font-semibold">
+                      {t("Cats scored", "تصنيفات مُحرَّزة")}
+                    </div>
+                  </div>
+                </div>
 
-                    {/* ── Score board: ranked categories with stacked bars ── */}
-                    <ScoreBoard
-                      breakdown={scoringBreakdown}
-                      categories={CATEGORIES}
-                      lang={lang}
-                      t={t}
+                <div className="grid grid-cols-2 gap-2">
+                  {sortedCats.map((cat) => {
+                    const catScore = scoringBreakdown[cat.id]?.points ?? 0;
+                    const catMatches = scoringBreakdown[cat.id]?.items.length ?? 0;
+                    const isSelected = selectedCategories.includes(cat.id);
+                    const isMatched = catMatches > 0;
+
+                    // Four states for clarity:
+                    //  1. selected + matched   → strong blue (primary action)
+                    //  2. selected + unmatched → soft blue (analyst override)
+                    //  3. unselected + matched → green accent + "Recommended"
+                    //  4. unselected + unm...  → plain
+                    let cls: string;
+                    let badge: string | null = null;
+                    if (isSelected && isMatched) {
+                      cls = "border-blue-500 bg-blue-50 dark:bg-blue-900/30 ring-1 ring-blue-500";
+                    } else if (isSelected) {
+                      cls = "border-blue-300 bg-blue-50/50 dark:bg-blue-900/15";
+                    } else if (isMatched) {
+                      cls = "border-emerald-300 bg-emerald-50/40 dark:bg-emerald-900/15 hover:border-emerald-400";
+                      badge = t("Recommended", "مُوصى به");
+                    } else {
+                      cls = "border-gray-200 hover:border-gray-300 hover:bg-gray-50";
+                    }
+
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => toggleCategory(cat.id)}
+                        className={`relative flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${cls}`}
+                      >
+                        <span className="text-xl">{cat.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-medium truncate">
+                              {lang === "ar" ? cat.ar : cat.en}
+                            </p>
+                            {badge && (
+                              <span className="px-1.5 py-0 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                                {badge}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-gray-500 mt-0.5 tabular-nums">
+                            {isMatched ? (
+                              <>
+                                <span className="font-semibold text-blue-700 dark:text-blue-300">
+                                  {catMatches} {t("match", "مطابقة")}
+                                </span>
+                                {" · "}
+                                <span className="font-mono">{catScore} pts</span>
+                              </>
+                            ) : (
+                              <span className="opacity-60">
+                                {t("no matches yet", "لا مطابقات بعد")}
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        {isSelected ? (
+                          <CheckCircle className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                        ) : isMatched ? (
+                          <span
+                            className="w-4 h-4 rounded-full border-2 border-emerald-400 flex-shrink-0"
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* ── Explainability: scoring breakdown panel ── */}
+                <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setShowBreakdown((p) => !p)}
+                    aria-expanded={showBreakdown}
+                    className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Brain className="w-4 h-4 text-purple-600" />
+                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                        {t("View scoring breakdown", "عرض تفصيل التسجيل")}
+                      </span>
+                      <span className="text-[10px] text-gray-500">
+                        {t("Why this score?", "لماذا هذه الدرجة؟")}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      className={`w-4 h-4 text-gray-500 transition-transform ${showBreakdown ? "rotate-180" : ""}`}
                     />
+                  </button>
+                  {showBreakdown && (
+                    <div className="p-4 space-y-4 bg-white dark:bg-gray-900">
+                      <p className="text-xs text-gray-500">
+                        {t(
+                          "Each point below is the contribution of a single evidence item, weighted by reliability. The total drives the confidence score shown in Step 4.",
+                          "كل نقطة أدناه هي مساهمة عنصر دليل واحد، مرجحة بالموثوقية. المجموع يحرك درجة الثقة المعروضة في الخطوة 4.",
+                        )}
+                      </p>
 
-                    {/* ── "What would boost" hints ── */}
-                    {evidenceItems.length > 0 && (
-                      <WhatWouldBoost
+                      {/* ── Score board: ranked categories with stacked bars ── */}
+                      <ScoreBoard
                         breakdown={scoringBreakdown}
                         categories={CATEGORIES}
                         lang={lang}
                         t={t}
                       />
-                    )}
 
-                    {evidenceItems.length === 0 && (
-                      <p className="text-xs text-amber-600">
-                        {t(
-                          "No evidence attached yet. Add evidence in Step 2 to see scoring.",
-                          "لا توجد أدلة مرفقة بعد. أضف أدلة في الخطوة 2 لرؤية التسجيل.",
-                        )}
-                      </p>
-                    )}
-                  </div>
-                )}
+                      {/* ── "What would boost" hints ── */}
+                      {evidenceItems.length > 0 && (
+                        <WhatWouldBoost
+                          breakdown={scoringBreakdown}
+                          categories={CATEGORIES}
+                          lang={lang}
+                          t={t}
+                        />
+                      )}
+
+                      {evidenceItems.length === 0 && (
+                        <p className="text-xs text-amber-600">
+                          {t(
+                            "No evidence attached yet. Add evidence in Step 2 to see scoring.",
+                            "لا توجد أدلة مرفقة بعد. أضف أدلة في الخطوة 2 لرؤية التسجيل.",
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Step 4: Review & Submit */}
           {step === 4 && (
