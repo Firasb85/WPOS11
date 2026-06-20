@@ -42,7 +42,7 @@ function LoginPage() {
   const addDebug = (msg: string) => {
     const ts = new Date().toLocaleTimeString();
     setDebugLog((p) => [...p.slice(-9), `[${ts}] ${msg}`]);
-    console.log(`[WPOS Auth] ${msg}`);
+    if (import.meta.env.DEV) console.log(`[WPOS Auth] ${msg}`);
   };
 
   // Initialize theme
