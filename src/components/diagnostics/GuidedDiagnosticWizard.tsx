@@ -26,6 +26,7 @@ import {
 } from "@/hooks/useDiagnosticWorkflow";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
+import { ConfidenceGauge } from "~/components/wpos/ConfidenceGauge";
 
 interface WizardProps {
   open: boolean;
@@ -743,124 +744,213 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
           })()}
 
           {/* Step 4: Review & Submit */}
-          {step === 4 && (
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold mb-1">
-                  {t("Review & Generate Report", "مراجعة وإنشاء التقرير")}
-                </h3>
-                <p className="text-xs text-gray-500 mb-3">
-                  {t(
-                    "Provide a title and review your selections before generating the diagnostic.",
-                    "قدم عنواناً وراجع اختياراتك قبل إنشاء التشخيص.",
-                  )}
-                </p>
-              </div>
+          {step === 4 && (() => {
+            // Compute preview confidence from current scoring breakdown
+            // (top category's points become the headline confidence %)
+            const sortedBreakdown = Object.values(scoringBreakdown).sort(
+              (a, b) => b.points - a.points,
+            );
+            const topCategory = sortedBreakdown[0];
+            const previewConfidence = topCategory ? Math.min(topCategory.points, 100) : 0;
+            const totalEvidencePoints = sortedBreakdown.reduce((s, b) => s + b.points, 0);
+            return (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold mb-1">
+                    {t("Review & Generate Report", "مراجعة وإنشاء التقرير")}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-3">
+                    {t(
+                      "Provide a title and review your selections before generating the diagnostic.",
+                      "قدم عنواناً وراجع اختياراتك قبل إنشاء التشخيص.",
+                    )}
+                  </p>
+                </div>
 
-              {/* ── Manager Approval — safety-feature framing ── */}
-              <div className="rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
-                    <ShieldCheck className="w-5 h-5 text-white" />
+                {/* ── Pre-submit confidence preview ── */}
+                <div className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-200 text-blue-900 dark:bg-blue-800/40 dark:text-blue-200">
+                      {t("Pre-submit estimate", "تقدير قبل الإرسال")}
+                    </span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-200 text-amber-900 dark:bg-amber-800/40 dark:text-amber-200">
-                        {t("Required Safety Step", "خطوة أمان مطلوبة")}
+                  <div className="flex items-center gap-4">
+                    {/* Circular gauge */}
+                    <ConfidenceGauge
+                      value={previewConfidence}
+                      size={64}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">
+                        {t(
+                          previewConfidence >= 60
+                            ? "Strong confidence — likely ready for review"
+                            : previewConfidence >= 30
+                              ? "Moderate confidence — review evidence quality"
+                              : "Low confidence — add more evidence",
+                          previewConfidence >= 60
+                            ? "ثقة عالية — جاهز للمراجعة على الأرجح"
+                            : previewConfidence >= 30
+                              ? "ثقة متوسطة — راجع جودة الأدلة"
+                              : "ثقة منخفضة — أضف مزيداً من الأدلة"
+                        )}
+                      </p>
+                      <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5 tabular-nums">
+                        {t(
+                          `${totalEvidencePoints} total points across ${sortedBreakdown.length} categor${sortedBreakdown.length === 1 ? "y" : "ies"}`,
+                          `${totalEvidencePoints} نقطة إجمالية عبر ${sortedBreakdown.length} تصنيف`,
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Manager Approval — safety-feature framing ── */}
+                <div className="rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4 shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
+                      <ShieldCheck className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-200 text-amber-900 dark:bg-amber-800/40 dark:text-amber-200">
+                          {t("Required Safety Step", "خطوة أمان مطلوبة")}
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                        {t("Manager Approval", "موافقة المدير")}
+                      </h4>
+                      <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
+                        {t(
+                          "Final diagnosis requires human approval before becoming a case. No case, intervention, or HR record is created until a manager signs off.",
+                          "التشخيص النهائي يتطلب موافقة بشرية قبل أن يصبح حالة. لا تُنشأ أي حالة أو تدخل أو سجل موارد بشرية حتى يوقّع المدير.",
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ── Post-submit lifecycle timeline ── */}
+                  <div className="mt-3 pt-3 border-t border-amber-200 dark:border-amber-800/40">
+                    <p className="text-[10px] uppercase tracking-wider font-bold text-amber-900 dark:text-amber-200 mb-2">
+                      {t("After you submit", "بعد الإرسال")}
+                    </p>
+                    <ol className="space-y-2 text-[11px] text-amber-800 dark:text-amber-300">
+                      <li className="flex items-start gap-2">
+                        <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800/60 flex items-center justify-center font-bold text-amber-900 dark:text-amber-200 flex-shrink-0 text-[10px]">
+                          1
+                        </span>
+                        <span>
+                          {t(
+                            "Report enters 'Under Review' status.",
+                            "يدخل التقرير حالة 'قيد المراجعة'.",
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800/60 flex items-center justify-center font-bold text-amber-900 dark:text-amber-200 flex-shrink-0 text-[10px]">
+                          2
+                        </span>
+                        <span>
+                          {t(
+                            "A manager reviews and either approves or rejects with notes (audit-logged).",
+                            "يراجع المدير ويعتمد أو يرفض مع ملاحظات (مسجلة في سجل التدقيق).",
+                          )}
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800/60 flex items-center justify-center font-bold text-amber-900 dark:text-amber-200 flex-shrink-0 text-[10px]">
+                          3
+                        </span>
+                        <span>
+                          {t(
+                            "Only after approval can a Case be created — and only from the report page.",
+                            "لا تُنشأ الحالة إلا بعد الاعتماد، ومن صفحة التقرير فقط.",
+                          )}
+                        </span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">
+                    {t("Report Title", "عنوان التقرير")} *
+                  </label>
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder={t(
+                      "e.g. Q2 Performance Gap — Ahmad Khalid",
+                      "مثال: فجوة أداء الربع الثاني — أحمد خالد",
+                    )}
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">
+                    {t("Summary Notes (optional)", "ملاحظات (اختياري)")}
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm resize-none"
+                  />
+                </div>
+
+                {/* ── Summary card ── */}
+                <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 overflow-hidden">
+                  <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-[10px] uppercase tracking-wider font-bold text-gray-500">
+                      {t("Summary", "ملخص")}
+                    </p>
+                  </div>
+                  <div className="p-4 space-y-2.5">
+                    <div className="flex justify-between text-sm items-center">
+                      <span className="text-gray-500">{t("Employee", "الموظف")}</span>
+                      <span className="font-medium">
+                        {selectedEmpData
+                          ? `${selectedEmpData.first_name} ${selectedEmpData.last_name}`
+                          : "-"}
                       </span>
                     </div>
-                    <h4 className="text-sm font-bold text-amber-900 dark:text-amber-200">
-                      {t("Manager Approval", "موافقة المدير")}
-                    </h4>
-                    <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
-                      {t(
-                        "Final diagnosis requires human approval before becoming a case. No case, intervention, or HR record is created until a manager signs off.",
-                        "التشخيص النهائي يتطلب موافقة بشرية قبل أن يصبح حالة. لا تُنشأ أي حالة أو تدخل أو سجل موارد بشرية حتى يوقّع المدير.",
-                      )}
-                    </p>
-                    <ul className="text-[11px] text-amber-800 dark:text-amber-300 mt-2 space-y-0.5 list-disc list-inside">
-                      <li>
-                        {t(
-                          "This report enters 'Under Review' status after generation.",
-                          "يدخل هذا التقرير حالة 'قيد المراجعة' بعد الإنشاء.",
-                        )}
-                      </li>
-                      <li>
-                        {t(
-                          "Only an authorized manager can promote it to a Case.",
-                          "يمكن لمدير مفوض فقط ترقيته إلى حالة.",
-                        )}
-                      </li>
-                      <li>
-                        {t(
-                          "Reviewer notes are recorded in the audit log.",
-                          "تُسجل ملاحظات المراجع في سجل التدقيق.",
-                        )}
-                      </li>
-                    </ul>
+                    <div className="flex justify-between text-sm items-center">
+                      <span className="text-gray-500">{t("Evidence Items", "عناصر الأدلة")}</span>
+                      <span className="font-medium tabular-nums">{evidenceItems.length}</span>
+                    </div>
+                    <div className="flex justify-between text-sm items-center">
+                      <span className="text-gray-500">{t("Categories", "التصنيفات")}</span>
+                      <span className="font-medium tabular-nums">{selectedCategories.length}</span>
+                    </div>
+                    {selectedCategories.length > 0 && (
+                      <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
+                        <div className="flex flex-wrap gap-1.5">
+                          {selectedCategories.map((c) => {
+                            const cat = CATEGORIES.find((x) => x.id === c);
+                            const pts = scoringBreakdown[c]?.points ?? 0;
+                            return (
+                              <span
+                                key={c}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs border border-blue-200 dark:border-blue-900/50"
+                              >
+                                <span>{cat?.icon}</span>
+                                <span>{lang === "ar" ? cat?.ar : cat?.en}</span>
+                                {pts > 0 && (
+                                  <span className="text-[10px] font-mono opacity-70 tabular-nums">
+                                    ·{pts}
+                                  </span>
+                                )}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
-                  {t("Report Title", "عنوان التقرير")} *
-                </label>
-                <input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder={t(
-                    "e.g. Q2 Performance Gap — Ahmad Khalid",
-                    "مثال: فجوة أداء الربع الثاني — أحمد خالد",
-                  )}
-                  className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
-                  {t("Summary Notes (optional)", "ملاحظات (اختياري)")}
-                </label>
-                <textarea
-                  rows={2}
-                  value={summary}
-                  onChange={(e) => setSummary(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm resize-none"
-                />
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">{t("Employee", "الموظف")}</span>
-                  <span className="font-medium">
-                    {selectedEmpData
-                      ? `${selectedEmpData.first_name} ${selectedEmpData.last_name}`
-                      : "-"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">{t("Evidence Items", "عناصر الأدلة")}</span>
-                  <span className="font-medium">{evidenceItems.length}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">{t("Categories", "التصنيفات")}</span>
-                  <span className="font-medium">{selectedCategories.length}</span>
-                </div>
-                <div className="flex flex-wrap gap-1 pt-1">
-                  {selectedCategories.map((c) => {
-                    const cat = CATEGORIES.find((x) => x.id === c);
-                    return (
-                      <span
-                        key={c}
-                        className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs"
-                      >
-                        {cat?.icon} {lang === "ar" ? cat?.ar : cat?.en}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
 
         {/* Footer */}
