@@ -107,7 +107,7 @@ This is the heart of WPOS — a structured methodology that ensures **no perform
 | 1 | **KPI Management** | Define, organize, and track performance indicators | KPI Library, Categories, Tree hierarchy, Dependency mapping, Target/actual tracking |
 | 2 | **Performance Snapshots** | Record point-in-time performance measurements | Gap calculator, Auto-status (RAG), Sparkline trends, 3-period decline detection |
 | 3 | **Evidence Collection** | Gather multi-source performance evidence | 6 types, Reliability scoring, Impact scoring, Theme detection, Correlation heatmap |
-| 4 | **Diagnostic Engine** | AI-powered root cause analysis | 4-step wizard, 10 categories, Hypothesis generation, Confidence scoring, Maturity levels |
+| 4 | **Diagnostic Engine** | Explainable scored root cause analysis | 4-step wizard, 10 categories, Hypothesis generation, Confidence scoring, Maturity levels, Full "Why this score?" breakdown |
 | 5 | **Case Management** | Track performance issues end-to-end | Auto-creation, Priority assignment, Status lifecycle, Root cause linking |
 | 6 | **Interventions** | Plan and assign corrective actions | Library of templates, Action plans, Owner assignment, Deadline tracking |
 | 7 | **Follow-Up Tracking** | Measure intervention effectiveness | 30/60/90-day cycles, Before/after KPI comparison, Improvement % |
@@ -128,7 +128,7 @@ This is the heart of WPOS — a structured methodology that ensures **no perform
 | 12 | **Dashboards** | Real-time performance views | CEO, Department, Supervisor, Competency, Diagnostic Intelligence, Process Intelligence, Executive |
 | 13 | **Risk Prediction** | Proactive breach forecasting | 3-factor probability algorithm, At-risk badges, Department/employee risk panels |
 | 14 | **Peer Comparison** | Benchmark against peers | Employee vs team/department average, Peer discovery, Difference highlighting |
-| 15 | **AI Assistant** | Natural language insights | Chat interface, Quick prompts, Performance Q&A, Intervention suggestions |
+| 15 | **Insights Assistant** | Q&A over your data | Chat interface, Quick prompts, Performance Q&A, Intervention suggestions (deterministic, optional LLM behind flag) |
 | 16 | **Analytics** | Deep-dive analysis | Root cause distribution, Competency trends, Evidence quality, Knowledge graph |
 
 ### D. Enterprise Platform
@@ -217,7 +217,7 @@ WPOS is sold **Pilot-first**. Every prospect starts with the 90-day Pilot; conve
 |---------|----------------------|------|
 | Performance tracking | ✅ Record KPIs | ✅ Record KPIs |
 | Gap detection | ❌ Manual review | ✅ **Automated** with sparkline trends |
-| Root cause analysis | ❌ Manager guesses | ✅ **AI-powered** with confidence scores |
+| Root cause analysis | ❌ Manager guesses | ✅ **Scored** with confidence scores, fully explainable |
 | Evidence-based | ❌ Annual review forms | ✅ **6 evidence types**, reliability scoring |
 | Intervention tracking | ❌ Separate training system | ✅ **Integrated** case → intervention → follow-up |
 | Impact measurement | ❌ Hope it works | ✅ **30/60/90-day** before/after KPI comparison |
@@ -236,7 +236,7 @@ WPOS is sold **Pilot-first**. Every prospect starts with the 90-day Pilot; conve
 | **BambooHR** | SMB simplicity | WPOS serves **enterprise** with role-based access and audit trails |
 | **Culture Amp** | Engagement surveys | WPOS connects **surveys to KPIs to interventions** — Culture Amp stops at insights |
 | **15Five** | Check-ins, OKRs | WPOS has **structured diagnostic methodology** — 15Five is lightweight |
-| **Lattice** | Performance + engagement | WPOS has **AI hypothesis generation** and **process architecture** |
+| **Lattice** | Performance + engagement | WPOS has **scored hypothesis generation** (explainable) and **process architecture** |
 
 ---
 
@@ -262,7 +262,8 @@ WPOS is sold **Pilot-first**. Every prospect starts with the 90-day Pilot; conve
 │         │           └──────────┘         └──────────┘           │
 │         │                                                        │
 │  ┌──────┴───────┐   ┌──────────────┐   ┌──────────────┐        │
-│  │ Integrations │   │ AI Engine    │   │ Export       │        │
+│  │ Integrations │   │ Diagnostic   │   │ Export       │        │
+│  │              │   │ Engine       │   │              │        │
 │  │              │   │              │   │              │        │
 │  │ SAP SF       │   │ Hypothesis   │   │ PDF/CSV/JSON │        │
 │  │ Oracle HCM   │   │ Risk Predict │   │ Bulk export  │        │
@@ -323,7 +324,7 @@ WPOS is sold **Pilot-first**. Every prospect starts with the 90-day Pilot; conve
 - [x] 125 unit tests
 
 ### Phase 2 — Intelligence (Q3 2026)
-- [ ] OpenAI/Claude integration for natural language diagnostics
+- [ ] Optional OpenAI integration (gated behind Enterprise plan; deterministic scoring is unchanged)
 - [ ] Predictive analytics with ML models
 - [ ] Automated evidence collection from integrated systems
 - [ ] Real-time anomaly detection

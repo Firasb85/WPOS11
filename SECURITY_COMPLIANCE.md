@@ -111,7 +111,7 @@ X-API-Key: <api_key>
 | `GET` | `/evidence` | List evidence | 100/min |
 | `POST` | `/evidence` | Submit evidence | 30/min |
 | `GET` | `/cases` | List cases | 100/min |
-| `POST` | `/ai/analyze` | AI analysis | 10/min |
+| `POST` | `/diagnostic/score` | Diagnostic scoring | 10/min |
 | `POST` | `/webhooks` | Register webhook | 5/min |
 | `GET` | `/health` | Health check | 60/min |
 

@@ -31,7 +31,7 @@
 | **New Evidence** | ✅ | ✅ | ✅ | ❌ | Submitting evidence is a management function |
 | **Diagnostics** (Reports, Root Cause) | ✅ | ✅ | ✅ | ❌ | Core diagnostic workflow — manager+ |
 | **New Diagnostic** | ✅ | ❌ | ✅ | ❌ | Only admin/managers initiate diagnostics |
-| **Diagnostic Intelligence Dashboard** | ✅ | ✅ | ✅ | ❌ | AI-driven insights about performance gaps |
+| **Diagnostic Intelligence Dashboard** | ✅ | ✅ | ✅ | ❌ | Scored insights about performance gaps (explainable) |
 | **Cases** (View, Details, Root Causes) | ✅ | ✅ | ✅ | ❌ | Case management — manager+ |
 | **Interventions** (View, Effectiveness) | ✅ | ✅ | ✅ | ❌ | Intervention tracking — manager+ |
 | **Action Plans** | ✅ | ✅ | ✅ | ❌ | Remediation plans — manager+ |
@@ -122,7 +122,7 @@
 |------|------------|-------------|----------------|
 | 1 | `/diagnostics/new` | **Guided Diagnostic Wizard** (4-step modal) | Structured methodology, not guesswork |
 | 2 | Wizard Step 1 | Select employee (Ahmad) + KPI (CSAT) | Links diagnosis to specific performance gap |
-| 3 | Wizard Step 2 | System pulls related evidence automatically | **Evidence Correlation** — AI finds relevant evidence |
+| 3 | Wizard Step 2 | System pulls related evidence automatically | **Evidence Correlation** — System suggests relevant evidence |
 | 4 | Wizard Step 3 | Root cause hypothesis generation | **5 Why / Fishbone** methodology built in |
 | 5 | Wizard Step 4 | Confidence scoring + final diagnosis | Statistical confidence, not opinion |
 | 6 | `/diagnostics/root-cause` | Root cause categorization | Systematic root cause taxonomy |

@@ -14,7 +14,7 @@ function DashboardsProcess_intelligencePage() {
 
   return (
     <div dir={isRTL ? "rtl" : "ltr"}>
-      <PageHeader title="Process Intelligence" titleAr="ذكاء العمليات" description="AI-driven process optimization insights" descriptionAr="رؤى تحسين العمليات المدعومة بالذكاء الاصطناعي" currentLang={lang} />
+      <PageHeader title="Process Intelligence" titleAr="ذكاء العمليات" description="Structured process analytics with explainable scoring" descriptionAr="تحليلات العمليات المنظمة مع تسجيل قابل للتفسير" currentLang={lang} />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center"><BarChart3 className="w-6 h-6 text-blue-600 mx-auto mb-1" /><p className="text-2xl font-bold">{items.length}</p><p className="text-xs text-gray-500">{t("Total Items","إجمالي العناصر")}</p></Card>
         <Card className="p-4 text-center"><CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-1" /><p className="text-2xl font-bold text-green-600">{items.filter?.((i: any) => i.status === "green" || i.status === "active").length ?? 0}</p><p className="text-xs text-gray-500">{t("Active","نشط")}</p></Card>

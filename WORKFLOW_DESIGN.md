@@ -134,7 +134,7 @@ Multiple Sources → Evidence Records → Reliability Scoring → Evidence Summa
 
 **Trigger:** Sufficient evidence collected (minimum threshold met)
 
-**Actors:** System (AI), Analyst
+**Actors:** System, Analyst
 
 **Process:**
 1. System analyzes collected evidence

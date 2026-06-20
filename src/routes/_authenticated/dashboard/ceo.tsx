@@ -204,7 +204,7 @@ function CEODashboardPage() {
         </Card>
       </div>
 
-      {/* AI Insights */}
+      {/* Insights */}
       {(insights ?? []).length > 0 && (
         <Card className="mt-6">
           <CardHeader>
