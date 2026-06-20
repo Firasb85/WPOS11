@@ -2,11 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
+import { KpiStatusBar } from "~/components/wpos/KpiStatusBar";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useEmployeesList } from "@/hooks/useOrganization";
 import { useSnapshots } from "@/hooks/useKpis";
 import { AtRiskEmployeesPanel } from "@/components/diagnostics/AtRiskPanel";
-import { Users, TrendingUp, AlertTriangle, Clock } from "lucide-react";
+import { Users, TrendingUp, AlertTriangle, Clock, Gauge } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/supervisor")({
   component: SupervisorDashboardPage,
@@ -58,7 +59,30 @@ function SupervisorDashboardPage() {
           status="good"
         />
       </div>
-      <Card>
+
+      {/* Team KPI Health */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>
+            <Gauge className="w-4 h-4 inline mr-2" />
+            {t("Team KPI Health", "صحة مؤشرات الفريق")}
+          </CardTitle>
+        </CardHeader>
+        <KpiStatusBar
+          green={snapshots.filter((s) => s.status === "green").length}
+          yellow={snapshots.filter((s) => s.status === "yellow").length}
+          red={redSnaps}
+          total={snapshots.length}
+          labels={{
+            good: t("Good", "جيد"),
+            warning: t("Warning", "تحذير"),
+            critical: t("Critical", "حرج"),
+            total: t("Team snapshots", "لقطات الفريق"),
+          }}
+        />
+      </Card>
+
+      <Card className="mt-6">
         <CardHeader>
           <CardTitle>{t("Team Members", "أعضاء الفريق")}</CardTitle>
         </CardHeader>

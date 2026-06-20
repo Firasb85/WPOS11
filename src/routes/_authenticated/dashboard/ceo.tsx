@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
+import { KpiStatusBar } from "~/components/wpos/KpiStatusBar";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useAIInsights } from "@/hooks/useAIInsights";
@@ -24,62 +25,6 @@ import {
 export const Route = createFileRoute("/_authenticated/dashboard/ceo")({
   component: CEODashboardPage,
 });
-
-/**
- * MiniSparkline — tiny SVG line chart for trend indicators.
- * Renders a series of values as a 80x24 px line. Colour comes from
- * the trend (up → green, down → red, flat → slate).
- */
-function MiniSparkline({
-  values,
-  trend = "flat",
-}: {
-  values: number[];
-  trend?: "up" | "down" | "flat";
-}) {
-  if (!values || values.length < 2) {
-    return <div className="w-20 h-6 bg-gray-100 dark:bg-gray-800 rounded" />;
-  }
-  const w = 80;
-  const h = 24;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  const pts = values
-    .map((v, i) => {
-      const x = (i / (values.length - 1)) * w;
-      const y = h - ((v - min) / range) * h;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
-  const stroke =
-    trend === "up"
-      ? "#15803d"
-      : trend === "down"
-        ? "#b91c1c"
-        : "#64748b";
-  const fill =
-    trend === "up"
-      ? "rgba(21, 160, 77, 0.08)"
-      : trend === "down"
-        ? "rgba(185, 28, 28, 0.08)"
-        : "rgba(100, 116, 139, 0.08)";
-  // Build the area fill polygon
-  const area = `0,${h} ${pts} ${w},${h}`;
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="inline-block">
-      <polygon points={area} fill={fill} />
-      <polyline
-        points={pts}
-        fill="none"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function CEODashboardPage() {
   const { t, lang: l } = useLanguage();
@@ -176,7 +121,12 @@ function CEODashboardPage() {
             yellow={m.kpiStatus.yellow}
             red={m.kpiStatus.red}
             total={m.totalKpis}
-            t={t}
+            labels={{
+              good: t("Good", "جيد"),
+              warning: t("Warning", "تحذير"),
+              critical: t("Critical", "حرج"),
+              total: t("Total KPIs defined", "إجمالي المؤشرات المعرفة"),
+            }}
           />
         </Card>
 
@@ -364,76 +314,7 @@ function insightPalette(priority: string, type: string): InsightPalette {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   KpiStatusBar — segmented horizontal bar (RAG).
-   Shows the ratio of green : yellow : red KPIs visually as one bar,
-   plus per-segment counts underneath.
+   KpiStatusBar and MiniSparkline are now shared components:
+     - src/components/wpos/KpiStatusBar.tsx
+     - src/components/wpos/MiniSparkline.tsx
    ───────────────────────────────────────────────────────────────────────── */
-
-function KpiStatusBar({
-  green,
-  yellow,
-  red,
-  total,
-  t,
-}: {
-  green: number;
-  yellow: number;
-  red: number;
-  total: number;
-  t: (en: string, ar: string) => string;
-}) {
-  const safeTotal = Math.max(total, green + yellow + red, 1);
-  const greenPct = (green / safeTotal) * 100;
-  const yellowPct = (yellow / safeTotal) * 100;
-  const redPct = (red / safeTotal) * 100;
-  return (
-    <div className="space-y-3">
-      <div className="h-3 rounded-full overflow-hidden flex bg-gray-100 dark:bg-gray-800">
-        {greenPct > 0 && (
-          <div
-            className="bg-green-500 transition-all"
-            style={{ width: `${greenPct}%` }}
-            title={`${green} green`}
-          />
-        )}
-        {yellowPct > 0 && (
-          <div
-            className="bg-amber-400 transition-all"
-            style={{ width: `${yellowPct}%` }}
-            title={`${yellow} warning`}
-          />
-        )}
-        {redPct > 0 && (
-          <div
-            className="bg-red-500 transition-all"
-            style={{ width: `${redPct}%` }}
-            title={`${red} critical`}
-          />
-        )}
-      </div>
-      <div className="grid grid-cols-3 gap-2">
-        <div className="text-center p-2.5 rounded-lg bg-green-50 dark:bg-green-900/20">
-          <p className="text-xl font-bold text-green-700 dark:text-green-400 tabular-nums">{green}</p>
-          <p className="text-[10px] uppercase tracking-wider text-green-700 dark:text-green-400 font-semibold mt-0.5">
-            {t("Good", "جيد")}
-          </p>
-        </div>
-        <div className="text-center p-2.5 rounded-lg bg-amber-50 dark:bg-amber-900/20">
-          <p className="text-xl font-bold text-amber-700 dark:text-amber-400 tabular-nums">{yellow}</p>
-          <p className="text-[10px] uppercase tracking-wider text-amber-700 dark:text-amber-400 font-semibold mt-0.5">
-            {t("Warning", "تحذير")}
-          </p>
-        </div>
-        <div className="text-center p-2.5 rounded-lg bg-red-50 dark:bg-red-900/20">
-          <p className="text-xl font-bold text-red-700 dark:text-red-400 tabular-nums">{red}</p>
-          <p className="text-[10px] uppercase tracking-wider text-red-700 dark:text-red-400 font-semibold mt-0.5">
-            {t("Critical", "حرج")}
-          </p>
-        </div>
-      </div>
-      <p className="text-xs text-gray-400 text-center">
-        {t("Total KPIs defined", "إجمالي المؤشرات المعرفة")}: {total}
-      </p>
-    </div>
-  );
-}

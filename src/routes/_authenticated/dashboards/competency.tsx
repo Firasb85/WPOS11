@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
+import { StatsCard } from "~/components/wpos/StatsCard";
 import { useCompetencies } from "@/hooks/useCompetencies";
 import { useEmployeesList } from "@/hooks/useOrganization";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
@@ -68,26 +69,30 @@ function CompetencyDashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card className="p-4 text-center">
-          <Brain className="w-6 h-6 text-blue-600 mx-auto mb-1" />
-          <p className="text-2xl font-bold">{comps.length}</p>
-          <p className="text-xs text-gray-500">{l === "ar" ? "كفاءات" : "Competencies"}</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <Users className="w-6 h-6 text-purple-600 mx-auto mb-1" />
-          <p className="text-2xl font-bold">{employees.length}</p>
-          <p className="text-xs text-gray-500">{l === "ar" ? "موظفين" : "Employees"}</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-1" />
-          <p className="text-2xl font-bold">{avgScore}</p>
-          <p className="text-xs text-gray-500">{l === "ar" ? "متوسط المستوى" : "Avg Level"}</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <AlertTriangle className="w-6 h-6 text-red-600 mx-auto mb-1" />
-          <p className="text-2xl font-bold">{lowSkillComps.length}</p>
-          <p className="text-xs text-gray-500">{l === "ar" ? "فجوات" : "Gaps"}</p>
-        </Card>
+        <StatsCard
+          title={l === "ar" ? "كفاءات" : "Competencies"}
+          value={String(comps.length)}
+          icon={<Brain />}
+          status="good"
+        />
+        <StatsCard
+          title={l === "ar" ? "موظفين" : "Employees"}
+          value={String(employees.length)}
+          icon={<Users />}
+          status="good"
+        />
+        <StatsCard
+          title={l === "ar" ? "متوسط المستوى" : "Avg Level"}
+          value={String(avgScore)}
+          icon={<TrendingUp />}
+          status={Number(avgScore) >= 4 ? "good" : Number(avgScore) >= 3 ? "warning" : "critical"}
+        />
+        <StatsCard
+          title={l === "ar" ? "فجوات" : "Gaps"}
+          value={String(lowSkillComps.length)}
+          icon={<AlertTriangle />}
+          status={lowSkillComps.length > 0 ? "critical" : "good"}
+        />
       </div>
 
       {/* Heatmap */}

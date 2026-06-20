@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
+import { KpiStatusBar } from "~/components/wpos/KpiStatusBar";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useCeoDashboard } from "@/hooks/useDashboard";
 import { useRootCauseMetrics, useDiagnosticMetrics } from "@/hooks/useAnalytics";
@@ -105,20 +106,18 @@ function ExecutivePage() {
           <CardHeader>
             <CardTitle>{t("KPI Health", "صحة المؤشرات")}</CardTitle>
           </CardHeader>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-6 bg-green-50 rounded-lg">
-              <p className="text-3xl font-bold text-green-600">{m.kpiStatus.green}</p>
-              <p className="text-xs mt-1">{t("Good", "جيد")}</p>
-            </div>
-            <div className="text-center p-6 bg-yellow-50 rounded-lg">
-              <p className="text-3xl font-bold text-yellow-600">{m.kpiStatus.yellow}</p>
-              <p className="text-xs mt-1">{t("Warning", "تحذير")}</p>
-            </div>
-            <div className="text-center p-6 bg-red-50 rounded-lg">
-              <p className="text-3xl font-bold text-red-600">{m.kpiStatus.red}</p>
-              <p className="text-xs mt-1">{t("Critical", "حرج")}</p>
-            </div>
-          </div>
+          <KpiStatusBar
+            green={m.kpiStatus.green}
+            yellow={m.kpiStatus.yellow}
+            red={m.kpiStatus.red}
+            total={m.kpiStatus.green + m.kpiStatus.yellow + m.kpiStatus.red}
+            labels={{
+              good: t("Good", "جيد"),
+              warning: t("Warning", "تحذير"),
+              critical: t("Critical", "حرج"),
+              total: t("KPIs measured", "مؤشرات مُقاسة"),
+            }}
+          />
         </Card>
       </div>
     </div>

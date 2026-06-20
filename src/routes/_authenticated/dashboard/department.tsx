@@ -2,10 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "~/components/wpos/PageHeader";
 import { Card, CardHeader, CardTitle } from "~/components/wpos/Card";
 import { StatsCard } from "~/components/wpos/StatsCard";
+import { KpiStatusBar } from "~/components/wpos/KpiStatusBar";
 import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useDepartmentMetrics } from "@/hooks/useAnalytics";
 import { AtRiskDepartmentsPanel } from "@/components/diagnostics/AtRiskPanel";
-import { Building2, Users, TrendingUp, AlertTriangle } from "lucide-react";
+import { Building2, Users, TrendingUp, AlertTriangle, Gauge } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/department")({
   component: DepartmentDashboardPage,
@@ -64,6 +65,31 @@ function DepartmentDashboardPage() {
           status="good"
         />
       </div>
+
+      {/* Org-wide KPI Health */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>
+            <Gauge className="w-4 h-4 inline mr-2" />
+            {t("Org-Wide KPI Health", "صحة المؤشرات على مستوى المؤسسة")}
+          </CardTitle>
+        </CardHeader>
+        <KpiStatusBar
+          green={items.reduce((s, d) => s + d.greenKpis, 0)}
+          yellow={items.reduce((s, d) => s + d.yellowKpis, 0)}
+          red={items.reduce((s, d) => s + d.redKpis, 0)}
+          total={items.reduce(
+            (s, d) => s + d.greenKpis + d.yellowKpis + d.redKpis,
+            0,
+          )}
+          labels={{
+            good: t("Good", "جيد"),
+            warning: t("Warning", "تحذير"),
+            critical: t("Critical", "حرج"),
+            total: t("KPIs across all departments", "مؤشرات عبر كل الإدارات"),
+          }}
+        />
+      </Card>
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
