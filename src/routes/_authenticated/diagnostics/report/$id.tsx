@@ -261,7 +261,7 @@ function DiagnosticReportPage() {
   };
 
   return (
-    <div>
+    <div className="max-w-5xl mx-auto">
       <PageHeader
         title={report.title}
         titleAr={report.title}
@@ -270,46 +270,53 @@ function DiagnosticReportPage() {
         currentLang={l}
       />
 
-      {/* Status Bar */}
-      <Card className="mb-6">
-        <div className="flex flex-wrap items-center gap-5">
-          <div>
-            <p className="text-xs text-gray-500 mb-1">{t("Status", "الحالة")}</p>
-            <StatusBadge
-              status={statusColors[report.status ?? "draft"] ?? "gray"}
-              label={(report.status ?? "draft").replace("_", " ")}
-            />
+      {/* Status Bar — Premium polish */}
+      <Card className="mb-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+          <div className="flex items-center gap-4">
+            <div>
+              <p className="text-[10px] font-semibold text-gray-500 tracking-wider mb-1">{t("STATUS", "الحالة")}</p>
+              <StatusBadge
+                status={statusColors[report.status ?? "draft"] ?? "gray"}
+                label={(report.status ?? "draft").replace("_", " ")}
+              />
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-gray-500 tracking-wider mb-1">{t("MATURITY", "النضج")}</p>
+              <MaturityBadge
+                level={(report.maturity_level ?? 1) as 1 | 2 | 3 | 4 | 5}
+                size="sm"
+                currentLang={l}
+              />
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-gray-500 tracking-wider mb-1">{t("CONFIDENCE", "الثقة")}</p>
+              <ConfidenceGauge value={report.confidence_score ?? 0} size={52} />
+            </div>
           </div>
-          <div>
-            <p className="text-xs text-gray-500 mb-1">{t("Maturity", "النضج")}</p>
-            <MaturityBadge
-              level={(report.maturity_level ?? 1) as 1 | 2 | 3 | 4 | 5}
-              size="sm"
-              currentLang={l}
-            />
-          </div>
-          <div>
-            <p className="text-xs text-gray-500 mb-1">{t("Confidence", "الثقة")}</p>
-            <ConfidenceGauge value={report.confidence_score ?? 0} size={48} />
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">{t("Employee", "الموظف")}</p>
-            <span className="text-sm font-medium">
-              {emp ? `${emp.first_name} ${emp.last_name}` : "-"}
-            </span>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">{t("Department", "الإدارة")}</p>
-            <span className="text-sm">{(dept?.name as string) ?? "-"}</span>
+
+          <div className="h-8 w-px bg-gray-200 dark:bg-gray-700 hidden md:block" />
+
+          <div className="flex items-center gap-x-6">
+            <div>
+              <p className="text-[10px] font-semibold text-gray-500 tracking-wider mb-1">{t("EMPLOYEE", "الموظف")}</p>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                {emp ? `${emp.first_name} ${emp.last_name}` : "—"}
+              </span>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-gray-500 tracking-wider mb-1">{t("DEPARTMENT", "الإدارة")}</p>
+              <span className="text-sm text-gray-700 dark:text-gray-300">{(dept?.name as string) ?? "—"}</span>
+            </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="ml-auto flex gap-2">
+          <div className="ml-auto flex flex-wrap gap-2">
             {report.status === "draft" && (
               <button
                 onClick={handleSubmit}
                 disabled={submitForReview.isPending}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-sm font-medium disabled:opacity-50 transition-colors shadow-sm"
               >
                 <Send className="w-4 h-4" />
                 {submitForReview.isPending
@@ -322,14 +329,14 @@ function DiagnosticReportPage() {
                 <button
                   onClick={handleApprove}
                   disabled={approveMutation.isPending}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-sm font-medium disabled:opacity-50 transition-colors"
                 >
                   <CheckCircle className="w-4 h-4" />
                   {t("Approve", "اعتماد")}
                 </button>
                 <button
                   onClick={() => setShowReject(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-sm font-medium transition-colors"
                 >
                   <XCircle className="w-4 h-4" />
                   {t("Reject", "رفض")}
@@ -343,7 +350,7 @@ function DiagnosticReportPage() {
                   if (c?.id) navigate({ to: "/cases" });
                 }}
                 disabled={createCase.isPending}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl text-sm font-medium disabled:opacity-50 transition-colors"
               >
                 <Briefcase className="w-4 h-4" />
                 {createCase.isPending
@@ -397,25 +404,30 @@ function DiagnosticReportPage() {
         )}
       </Card>
 
-      {/* Performance Summary */}
+      {/* Performance Summary — Polished */}
       {report.performance_summary && (
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>
-              <FileText className="w-4 h-4 inline mr-2" />
+        <Card className="mb-6 border border-gray-200 dark:border-gray-800">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <FileText className="w-4 h-4" />
               {t("Performance Summary", "ملخص الأداء")}
             </CardTitle>
           </CardHeader>
-          <p className="text-sm text-gray-600">{report.performance_summary}</p>
+          <div className="px-6 pb-6 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            {report.performance_summary}
+          </div>
         </Card>
       )}
 
-      {/* Hypotheses */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <Brain className="w-4 h-4 inline mr-2" />
-            {t("Diagnostic Hypotheses", "الفرضيات التشخيصية")} ({hypotheses.length})
+      {/* Hypotheses — Major Polish */}
+      <Card className="border border-gray-200 dark:border-gray-800">
+        <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+          <CardTitle className="flex items-center gap-2">
+            <Brain className="w-4 h-4" />
+            {t("Diagnostic Hypotheses", "الفرضيات التشخيصية")} 
+            <span className="ml-2 text-xs px-2 py-px bg-gray-100 dark:bg-gray-800 text-gray-500 rounded-full font-mono">
+              {hypotheses.length}
+            </span>
           </CardTitle>
         </CardHeader>
         {hypotheses.length === 0 ? (
