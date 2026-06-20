@@ -13,6 +13,37 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { Stethoscope, Brain, CheckCircle, XCircle, Send, FileText, ChevronDown } from "lucide-react";
 import { useState } from "react";
+
+/**
+ * Contribution bar — stacked horizontal bar where each segment is one
+ * supporting evidence item, width-proportional to its implicit weight.
+ * Mirrors the wizard's running-score visualisation so the report page
+ * shows the same shape the analyst saw when generating the hypothesis.
+ */
+function HypothesisContributionBar({
+  items,
+  total,
+}: {
+  items: string[];
+  total: number;
+}) {
+  if (total === 0 || items.length === 0) {
+    return <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded" />;
+  }
+  const segW = 100 / items.length;
+  return (
+    <div className="flex h-2 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+      {items.map((it, i) => (
+        <div
+          key={i}
+          className="bg-blue-500 hover:opacity-80 transition-opacity"
+          style={{ width: `${segW}%` }}
+          title={it}
+        />
+      ))}
+    </div>
+  );
+}
 import { PeerComparison } from "@/components/diagnostics/PeerComparison";
 import { useCreateCaseFromDiagnostic } from "@/hooks/useCases";
 import { useNavigate } from "@tanstack/react-router";
@@ -312,6 +343,17 @@ function DiagnosticReportPage() {
                           "هذه الدرجة هي مجموع شفاف لعناصر الأدلة المطابقة بالكلمات المفتاحية، مرجحة بالموثوقية. لا يوجد نموذج مخفي — فقط القواعد التي يمكنك فحصها أدناه.",
                         )}
                       </p>
+
+                      {/* Stacked contribution bar — visual running-score for this hypothesis */}
+                      {supporting.length > 0 && (
+                        <div className="mb-3">
+                          <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">
+                            {t("Per-evidence contribution", "مساهمة كل دليل")}
+                          </p>
+                          <HypothesisContributionBar items={supporting} total={conf} />
+                        </div>
+                      )}
+
                       {supporting.length > 0 ? (
                         <ul className="text-xs space-y-1.5">
                           {supporting.map((ev, k) => (

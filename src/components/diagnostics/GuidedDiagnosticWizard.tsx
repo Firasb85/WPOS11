@@ -610,6 +610,25 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                         "كل نقطة أدناه هي مساهمة عنصر دليل واحد، مرجحة بالموثوقية. المجموع يحرك درجة الثقة المعروضة في الخطوة 4.",
                       )}
                     </p>
+
+                    {/* ── Score board: ranked categories with stacked bars ── */}
+                    <ScoreBoard
+                      breakdown={scoringBreakdown}
+                      categories={CATEGORIES}
+                      lang={lang}
+                      t={t}
+                    />
+
+                    {/* ── "What would boost" hints ── */}
+                    {evidenceItems.length > 0 && (
+                      <WhatWouldBoost
+                        breakdown={scoringBreakdown}
+                        categories={CATEGORIES}
+                        lang={lang}
+                        t={t}
+                      />
+                    )}
+
                     {evidenceItems.length === 0 && (
                       <p className="text-xs text-amber-600">
                         {t(
@@ -618,73 +637,6 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                         )}
                       </p>
                     )}
-                    {Object.values(scoringBreakdown)
-                      .filter((b) => b.items.length > 0)
-                      .sort((a, b) => b.points - a.points)
-                      .map((b) => {
-                        const cat = CATEGORIES.find((c) => c.id === b.categoryId);
-                        return (
-                          <div key={b.categoryId} className="border border-gray-100 dark:border-gray-800 rounded-md p-3">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-lg">{cat?.icon}</span>
-                                <span className="text-sm font-semibold">
-                                  {cat ? (lang === "ar" ? cat.ar : cat.en) : b.categoryId}
-                                </span>
-                              </div>
-                              <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded">
-                                +{b.points} pts
-                              </span>
-                            </div>
-                            <table className="w-full text-xs">
-                              <thead>
-                                <tr className="text-gray-400 text-[10px] uppercase">
-                                  <th className="text-left pb-1 font-medium">
-                                    {t("Evidence", "الدليل")}
-                                  </th>
-                                  <th className="text-left pb-1 font-medium">
-                                    {t("Match", "مطابقة")}
-                                  </th>
-                                  <th className="text-right pb-1 font-medium">
-                                    {t("Pts", "نقاط")}
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {b.items.map((it, i) => (
-                                  <tr key={i} className="border-t border-gray-100 dark:border-gray-800">
-                                    <td className="py-1.5 pr-2">
-                                      <p className="text-gray-700 dark:text-gray-300 line-clamp-1">
-                                        {it.description}
-                                      </p>
-                                      <p className="text-[10px] text-gray-400">
-                                        {it.source} · {it.reliability}
-                                      </p>
-                                    </td>
-                                    <td className="py-1.5 pr-2">
-                                      <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 rounded text-[10px] font-mono">
-                                        "{it.keyword}"
-                                      </span>
-                                    </td>
-                                    <td className="py-1.5 text-right font-mono font-semibold text-blue-700 dark:text-blue-400">
-                                      +{it.points}
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        );
-                      })}
-                    {Object.values(scoringBreakdown).every((b) => b.items.length === 0) &&
-                      evidenceItems.length > 0 && (
-                        <p className="text-xs text-gray-500 italic">
-                          {t(
-                            "No keyword matches yet. Add evidence mentioning skills, processes, tools, workload, etc. to score categories.",
-                            "لا توجد مطابقات كلمات مفتاحية بعد. أضف أدلة تذكر المهارات أو العمليات أو الأدوات أو عبء العمل لتسجيل التصنيفات.",
-                          )}
-                        </p>
-                      )}
                   </div>
                 )}
               </div>
@@ -850,6 +802,179 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
             </button>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ScoreBoard — ranked categories with stacked contribution bars.
+
+   Each row shows:
+     • category icon + name
+     • matches count
+     • running total points
+     • a horizontal stacked bar where each segment is one evidence
+       item, width-proportional to its contribution.
+
+   This is the "running score" view — every segment is one matched
+   keyword × evidence item, so adding/removing evidence visibly
+   changes the bar live.
+   ───────────────────────────────────────────────────────────────────────── */
+
+interface ScoreBoardProps {
+  breakdown: Record<
+    string,
+    {
+      categoryId: string;
+      points: number;
+      items: { evidenceIndex: number; keyword: string; points: number; reliability: string; source: string; description: string }[];
+    }
+  >;
+  categories: typeof CATEGORIES;
+  lang: "en" | "ar";
+  t: (en: string, ar: string) => string;
+}
+
+function ScoreBoard({ breakdown, categories, lang, t }: ScoreBoardProps) {
+  const ranked = Object.values(breakdown)
+    .filter((b) => b.items.length > 0)
+    .sort((a, b) => b.points - a.points);
+
+  if (ranked.length === 0) {
+    return (
+      <p className="text-xs text-gray-500 italic">
+        {t(
+          "No keyword matches yet. Add evidence mentioning skills, processes, tools, workload, etc. to score categories.",
+          "لا توجد مطابقات كلمات مفتاحية بعد. أضف أدلة تذكر المهارات أو العمليات أو الأدوات أو عبء العمل لتسجيل التصنيفات.",
+        )}
+      </p>
+    );
+  }
+
+  return (
+    <div className="border border-gray-100 dark:border-gray-800 rounded-md divide-y divide-gray-100 dark:divide-gray-800">
+      <div className="grid grid-cols-12 gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
+        <div className="col-span-4">{t("Category", "التصنيف")}</div>
+        <div className="col-span-2 text-center">{t("Matches", "مطابقات")}</div>
+        <div className="col-span-2 text-right">{t("Score", "الدرجة")}</div>
+        <div className="col-span-4">{t("Contribution", "المساهمة")}</div>
+      </div>
+      {ranked.map((b) => {
+        const cat = categories.find((c) => c.id === b.categoryId);
+        const label = cat ? (lang === "ar" ? cat.ar : cat.en) : b.categoryId;
+        return (
+          <div key={b.categoryId} className="grid grid-cols-12 gap-2 px-3 py-2 items-center">
+            <div className="col-span-4 flex items-center gap-2 min-w-0">
+              <span className="text-base flex-shrink-0">{cat?.icon}</span>
+              <span className="text-xs font-medium truncate">{label}</span>
+            </div>
+            <div className="col-span-2 text-center text-xs text-gray-500">
+              {b.items.length}
+            </div>
+            <div className="col-span-2 text-right">
+              <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
+                {b.points} pts
+              </span>
+            </div>
+            <div className="col-span-4">
+              <ContributionBar items={b.items} total={b.points} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * ContributionBar — stacked horizontal bar.
+ * Each evidence item is a segment, width-proportional to its points.
+ * Hovering shows the source + keyword tooltip.
+ */
+function ContributionBar({
+  items,
+  total,
+}: {
+  items: { evidenceIndex: number; keyword: string; points: number; reliability: string }[];
+  total: number;
+}) {
+  if (total === 0) {
+    return <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded" />;
+  }
+  // Colour by reliability (high → blue, medium → indigo, low → slate)
+  const colorByReliability: Record<string, string> = {
+    high: "bg-blue-500",
+    medium: "bg-indigo-400",
+    low: "bg-slate-400",
+  };
+  return (
+    <div className="flex h-2 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+      {items.map((it, i) => (
+        <div
+          key={i}
+          className={`${colorByReliability[it.reliability] ?? "bg-blue-500"} hover:opacity-80 transition-opacity`}
+          style={{ width: `${(it.points / total) * 100}%` }}
+          title={`#${it.evidenceIndex + 1} · "${it.keyword}" → +${it.points} pts (${it.reliability})`}
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
+ * WhatWouldBoost — for each unmatched category, list the keywords that
+ * WOULD add points if the analyst adds evidence containing them.
+ * Closes the gap between "I added 5 evidence items but only 2 categories scored"
+ * and "what do I do next".
+ */
+function WhatWouldBoost({ breakdown, categories, lang, t }: ScoreBoardProps) {
+  const unmatched = categories
+    .filter((c) => !breakdown[c.id] || breakdown[c.id].items.length === 0)
+    .map((c) => ({
+      id: c.id,
+      label: lang === "ar" ? c.ar : c.en,
+      icon: c.icon,
+      keywords: SCORING_RULES[c.id]?.keywords ?? [],
+      points: SCORING_RULES[c.id]?.points ?? 0,
+    }));
+
+  if (unmatched.length === 0) return null;
+
+  return (
+    <div className="border border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-900/10 rounded-md p-3">
+      <p className="text-[11px] font-semibold text-amber-900 dark:text-amber-300 mb-2">
+        {t(
+          "What would boost unmatched categories?",
+          "ماذا سيعزز التصنيفات غير المطابقة؟",
+        )}
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5">
+        {unmatched.slice(0, 6).map((c) => (
+          <div key={c.id} className="flex items-start gap-1.5 text-[10px] text-amber-800 dark:text-amber-300">
+            <span className="flex-shrink-0">{c.icon}</span>
+            <span className="min-w-0">
+              <span className="font-medium">{c.label}: </span>
+              <span className="font-mono">
+                {c.keywords.map((kw, i) => (
+                  <span key={kw}>
+                    "{kw}"
+                    {i < c.keywords.length - 1 ? ", " : ""}
+                  </span>
+                ))}
+              </span>
+              <span className="opacity-70"> → +{c.points} pts each</span>
+            </span>
+          </div>
+        ))}
+        {unmatched.length > 6 && (
+          <div className="text-[10px] text-amber-700 dark:text-amber-400 col-span-full">
+            {t(
+              `+ ${unmatched.length - 6} more categories — see score board above.`,
+              `+ ${unmatched.length - 6} تصنيفات أخرى — انظر لوحة الدرجات أعلاه.`,
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
