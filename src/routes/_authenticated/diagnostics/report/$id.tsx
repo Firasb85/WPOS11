@@ -11,8 +11,20 @@ import {
   useRejectDiagnostic,
 } from "@/hooks/useDiagnosticWorkflow";
 import { useAuth } from "@/hooks/useAuth";
-import { Stethoscope, Brain, CheckCircle, XCircle, Send, FileText, ChevronDown } from "lucide-react";
+import {
+  Stethoscope,
+  Brain,
+  CheckCircle,
+  XCircle,
+  Send,
+  FileText,
+  ChevronDown,
+  Briefcase,
+} from "lucide-react";
 import { useState } from "react";
+import { PeerComparison } from "@/components/diagnostics/PeerComparison";
+import { useCreateCaseFromDiagnostic } from "@/hooks/useCases";
+import { useNavigate } from "@tanstack/react-router";
 
 /**
  * Contribution bar — stacked horizontal bar where each segment is one
@@ -23,9 +35,11 @@ import { useState } from "react";
 function HypothesisContributionBar({
   items,
   total,
+  accentClass,
 }: {
   items: string[];
   total: number;
+  accentClass: string; // e.g. "bg-indigo-500"
 }) {
   if (total === 0 || items.length === 0) {
     return <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded" />;
@@ -36,7 +50,7 @@ function HypothesisContributionBar({
       {items.map((it, i) => (
         <div
           key={i}
-          className="bg-blue-500 hover:opacity-80 transition-opacity"
+          className={`${accentClass} hover:opacity-80 transition-opacity`}
           style={{ width: `${segW}%` }}
           title={it}
         />
@@ -44,10 +58,170 @@ function HypothesisContributionBar({
     </div>
   );
 }
-import { PeerComparison } from "@/components/diagnostics/PeerComparison";
-import { useCreateCaseFromDiagnostic } from "@/hooks/useCases";
-import { useNavigate } from "@tanstack/react-router";
-import { Briefcase } from "lucide-react";
+
+/**
+ * Category palette — consistent color per root-cause category.
+ * Used as the left-stripe accent on hypothesis cards, the category chip,
+ * the contribution bar segments, and the confidence gauge fill.
+ *
+ * Single source of truth — if you add a category, add it here AND in
+ * the wizard's CATEGORIES list.
+ */
+const CATEGORY_PALETTE: Record<
+  string,
+  {
+    label: string;
+    /** Tailwind classes for the left-stripe accent border */
+    stripeBorder: string;
+    /** Tailwind classes for the small category chip background */
+    chipBg: string;
+    chipText: string;
+    /** Tailwind classes for the contribution-bar segment colour */
+    barSegment: string;
+    /** Hex (no prefix) used for inline SVG stroke colour */
+    hex: string;
+  }
+> = {
+  skill_gap: {
+    label: "Skill Gap",
+    stripeBorder: "border-l-indigo-500",
+    chipBg: "bg-indigo-50 dark:bg-indigo-900/30",
+    chipText: "text-indigo-700 dark:text-indigo-300",
+    barSegment: "bg-indigo-500",
+    hex: "#6366f1",
+  },
+  knowledge_gap: {
+    label: "Knowledge Gap",
+    stripeBorder: "border-l-violet-500",
+    chipBg: "bg-violet-50 dark:bg-violet-900/30",
+    chipText: "text-violet-700 dark:text-violet-300",
+    barSegment: "bg-violet-500",
+    hex: "#8b5cf6",
+  },
+  process_issue: {
+    label: "Process Issue",
+    stripeBorder: "border-l-cyan-500",
+    chipBg: "bg-cyan-50 dark:bg-cyan-900/30",
+    chipText: "text-cyan-700 dark:text-cyan-300",
+    barSegment: "bg-cyan-500",
+    hex: "#06b6d4",
+  },
+  tool_issue: {
+    label: "Tool Issue",
+    stripeBorder: "border-l-teal-500",
+    chipBg: "bg-teal-50 dark:bg-teal-900/30",
+    chipText: "text-teal-700 dark:text-teal-300",
+    barSegment: "bg-teal-500",
+    hex: "#14b8a6",
+  },
+  environmental_issue: {
+    label: "Environmental",
+    stripeBorder: "border-l-emerald-500",
+    chipBg: "bg-emerald-50 dark:bg-emerald-900/30",
+    chipText: "text-emerald-700 dark:text-emerald-300",
+    barSegment: "bg-emerald-500",
+    hex: "#10b981",
+  },
+  resource_issue: {
+    label: "Resource Issue",
+    stripeBorder: "border-l-amber-500",
+    chipBg: "bg-amber-50 dark:bg-amber-900/30",
+    chipText: "text-amber-700 dark:text-amber-300",
+    barSegment: "bg-amber-500",
+    hex: "#f59e0b",
+  },
+  management_issue: {
+    label: "Management",
+    stripeBorder: "border-l-orange-500",
+    chipBg: "bg-orange-50 dark:bg-orange-900/30",
+    chipText: "text-orange-700 dark:text-orange-300",
+    barSegment: "bg-orange-500",
+    hex: "#f97316",
+  },
+  motivation_issue: {
+    label: "Motivation",
+    stripeBorder: "border-l-pink-500",
+    chipBg: "bg-pink-50 dark:bg-pink-900/30",
+    chipText: "text-pink-700 dark:text-pink-300",
+    barSegment: "bg-pink-500",
+    hex: "#ec4899",
+  },
+  workload_issue: {
+    label: "Workload",
+    stripeBorder: "border-l-red-500",
+    chipBg: "bg-red-50 dark:bg-red-900/30",
+    chipText: "text-red-700 dark:text-red-300",
+    barSegment: "bg-red-500",
+    hex: "#ef4444",
+  },
+  policy_issue: {
+    label: "Policy Issue",
+    stripeBorder: "border-l-slate-500",
+    chipBg: "bg-slate-100 dark:bg-slate-800",
+    chipText: "text-slate-700 dark:text-slate-300",
+    barSegment: "bg-slate-500",
+    hex: "#64748b",
+  },
+};
+
+/**
+ * ConfidenceGauge — circular SVG progress indicator.
+ * Colour is based on the score (>=70 green, 40-69 amber, <40 red)
+ * using the same palette as the rest of the diagnostic UI.
+ */
+function ConfidenceGauge({ value, size = 56 }: { value: number; size?: number }) {
+  const v = Math.max(0, Math.min(100, value ?? 0));
+  const r = (size - 8) / 2;
+  const c = 2 * Math.PI * r;
+  const dash = (v / 100) * c;
+  const color =
+    v >= 70 ? "#15803d" : v >= 40 ? "#b45309" : "#b91c1c";
+  const bg = "#e2e8f0";
+  return (
+    <div
+      className="relative inline-flex items-center justify-center flex-shrink-0"
+      style={{ width: size, height: size }}
+      title={`Confidence: ${v}%`}
+    >
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={r} stroke={bg} strokeWidth="4" fill="none" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          stroke={color}
+          strokeWidth="4"
+          fill="none"
+          strokeDasharray={`${dash} ${c}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <span
+        className="absolute font-bold tabular-nums"
+        style={{ fontSize: size * 0.28, color }}
+      >
+        {v}%
+      </span>
+    </div>
+  );
+}
+
+/**
+ * EvidenceBadge — small chip with a reliability dot.
+ * High-reliability evidence gets a solid green dot;
+ * medium gets an amber dot; low gets a slate dot.
+ */
+function EvidenceBadge({ text }: { text: string }) {
+  // Heuristic — actual reliability isn't carried on the persisted
+  // supporting_evidence string. Treat them all as "medium" so the
+  // visual treatment is consistent until we wire reliability through.
+  return (
+    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 rounded text-xs border border-green-200 dark:border-green-900/50">
+      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" title="medium reliability" />
+      {text}
+    </span>
+  );
+}
 
 export const Route = createFileRoute("/_authenticated/diagnostics/report/$id")({
   component: DiagnosticReportPage,
@@ -134,16 +308,16 @@ function DiagnosticReportPage() {
 
       {/* Status Bar */}
       <Card className="mb-6">
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-5">
           <div>
-            <p className="text-xs text-gray-500">{t("Status", "الحالة")}</p>
+            <p className="text-xs text-gray-500 mb-1">{t("Status", "الحالة")}</p>
             <StatusBadge
               status={statusColors[report.status ?? "draft"] ?? "gray"}
               label={(report.status ?? "draft").replace("_", " ")}
             />
           </div>
           <div>
-            <p className="text-xs text-gray-500">{t("Maturity", "النضج")}</p>
+            <p className="text-xs text-gray-500 mb-1">{t("Maturity", "النضج")}</p>
             <MaturityBadge
               level={(report.maturity_level ?? 1) as 1 | 2 | 3 | 4 | 5}
               size="sm"
@@ -151,8 +325,8 @@ function DiagnosticReportPage() {
             />
           </div>
           <div>
-            <p className="text-xs text-gray-500">{t("Confidence", "الثقة")}</p>
-            <span className="text-sm font-bold">{report.confidence_score ?? 0}%</span>
+            <p className="text-xs text-gray-500 mb-1">{t("Confidence", "الثقة")}</p>
+            <ConfidenceGauge value={report.confidence_score ?? 0} size={48} />
           </div>
           <div>
             <p className="text-xs text-gray-500">{t("Employee", "الموظف")}</p>
@@ -288,11 +462,20 @@ function DiagnosticReportPage() {
             )}
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {hypotheses
               .sort((a, b) => ((a.rank_order as number) ?? 99) - ((b.rank_order as number) ?? 99))
               .map((hyp, i) => {
                 const conf = (hyp.confidence_score as number) ?? 0;
+                const catId = (hyp.category as string) ?? "";
+                const palette = CATEGORY_PALETTE[catId] ?? {
+                  label: catId.replace(/_/g, " "),
+                  stripeBorder: "border-l-gray-400",
+                  chipBg: "bg-gray-100 dark:bg-gray-800",
+                  chipText: "text-gray-700 dark:text-gray-300",
+                  barSegment: "bg-gray-500",
+                  hex: "#94a3b8",
+                };
                 const supporting = Array.isArray(hyp.supporting_evidence)
                   ? (hyp.supporting_evidence as string[])
                   : [];
@@ -300,24 +483,47 @@ function DiagnosticReportPage() {
                 return (
                   <div
                     key={hyp.id as string}
-                    className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700"
+                    className={`relative pl-5 pr-4 py-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 border-l-4 ${palette.stripeBorder} shadow-sm`}
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">
+                    {/* Header row: rank + category chip + confidence gauge */}
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="w-7 h-7 rounded-full text-white text-xs font-bold flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: palette.hex }}
+                        >
                           {i + 1}
                         </span>
-                        <span className="text-sm font-semibold capitalize">
-                          {((hyp.category as string) ?? "").replace("_", " ")}
+                        <span
+                          className={`px-2.5 py-0.5 rounded text-xs font-semibold ${palette.chipBg} ${palette.chipText}`}
+                        >
+                          {palette.label}
                         </span>
                       </div>
-                      <span className="text-sm font-bold text-blue-600">
-                        {conf}% {t("confidence", "ثقة")}
-                      </span>
+                      <ConfidenceGauge value={conf} size={56} />
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{hyp.hypothesis as string}</p>
-                    {hyp.reasoning != null && (
-                      <p className="text-xs text-gray-400 italic">{String(hyp.reasoning ?? "")}</p>
+
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 leading-relaxed">
+                      {hyp.hypothesis as string}
+                    </p>
+
+                    {hyp.reasoning != null && String(hyp.reasoning).trim() && (
+                      <p className="text-xs text-gray-500 italic mb-3 pl-3 border-l-2 border-gray-200 dark:border-gray-700">
+                        {String(hyp.reasoning)}
+                      </p>
+                    )}
+
+                    {supporting.length > 0 && (
+                      <div className="mb-2">
+                        <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1.5 font-semibold">
+                          {t("Supporting Evidence", "أدلة داعمة")} · {supporting.length}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {supporting.map((e, j) => (
+                            <EvidenceBadge key={j} text={e} />
+                          ))}
+                        </div>
+                      </div>
                     )}
 
                     {/* Why this score? affordance */}
@@ -334,7 +540,7 @@ function DiagnosticReportPage() {
                       {t("Why this score?", "لماذا هذه الدرجة؟")}
                       <ChevronDown className="w-3 h-3" />
                     </button>
-                    <div id={breakdownId} className="hidden mt-2 p-3 bg-white dark:bg-gray-900 border border-purple-200 dark:border-purple-900 rounded-md">
+                    <div id={breakdownId} className="hidden mt-2 p-3 bg-gray-50 dark:bg-gray-800/40 border border-purple-200 dark:border-purple-900 rounded-md">
                       <p className="text-[11px] text-gray-500 mb-2">
                         {t(
                           "This score is a transparent sum of keyword-matched evidence items, weighted by reliability. There is no hidden model — only the rules you can inspect below.",
@@ -345,10 +551,14 @@ function DiagnosticReportPage() {
                       {/* Stacked contribution bar — visual running-score for this hypothesis */}
                       {supporting.length > 0 && (
                         <div className="mb-3">
-                          <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">
+                          <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1 font-semibold">
                             {t("Per-evidence contribution", "مساهمة كل دليل")}
                           </p>
-                          <HypothesisContributionBar items={supporting} total={conf} />
+                          <HypothesisContributionBar
+                            items={supporting}
+                            total={conf}
+                            accentClass={palette.barSegment}
+                          />
                         </div>
                       )}
 
@@ -376,25 +586,6 @@ function DiagnosticReportPage() {
                         )}
                       </p>
                     </div>
-
-                    {Array.isArray(hyp.supporting_evidence) &&
-                      (hyp.supporting_evidence as string[]).length > 0 && (
-                        <div className="mt-2">
-                          <p className="text-xs text-gray-500 font-medium mb-1">
-                            {t("Supporting Evidence:", "أدلة داعمة:")}
-                          </p>
-                          <div className="flex flex-wrap gap-1">
-                            {(hyp.supporting_evidence as string[]).map((e, j) => (
-                              <span
-                                key={j}
-                                className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs"
-                              >
-                                {e}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                   </div>
                 );
               })}
