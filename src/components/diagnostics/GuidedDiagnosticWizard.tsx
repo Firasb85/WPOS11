@@ -555,104 +555,162 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
-                    {t("Type", "النوع")}
-                  </label>
-                  <select
-                    value={evType}
-                    onChange={(e) => setEvType(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
-                  >
-                    {EVIDENCE_TYPES.map((et) => (
-                      <option key={et.id} value={et.id}>
-                        {lang === "ar" ? et.ar : et.en}
-                      </option>
-                    ))}
-                  </select>
+              {/* Evidence form — polished grid */}
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                      {t("Type", "النوع")}
+                    </label>
+                    <select
+                      value={evType}
+                      onChange={(e) => setEvType(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 text-sm bg-white dark:bg-gray-950"
+                    >
+                      {EVIDENCE_TYPES.map((et) => (
+                        <option key={et.id} value={et.id}>
+                          {lang === "ar" ? et.ar : et.en}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                      {t("Source", "المصدر")}
+                    </label>
+                    <input
+                      value={evSource}
+                      onChange={(e) => setEvSource(e.target.value)}
+                      placeholder={t("e.g. HR System", "مثال: نظام HR")}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 text-sm bg-white dark:bg-gray-950"
+                    />
+                  </div>
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
-                    {t("Source", "المصدر")}
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                    {t("Description", "الوصف")}
                   </label>
-                  <input
-                    value={evSource}
-                    onChange={(e) => setEvSource(e.target.value)}
-                    placeholder={t("e.g. HR System", "مثال: نظام HR")}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
+                  <textarea
+                    rows={3}
+                    value={evDesc}
+                    onChange={(e) => setEvDesc(e.target.value)}
+                    placeholder={t("Describe the evidence...", "صف الدليل...")}
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 text-sm resize-y min-h-[72px] bg-white dark:bg-gray-950"
                   />
                 </div>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
-                  {t("Description", "الوصف")}
-                </label>
-                <textarea
-                  rows={2}
-                  value={evDesc}
-                  onChange={(e) => setEvDesc(e.target.value)}
-                  placeholder={t("Describe the evidence...", "صف الدليل...")}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm resize-none"
-                />
-              </div>
-              <div className="flex items-end gap-3">
-                <div className="flex-1">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">
-                    {t("Reliability", "الموثوقية")}
-                  </label>
-                  <select
-                    value={evReliability}
-                    onChange={(e) => setEvReliability(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
+
+                <div className="flex items-end justify-between gap-3 pt-1">
+                  <div className="w-48">
+                    <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                      {t("Reliability", "الموثوقية")}
+                    </label>
+                    <select
+                      value={evReliability}
+                      onChange={(e) => setEvReliability(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 text-sm bg-white dark:bg-gray-950"
+                    >
+                      <option value="high">{t("High — verified source", "عالية — مصدر موثق")}</option>
+                      <option value="medium">{t("Medium — reliable", "متوسطة — موثوق")}</option>
+                      <option value="low">{t("Low — anecdotal", "منخفضة — رواية")}</option>
+                    </select>
+                  </div>
+
+                  <button
+                    aria-label="Add evidence"
+                    onClick={addEvidence}
+                    disabled={!evSource.trim() || !evDesc.trim()}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
-                    <option value="high">{t("High", "عالية")}</option>
-                    <option value="medium">{t("Medium", "متوسطة")}</option>
-                    <option value="low">{t("Low", "منخفضة")}</option>
-                  </select>
+                    <Plus className="w-4 h-4" />
+                    {t("Add Evidence", "أضف الدليل")}
+                  </button>
                 </div>
-                <button
-                  aria-label="Add item"
-                  onClick={addEvidence}
-                  disabled={!evSource.trim() || !evDesc.trim()}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-40"
-                >
-                  <Plus className="w-4 h-4" />
-                  {t("Add", "أضف")}
-                </button>
               </div>
 
-              {evidenceItems.length > 0 && (
-                <div className="space-y-2 mt-2">
-                  <p className="text-xs font-medium text-gray-500">
-                    {t(
-                      `${evidenceItems.length} evidence item(s)`,
-                      `${evidenceItems.length} عنصر(عناصر) دليل`,
-                    )}
-                  </p>
-                  {evidenceItems.map((ev, i) => (
-                    <div
-                      key={i}
-                      className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
+              {/* Evidence list — polished cards matching Step 1 style */}
+              {evidenceItems.length > 0 ? (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                      <ClipboardCheck className="w-3.5 h-3.5" />
+                      {t(
+                        `${evidenceItems.length} evidence item${evidenceItems.length === 1 ? "" : "s"}`,
+                        `${evidenceItems.length} عنصر${evidenceItems.length === 1 ? "" : "ات"} دليل`,
+                      )}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setEvidenceItems([]);
+                        toast.info(t("All evidence cleared", "تم مسح جميع الأدلة"));
+                      }}
+                      className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1"
                     >
-                      <ClipboardCheck className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-medium">
-                            {ev.type}
-                          </span>
-                          <span className="text-[10px] text-gray-400">{ev.source}</span>
+                      <Trash2 className="w-3 h-3" /> {t("Clear all", "مسح الكل")}
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {evidenceItems.map((ev, i) => {
+                      const reliabilityColor =
+                        ev.reliability === "high"
+                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                          : ev.reliability === "medium"
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                            : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
+
+                      return (
+                        <div
+                          key={i}
+                          className="group flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-600 transition-all"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <ClipboardCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded text-[10px] font-medium">
+                                {ev.type}
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {ev.source}
+                              </span>
+                              <span
+                                className={`px-1.5 py-px rounded text-[9px] font-bold uppercase tracking-wider ${reliabilityColor}`}
+                              >
+                                {ev.reliability}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-700 dark:text-gray-200 leading-snug">
+                              {ev.description}
+                            </p>
+                          </div>
+
+                          <button
+                            onClick={() => removeEvidence(i)}
+                            className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg opacity-60 group-hover:opacity-100 transition-all flex-shrink-0"
+                            aria-label="Remove evidence"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <p className="text-xs text-gray-600 line-clamp-2">{ev.description}</p>
-                      </div>
-                      <button
-                        onClick={() => removeEvidence(i)}
-                        className="p-1 text-red-400 hover:text-red-600 flex-shrink-0"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-6 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-center">
+                  <div className="mx-auto w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+                    <ClipboardCheck className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {t("No evidence added yet", "لم تتم إضافة أي أدلة بعد")}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {t("Evidence helps the engine generate accurate hypotheses.", "الأدلة تساعد المحرك على توليد فرضيات دقيقة.")}
+                  </p>
                 </div>
               )}
             </div>
@@ -675,6 +733,7 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
               const bp = scoringBreakdown[b.id]?.points ?? 0;
               return bp - ap;
             });
+
             return (
               <div className="space-y-4">
                 <div>
@@ -689,137 +748,143 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                   </p>
                 </div>
 
-                {/* ── Step summary stats row ── */}
-                <div className="grid grid-cols-3 gap-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-100 dark:border-blue-900/50">
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-blue-900 dark:text-blue-200 tabular-nums">
+                {/* ── Step summary stats row — upgraded visual ── */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/25 dark:to-indigo-900/25 border border-blue-100 dark:border-blue-900/40 text-center">
+                    <div className="text-3xl font-bold text-blue-700 dark:text-blue-300 tabular-nums tracking-tighter">
                       {totalPoints}
                     </div>
-                    <div className="text-[10px] uppercase tracking-wider text-blue-700 dark:text-blue-400 font-semibold">
-                      {t("Total points", "إجمالي النقاط")}
+                    <div className="text-[10px] font-semibold uppercase tracking-[1px] text-blue-700/80 dark:text-blue-400 mt-0.5">
+                      {t("Total Points", "إجمالي النقاط")}
                     </div>
                   </div>
-                  <div className="text-center border-x border-blue-200/50 dark:border-blue-800/50">
-                    <div className="text-lg font-bold text-blue-900 dark:text-blue-200 tabular-nums">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/25 dark:to-teal-900/25 border border-emerald-100 dark:border-emerald-900/40 text-center">
+                    <div className="text-3xl font-bold text-emerald-700 dark:text-emerald-300 tabular-nums tracking-tighter">
                       {totalMatches}
                     </div>
-                    <div className="text-[10px] uppercase tracking-wider text-blue-700 dark:text-blue-400 font-semibold">
-                      {t("Matches", "مطابقات")}
+                    <div className="text-[10px] font-semibold uppercase tracking-[1px] text-emerald-700/80 dark:text-emerald-400 mt-0.5">
+                      {t("Keyword Matches", "مطابقات الكلمات")}
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-blue-900 dark:text-blue-200 tabular-nums">
-                      {matchedCats}/{CATEGORIES.length}
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/25 dark:to-orange-900/25 border border-amber-100 dark:border-amber-900/40 text-center">
+                    <div className="text-3xl font-bold text-amber-700 dark:text-amber-300 tabular-nums tracking-tighter">
+                      {matchedCats}<span className="text-xl font-medium text-amber-500">/{CATEGORIES.length}</span>
                     </div>
-                    <div className="text-[10px] uppercase tracking-wider text-blue-700 dark:text-blue-400 font-semibold">
-                      {t("Cats scored", "تصنيفات مُحرَّزة")}
+                    <div className="text-[10px] font-semibold uppercase tracking-[1px] text-amber-700/80 dark:text-amber-400 mt-0.5">
+                      {t("Categories Scored", "تصنيفات مُحرَّزة")}
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                {/* Category cards — polished selection grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {sortedCats.map((cat) => {
                     const catScore = scoringBreakdown[cat.id]?.points ?? 0;
                     const catMatches = scoringBreakdown[cat.id]?.items.length ?? 0;
                     const isSelected = selectedCategories.includes(cat.id);
                     const isMatched = catMatches > 0;
 
-                    // Four states for clarity:
-                    //  1. selected + matched   → strong blue (primary action)
-                    //  2. selected + unmatched → soft blue (analyst override)
-                    //  3. unselected + matched → green accent + "Recommended"
-                    //  4. unselected + unm...  → plain
-                    let cls: string;
+                    let cls = "";
                     let badge: string | null = null;
+                    let iconColor = "";
+
                     if (isSelected && isMatched) {
-                      cls = "border-blue-500 bg-blue-50 dark:bg-blue-900/30 ring-1 ring-blue-500";
+                      cls = "border-blue-500 bg-blue-50 dark:bg-blue-950/60 ring-1 ring-blue-500";
+                      iconColor = "text-blue-600 dark:text-blue-400";
                     } else if (isSelected) {
-                      cls = "border-blue-300 bg-blue-50/50 dark:bg-blue-900/15";
+                      cls = "border-blue-400 bg-blue-50/60 dark:bg-blue-950/40";
+                      iconColor = "text-blue-600 dark:text-blue-400";
                     } else if (isMatched) {
-                      cls = "border-emerald-300 bg-emerald-50/40 dark:bg-emerald-900/15 hover:border-emerald-400";
+                      cls = "border-emerald-300 bg-emerald-50/40 dark:bg-emerald-950/30 hover:border-emerald-400";
+                      iconColor = "text-emerald-600 dark:text-emerald-400";
                       badge = t("Recommended", "مُوصى به");
                     } else {
-                      cls = "border-gray-200 hover:border-gray-300 hover:bg-gray-50";
+                      cls = "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600";
+                      iconColor = "text-gray-400 dark:text-gray-500";
                     }
 
                     return (
                       <button
                         key={cat.id}
                         onClick={() => toggleCategory(cat.id)}
-                        className={`relative flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${cls}`}
+                        className={`group relative flex items-start gap-3.5 p-4 rounded-2xl border text-left transition-all active:scale-[0.985] ${cls}`}
                       >
-                        <span className="text-xl">{cat.icon}</span>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <p className="text-sm font-medium truncate">
+                        <div className={`w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-xl text-2xl ${isSelected || isMatched ? "bg-white dark:bg-gray-900 shadow-sm" : ""}`}>
+                          {cat.icon}
+                        </div>
+
+                        <div className="flex-1 min-w-0 pt-0.5">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-sm font-semibold text-gray-900 dark:text-white">
                               {lang === "ar" ? cat.ar : cat.en}
-                            </p>
+                            </span>
                             {badge && (
-                              <span className="px-1.5 py-0 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                              <span className="px-1.5 py-px text-[9px] font-bold uppercase tracking-[0.5px] bg-emerald-200 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded">
                                 {badge}
                               </span>
                             )}
                           </div>
-                          <p className="text-[10px] text-gray-500 mt-0.5 tabular-nums">
+
+                          <div className="text-[10px] text-gray-500 dark:text-gray-400 tabular-nums">
                             {isMatched ? (
                               <>
-                                <span className="font-semibold text-blue-700 dark:text-blue-300">
+                                <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                                   {catMatches} {t("match", "مطابقة")}
                                 </span>
                                 {" · "}
-                                <span className="font-mono">{catScore} pts</span>
+                                <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">{catScore} pts</span>
                               </>
                             ) : (
-                              <span className="opacity-60">
-                                {t("no matches yet", "لا مطابقات بعد")}
-                              </span>
+                              <span className="opacity-70">{t("No evidence match", "لا مطابقات من الأدلة")}</span>
                             )}
-                          </p>
+                          </div>
                         </div>
-                        {isSelected ? (
-                          <CheckCircle className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                        ) : isMatched ? (
-                          <span
-                            className="w-4 h-4 rounded-full border-2 border-emerald-400 flex-shrink-0"
-                            aria-hidden="true"
-                          />
-                        ) : null}
+
+                        <div className="pt-1 flex-shrink-0">
+                          {isSelected ? (
+                            <CheckCircle className="w-5 h-5 text-blue-600" />
+                          ) : isMatched ? (
+                            <div className="w-5 h-5 rounded-full border-[2.5px] border-emerald-400" />
+                          ) : (
+                            <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 group-hover:border-gray-400" />
+                          )}
+                        </div>
                       </button>
                     );
                   })}
                 </div>
 
-                {/* ── Explainability: scoring breakdown panel ── */}
-                <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                {/* ── Explainability panel (unchanged, but with better header) ── */}
+                <div className="mt-2 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden">
                   <button
                     type="button"
                     onClick={() => setShowBreakdown((p) => !p)}
                     aria-expanded={showBreakdown}
-                    className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="w-full flex items-center justify-between px-5 py-3 bg-gray-50 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <Brain className="w-4 h-4 text-purple-600" />
                       <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                         {t("View scoring breakdown", "عرض تفصيل التسجيل")}
                       </span>
-                      <span className="text-[10px] text-gray-500">
-                        {t("Why this score?", "لماذا هذه الدرجة؟")}
+                      <span className="px-2 py-px text-[10px] bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded font-medium">
+                        {t("Explainable", "قابل للتفسير")}
                       </span>
                     </div>
                     <ChevronDown
                       className={`w-4 h-4 text-gray-500 transition-transform ${showBreakdown ? "rotate-180" : ""}`}
                     />
                   </button>
+
                   {showBreakdown && (
-                    <div className="p-4 space-y-4 bg-white dark:bg-gray-900">
+                    <div className="p-5 space-y-5 bg-white dark:bg-gray-900">
                       <p className="text-xs text-gray-500">
                         {t(
-                          "Each point below is the contribution of a single evidence item, weighted by reliability. The total drives the confidence score shown in Step 4.",
-                          "كل نقطة أدناه هي مساهمة عنصر دليل واحد، مرجحة بالموثوقية. المجموع يحرك درجة الثقة المعروضة في الخطوة 4.",
+                          "Each point is the contribution of a single evidence item weighted by reliability. The engine uses the same rules.",
+                          "كل نقطة هي مساهمة دليل واحد مرجحة بالموثوقية. المحرك يستخدم نفس القواعد.",
                         )}
                       </p>
 
-                      {/* ── Score board: ranked categories with stacked bars ── */}
                       <ScoreBoard
                         breakdown={scoringBreakdown}
                         categories={CATEGORIES}
@@ -827,7 +892,6 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                         t={t}
                       />
 
-                      {/* ── "What would boost" hints ── */}
                       {evidenceItems.length > 0 && (
                         <WhatWouldBoost
                           breakdown={scoringBreakdown}
@@ -838,12 +902,12 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                       )}
 
                       {evidenceItems.length === 0 && (
-                        <p className="text-xs text-amber-600">
+                        <div className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
                           {t(
                             "No evidence attached yet. Add evidence in Step 2 to see scoring.",
                             "لا توجد أدلة مرفقة بعد. أضف أدلة في الخطوة 2 لرؤية التسجيل.",
                           )}
-                        </p>
+                        </div>
                       )}
                     </div>
                   )}
