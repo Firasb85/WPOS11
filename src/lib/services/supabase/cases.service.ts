@@ -18,6 +18,31 @@ export interface CaseRecord {
   created_at: string | null;
 }
 
+export interface FollowUpRecord {
+  id: string;
+  case_id: string;
+  follow_up_type: string;
+  check_in_date: string;
+  status: string;
+  result: string | null;
+  kpi_value_before: number | null;
+  kpi_value_after: number | null;
+  improvement_pct: number | null;
+  notes: string | null;
+  conducted_by: string | null;
+  conducted_at: string | null;
+}
+
+export interface FollowUpWithCase extends FollowUpRecord {
+  cases: {
+    case_number: string;
+    root_cause_category: string | null;
+    priority: string | null;
+    status: string | null;
+    employees: { first_name: string; last_name: string } | null;
+  } | null;
+}
+
 let caseCounter = Date.now() % 10000;
 function generateCaseNumber(): string {
   caseCounter += 1;
@@ -155,6 +180,22 @@ export const casesService = {
       .single();
     if (error) throw error;
     return data;
+  },
+
+  /**
+   * List all follow-ups across cases with case + employee context.
+   * Joins follow_ups -> cases -> employees for the dashboard.
+   * Sorted by check_in_date desc (most recent first).
+   */
+  async listFollowUps(): Promise<FollowUpWithCase[]> {
+    const { data, error } = await db
+      .from("follow_ups")
+      .select(
+        "*, cases(case_number, root_cause_category, priority, status, employees(first_name, last_name))",
+      )
+      .order("check_in_date", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as FollowUpWithCase[];
   },
 
   async listInterventionLibrary(): Promise<Record<string, unknown>[]> {

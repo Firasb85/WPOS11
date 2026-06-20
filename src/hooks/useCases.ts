@@ -108,6 +108,13 @@ export function useInterventionLibrary() {
   });
 }
 
+export function useFollowUps() {
+  return useQuery({
+    queryKey: ["follow-ups"],
+    queryFn: () => casesService.listFollowUps(),
+  });
+}
+
 export function useCreateInterventionTemplate() {
   const qc = useQueryClient();
   return useMutation({
