@@ -70,8 +70,8 @@ function Follow_upPage() {
         currentLang={lang}
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {/* Stats — Premium polished row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <StatsCard
           title={t("Total Follow-Ups", "إجمالي المتابعات")}
           value={String(total)}
@@ -108,18 +108,20 @@ function Follow_upPage() {
         />
       </div>
 
-      {/* Overdue alert */}
+      {/* Overdue alert — Premium treatment */}
       {overdue > 0 && (
-        <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-900/50 rounded-lg flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-red-900 dark:text-red-200">
+        <div className="mb-8 p-5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/60 rounded-2xl flex items-start gap-4">
+          <div className="w-10 h-10 flex-shrink-0 bg-red-100 dark:bg-red-900/40 rounded-2xl flex items-center justify-center">
+            <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </div>
+          <div className="flex-1 pt-1">
+            <p className="font-semibold text-red-900 dark:text-red-200">
               {t(
                 `${overdue} overdue follow-up${overdue > 1 ? "s" : ""}`,
                 `${overdue} متابعات متأخرة`,
               )}
             </p>
-            <p className="text-xs text-red-700 dark:text-red-300 mt-0.5">
+            <p className="text-sm text-red-700 dark:text-red-300 mt-1">
               {t(
                 "Schedule and conduct these check-ins to keep intervention cycles on track.",
                 "جدول وأجر هذه المتابعات للحفاظ على سير دورات التدخل.",
@@ -129,12 +131,12 @@ function Follow_upPage() {
         </div>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <Activity className="w-4 h-4 inline mr-2" />
+      <Card className="border border-gray-200 dark:border-gray-800">
+        <CardHeader className="border-b border-gray-100 dark:border-gray-700">
+          <CardTitle className="flex items-center text-base">
+            <Activity className="w-4 h-4 mr-2" />
             {t("Follow-Up Cycles", "دورات المتابعة")}
-            <span className="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold tabular-nums">
+            <span className="ml-2 px-2.5 py-px bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold tabular-nums">
               {total}
             </span>
           </CardTitle>
@@ -301,15 +303,16 @@ function Follow_upPage() {
         )}
       </Card>
 
-      {/* Methodology */}
-      <div className="mt-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/15 dark:to-indigo-900/15 border border-blue-100 dark:border-blue-900/50 rounded-lg flex items-start gap-3">
-        <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-        <div className="flex-1">
-          <p className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1 flex items-center gap-2">
-            <Target className="w-3.5 h-3.5" />
+      {/* Methodology — Polished callout */}
+      <div className="mt-8 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-900/60 rounded-2xl flex items-start gap-4">
+        <div className="w-10 h-10 flex-shrink-0 bg-blue-100 dark:bg-blue-900/40 rounded-2xl flex items-center justify-center">
+          <Target className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+        </div>
+        <div className="flex-1 pt-0.5">
+          <div className="font-semibold text-blue-900 dark:text-blue-200 mb-1.5 flex items-center gap-2">
             {t("30 / 60 / 90-Day Cycle", "دورة 30 / 60 / 90 يوماً")}
-          </p>
-          <p className="text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
+          </div>
+          <p className="text-sm text-blue-800 dark:text-blue-300 leading-relaxed">
             {t(
               "Each case opens three follow-up windows: 30 days (early signal), 60 days (mid-cycle), and 90 days (closure). Improvement is computed from the KPI value attached to each follow-up vs. the value at case creation.",
               "كل حالة تفتح ثلاث نوافذ متابعة: 30 يوماً (إشارة مبكرة)، 60 يوماً (منتصف الدورة)، و90 يوماً (الإغلاق). يُحسب التحسن من قيمة المؤشر المرفقة مع كل متابعة مقارنة بالقيمة عند إنشاء الحالة.",
