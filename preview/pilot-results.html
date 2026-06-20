@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Pilot Results Preview — Pilot Demo Co. · Customer Success</title>
+<style>
+  body { background:#e2e8f0; padding:24px; font-family:system-ui,sans-serif; }
+  .preview-banner { max-width:760px; margin:0 auto 16px; padding:12px 16px; background:#1e3a8a; color:white; border-radius:8px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .preview-banner code { background:rgba(255,255,255,0.15); padding:2px 8px; border-radius:4px; }
+  .doc { max-width:760px; margin:0 auto; background:white; padding:0; box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @page { size: A4; margin: 18mm; }
+  .doc { font-family:'Helvetica Neue','Segoe UI',system-ui,-apple-system,sans-serif; color:#0f172a; padding:32px; line-height:1.5; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .cover { padding-bottom:24px; border-bottom:1px solid #e2e8f0; margin-bottom:28px; }
+  .cover-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .logo-row { display:flex; align-items:center; gap:10px; }
+  .wordmark { font-size:13px; font-weight:700; letter-spacing:0.16em; color:#1e3a8a; text-transform:uppercase; }
+  .cover-meta { font-size:11px; color:#64748b; text-align:right; }
+  .cover-meta .stamp { display:inline-block; padding:3px 10px; border-radius:999px; background:#eef2ff; color:#4338ca; font-weight:600; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; margin-top:6px; }
+  .cover h1 { font-family:Georgia,'Times New Roman',serif; font-size:36px; font-weight:700; color:#0f172a; line-height:1.15; margin-bottom:10px; }
+  .cover .org { font-size:16px; font-weight:600; color:#4338ca; margin-bottom:4px; }
+  .cover .tagline { font-family:Georgia,serif; font-style:italic; font-size:14px; color:#475569; margin-top:6px; }
+  .cover .window { display:inline-block; margin-top:14px; padding:5px 12px; background:#f1f5f9; border-radius:6px; font-size:11px; color:#475569; font-variant-numeric:tabular-nums; }
+  .gradient-rule { height:4px; background:linear-gradient(90deg,#4f46e5 0%,#6366f1 50%,#818cf8 100%); border-radius:2px; margin-top:18px; }
+  .summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:22px; }
+  .stat { padding:14px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; text-align:center; }
+  .stat .v { font-size:26px; font-weight:700; color:#0f172a; font-variant-numeric:tabular-nums; line-height:1.1; }
+  .stat .l { font-size:10px; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; margin-top:6px; font-weight:600; }
+  .stat--accent .v { color:#4338ca; }
+  .callouts { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .callout { padding:14px 16px; border-radius:8px; border:1px solid; }
+  .callout--success { background:#f0fdf4; border-color:#86efac; }
+  .callout--warn { background:#fef2f2; border-color:#fca5a5; }
+  .callout-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803d; margin-bottom:4px; }
+  .callout--warn .callout-label { color:#b91c1c; }
+  .callout-kpi { font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px; }
+  .callout-delta { font-size:28px; font-weight:700; color:#15803d; font-variant-numeric:tabular-nums; line-height:1; margin-bottom:4px; }
+  .callout--warn .callout-delta { color:#b91c1c; }
+  .callout-sub { font-size:11px; color:#475569; }
+  .section-title { font-size:11px; font-weight:700; color:#1e3a8a; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  thead th { background:#1e3a8a; color:white; padding:10px 12px; text-align:left; font-weight:600; font-size:11px; letter-spacing:0.04em; text-transform:uppercase; }
+  thead th:first-child { border-top-left-radius:6px; }
+  thead th:last-child { border-top-right-radius:6px; }
+  tbody td { padding:12px; border-bottom:1px solid #e2e8f0; color:#1e293b; vertical-align:middle; }
+  tbody tr:nth-child(even) td { background:#fafbfc; }
+  .kpi-name { font-weight:600; color:#0f172a; }
+  .emp-name { font-size:11px; color:#64748b; margin-top:2px; }
+  .num { text-align:right; font-variant-numeric:tabular-nums; font-weight:500; }
+  .pos { color:#15803d; font-weight:700; }
+  .neg { color:#b91c1c; font-weight:700; }
+  .range { font-size:11px; color:#64748b; }
+  .bar-track { position:relative; height:8px; background:#f1f5f9; border-radius:4px; overflow:hidden; min-width:120px; }
+  .bar-baseline { position:absolute; top:0; left:0; height:100%; background:#cbd5e1; border-radius:4px 0 0 4px; }
+  .bar-current { position:absolute; top:0; left:0; height:100%; border-radius:4px; }
+  .bar-labels { display:flex; justify-content:space-between; font-size:9px; margin-top:3px; text-transform:uppercase; letter-spacing:0.05em; font-weight:600; }
+  .methodology { margin-top:28px; padding:14px 16px; background:#f8fafc; border-left:3px solid #4f46e5; border-radius:0 6px 6px 0; font-size:11px; color:#475569; line-height:1.6; }
+  .methodology strong { color:#1e3a8a; }
+  .footer { margin-top:22px; padding-top:12px; border-top:1px solid #e2e8f0; color:#94a3b8; font-size:10px; text-align:center; letter-spacing:0.04em; }
+  .footer .brand { color:#4338ca; font-weight:600; }
+  @media print { body { background:white; padding:0; } .preview-banner { display:none; } .doc { box-shadow:none; padding:0; } }
+</style></head>
+<body>
+  <div class="preview-banner">
+    <span>📄 <strong>Preview</strong> — sample data, not real measurements</span>
+    <span>To save as PDF: <code>Cmd/Ctrl + P</code> → "Save as PDF"</span>
+  </div>
+  <div class="doc">
+    <div class="cover">
+      <div class="cover-top">
+        <div class="logo-row">
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" aria-label="WPOS">
+    <defs>
+      <linearGradient id="wposg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#4f46e5"/>
+        <stop offset="100%" stop-color="#1e3a8a"/>
+      </linearGradient>
+    </defs>
+    <rect width="40" height="40" rx="9" fill="url(#wposg)"/>
+    <path d="M9 11 L14.5 28 L20 17 L25.5 28 L31 11" stroke="white" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg><div class="wordmark">WPOS</div></div>
+        <div class="cover-meta">Workforce Performance Operating System<div class="stamp">Pilot Results</div></div>
+      </div>
+      <h1>Pilot Results —<br/>Before &amp; After</h1>
+      <div class="org">Pilot Demo Co. · Customer Success</div>
+      <div class="tagline">Workforce performance, explainable.</div>
+      <div class="window">Pilot window: March 22, 2026 &rarr; June 20, 2026</div>
+      <div class="gradient-rule"></div>
+    </div>
+    <div class="summary">
+      <div class="stat stat--accent"><div class="v">12</div><div class="l">KPIs Tracked</div></div>
+      <div class="stat"><div class="v" style="color:#15803d">10</div><div class="l">Improved</div></div>
+      <div class="stat"><div class="v" style="color:#b91c1c">2</div><div class="l">Declined</div></div>
+      <div class="stat"><div class="v" style="color:#15803d">+20.2%</div><div class="l">Avg &Delta;</div></div>
+    </div>
+    <div class="callouts">
+      <div class="callout callout--success">
+        <div class="callout-label">Top improvement</div>
+        <div class="callout-kpi">Self-Service Resolution Rate</div>
+        <div class="callout-delta">+39.6%</div>
+        <div class="callout-sub">Omar Al-Naqbi · Mar 22 → Jun 20</div>
+      </div>
+      <div class="callout callout--warn">
+        <div class="callout-label">Needs attention</div>
+        <div class="callout-kpi">Customer Satisfaction (CSAT)</div>
+        <div class="callout-delta">-6.6%</div>
+        <div class="callout-sub">Omar Al-Naqbi · Mar 22 → Jun 20</div>
+      </div></div>
+    <div class="section-title">Per-KPI Performance</div>
+    <table>
+      <thead><tr><th style="width:32%">KPI / Employee</th><th style="width:8%" class="num">Baseline</th><th style="width:8%" class="num">Current</th><th style="width:30%">Trajectory</th><th style="width:10%" class="num">&Delta;%</th><th style="width:12%">Window</th></tr></thead>
+      <tbody>
+      <tr>
+        <td>
+          <div class="kpi-name">Customer Satisfaction (CSAT)</div>
+          <div class="emp-name">Aisha Al-Mansoori</div>
+        </td>
+        <td class="num">72.0</td>
+        <td class="num">89.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:76.59574468085107%"></div>
+            <div class="bar-current" style="width:94.68085106382979%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +23.6%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">First Response Time</div>
+          <div class="emp-name">Aisha Al-Mansoori</div>
+        </td>
+        <td class="num">65.0</td>
+        <td class="num">84.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:69.14893617021278%"></div>
+            <div class="bar-current" style="width:89.36170212765957%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +29.2%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Customer Satisfaction (CSAT)</div>
+          <div class="emp-name">Yusuf Al-Hashimi</div>
+        </td>
+        <td class="num">78.0</td>
+        <td class="num">91.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:82.97872340425532%"></div>
+            <div class="bar-current" style="width:96.80851063829788%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +16.7%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Tickets Resolved / Day</div>
+          <div class="emp-name">Yusuf Al-Hashimi</div>
+        </td>
+        <td class="num">70.0</td>
+        <td class="num">88.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:74.46808510638297%"></div>
+            <div class="bar-current" style="width:93.61702127659575%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +25.7%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Customer Satisfaction (CSAT)</div>
+          <div class="emp-name">Mariam Al-Suwaidi</div>
+        </td>
+        <td class="num">81.0</td>
+        <td class="num">79.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:86.17021276595744%"></div>
+            <div class="bar-current" style="width:84.04255319148936%; background:#ef4444"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#ef4444">current</span>
+          </div>
+        </td>
+        <td class="num neg">
+          -2.5%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Knowledge Base Articles Used</div>
+          <div class="emp-name">Mariam Al-Suwaidi</div>
+        </td>
+        <td class="num">55.0</td>
+        <td class="num">73.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:58.51063829787234%"></div>
+            <div class="bar-current" style="width:77.6595744680851%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +32.7%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Customer Satisfaction (CSAT)</div>
+          <div class="emp-name">Khalid Al-Maktoum</div>
+        </td>
+        <td class="num">68.0</td>
+        <td class="num">82.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:72.3404255319149%"></div>
+            <div class="bar-current" style="width:87.2340425531915%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +20.6%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Average Handle Time</div>
+          <div class="emp-name">Khalid Al-Maktoum</div>
+        </td>
+        <td class="num">75.0</td>
+        <td class="num">91.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:79.7872340425532%"></div>
+            <div class="bar-current" style="width:96.80851063829788%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +21.3%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Net Promoter Score</div>
+          <div class="emp-name">Salma Al-Rashid</div>
+        </td>
+        <td class="num">60.0</td>
+        <td class="num">78.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:63.829787234042556%"></div>
+            <div class="bar-current" style="width:82.97872340425532%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +30.0%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Customer Satisfaction (CSAT)</div>
+          <div class="emp-name">Salma Al-Rashid</div>
+        </td>
+        <td class="num">84.0</td>
+        <td class="num">94.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:89.36170212765957%"></div>
+            <div class="bar-current" style="width:100%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +11.9%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Self-Service Resolution Rate</div>
+          <div class="emp-name">Omar Al-Naqbi</div>
+        </td>
+        <td class="num">48.0</td>
+        <td class="num">67.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:51.06382978723404%"></div>
+            <div class="bar-current" style="width:71.27659574468085%; background:#10b981"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#10b981">current</span>
+          </div>
+        </td>
+        <td class="num pos">
+          +39.6%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="kpi-name">Customer Satisfaction (CSAT)</div>
+          <div class="emp-name">Omar Al-Naqbi</div>
+        </td>
+        <td class="num">76.0</td>
+        <td class="num">71.0</td>
+        <td>
+          <div class="bar-track">
+            <div class="bar-baseline" style="width:80.85106382978722%"></div>
+            <div class="bar-current" style="width:75.53191489361703%; background:#ef4444"></div>
+          </div>
+          <div class="bar-labels">
+            <span style="color:#94a3b8">baseline</span>
+            <span style="color:#ef4444">current</span>
+          </div>
+        </td>
+        <td class="num neg">
+          -6.6%
+        </td>
+        <td class="range">Mar 22 → Jun 20</td>
+      </tr></tbody>
+    </table>
+    <div class="methodology"><strong>Methodology.</strong> Each row compares the earliest and latest performance snapshot for one employee &times; KPI pair within the pilot window. Improvement is calculated as <em>(current &minus; baseline) &divide; baseline</em>. Reliability weights and confidence scoring follow WPOS&rsquo;s deterministic, explainable diagnostic rules &mdash; every score traces back to the evidence items that contributed.</div>
+    <p class="footer"><span class="brand">WPOS</span> &middot; Pilot Results &middot; Generated June 20, 2026 &middot; Confidential</p>
+  </div>
+</body></html>
