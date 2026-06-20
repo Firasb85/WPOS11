@@ -36,8 +36,6 @@ import {
   ScrollText,
   BarChart3,
   LogOut,
-  Moon,
-  Sun,
   Brain,
   Activity,
   CreditCard,
@@ -55,13 +53,15 @@ import {
   Award,
   Clock,
   Key,
-  Bot,
   Search,
   BookOpen,
   TrendingUp,
   ClipboardList,
   Layout,
   Link2,
+  Sparkles,
+  Workflow,
+  FlaskConical,
 } from "lucide-react";
 import { navigation, type SecureNavItem, type Role } from "@/lib/wpos/constants/navigation";
 import { APP_NAME } from "@/lib/constants";
@@ -69,7 +69,7 @@ import { useLanguage } from "@/lib/wpos/context/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { ROLE_LABELS } from "@/routes/_authenticated";
 import { isModuleVisible } from "@/lib/stores/module-visibility";
-import { useOrgTier, isAdvancedVisible } from "@/lib/stores/organization-tier";
+import { useOrgTier, isAdvancedVisible, type OrgTier } from "@/lib/stores/organization-tier";
 import { isFeatureEnabled } from "@/lib/security/feature-flags";
 
 const iconMap: Record<string, LucideIcon> = {
@@ -119,13 +119,15 @@ const iconMap: Record<string, LucideIcon> = {
   Award,
   Clock,
   Key,
-  Bot,
   Search,
   BookOpen,
   TrendingUp,
   ClipboardList,
   Layout,
   Link2,
+  Sparkles,
+  Workflow,
+  FlaskConical,
 };
 
 interface SidebarProps {
@@ -157,6 +159,29 @@ function filterNav(items: SecureNavItem[], userRole: Role, advancedVisible: bool
     }
   }
   return out;
+}
+
+/* ── Tier chip — small badge showing the current org plan ── */
+
+const TIER_STYLES: Record<OrgTier, { bg: string; text: string; icon: string }> = {
+  pilot:       { bg: "bg-amber-100 dark:bg-amber-900/40", text: "text-amber-800 dark:text-amber-300", icon: "🧪" },
+  starter:     { bg: "bg-gray-100 dark:bg-gray-800",       text: "text-gray-700 dark:text-gray-300",     icon: "•" },
+  professional:{ bg: "bg-blue-100 dark:bg-blue-900/40",    text: "text-blue-800 dark:text-blue-300",     icon: "★" },
+  enterprise:  { bg: "bg-purple-100 dark:bg-purple-900/40",text: "text-purple-800 dark:text-purple-300", icon: "◆" },
+  unlimited:   { bg: "bg-indigo-100 dark:bg-indigo-900/40",text: "text-indigo-800 dark:text-indigo-300", icon: "✦" },
+};
+
+function TierChip({ tier }: { tier: OrgTier }) {
+  const s = TIER_STYLES[tier] ?? TIER_STYLES.pilot;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${s.bg} ${s.text}`}
+      title={`Current plan: ${tier}`}
+    >
+      <span aria-hidden="true">{s.icon}</span>
+      {tier}
+    </span>
+  );
 }
 
 /* ── Sidebar Component ───────────────────────────────── */
@@ -222,12 +247,48 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
     const active = isActive(item);
     const open = expanded.includes(item.href);
     const label = lang === "ar" ? item.labelAr : item.label;
+    const tooltip = !isOpen ? label : undefined;
 
-    const cls = `flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] cursor-pointer transition-all no-underline ${
-      active
-        ? "bg-blue-600 text-white font-medium shadow-sm dark:bg-blue-600 dark:shadow-blue-900/30"
-        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"
-    }`;
+    // Active item: subtle bg + left-bar accent (instead of full blue fill).
+    // Matches the visual language used elsewhere (diagnostic cards, hypothesis
+    // left-stripe accents) for consistency across the app.
+    const baseCls =
+      "relative flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] cursor-pointer transition-all no-underline";
+    const inactiveCls =
+      "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white";
+    const activeCls =
+      "bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 font-semibold";
+    const parentActiveCls =
+      "text-gray-900 dark:text-white font-medium bg-gray-50 dark:bg-white/5";
+
+    let cls: string;
+    if (active && depth === 0) {
+      cls = `${baseCls} ${activeCls}`;
+    } else if (active) {
+      cls = `${baseCls} ${activeCls}`;
+    } else if (hasKids && depth === 0) {
+      cls = `${baseCls} ${parentActiveCls}`;
+    } else {
+      cls = `${baseCls} ${inactiveCls}`;
+    }
+
+    const inner = (
+      <>
+        <Icon className="w-4 h-4 flex-shrink-0" />
+        {isOpen && (
+          <>
+            <span className="flex-1 truncate text-left">{label}</span>
+            {hasKids && (
+              <ChevronDown
+                className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
+              />
+            )}
+          </>
+        )}
+      </>
+    );
+
+    const baseStyle = { paddingLeft: `${depth * 12 + 12}px` };
 
     return (
       <div key={item.href + "-" + item.label}>
@@ -235,27 +296,38 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
           <button
             type="button"
             className={`${cls} w-full`}
-            style={{ paddingLeft: `${depth * 12 + 12}px` }}
+            style={baseStyle}
             onClick={(e) => {
               e.preventDefault();
               toggle(item.href);
             }}
             aria-expanded={open}
+            title={tooltip}
           >
-            <Icon className="w-4 h-4 flex-shrink-0" />
-            {isOpen && (
-              <>
-                <span className="flex-1 truncate text-left">{label}</span>
-                <ChevronDown
-                  className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
-                />
-              </>
+            {/* Left-bar accent for active top-level items */}
+            {active && depth === 0 && (
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-blue-600 dark:bg-blue-400"
+              />
             )}
+            {inner}
           </button>
         ) : (
-          <Link to={item.href} className={cls} style={{ paddingLeft: `${depth * 12 + 12}px` }}>
-            <Icon className="w-4 h-4 flex-shrink-0" />
-            {isOpen && <span className="flex-1 truncate">{label}</span>}
+          <Link
+            to={item.href}
+            className={cls}
+            style={baseStyle}
+            title={tooltip}
+          >
+            {/* Left-bar accent for active top-level items */}
+            {active && depth === 0 && (
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-blue-600 dark:bg-blue-400"
+              />
+            )}
+            {inner}
           </Link>
         )}
         {hasKids && open && isOpen && (
@@ -287,12 +359,23 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
         aria-label="Main navigation"
       >
         {/* Header */}
-        <div className="h-16 flex items-center gap-2 px-4 border-b border-gray-200 dark:border-[#1b2230]">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
-            <span className="text-white font-bold text-sm">W</span>
+        <div className="h-16 flex items-center gap-2.5 px-4 border-b border-gray-200 dark:border-[#1b2230]">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm bg-gradient-to-br from-indigo-500 via-blue-600 to-blue-700 dark:from-indigo-400 dark:via-blue-500 dark:to-blue-600">
+            <svg viewBox="0 0 40 40" className="w-6 h-6" aria-label="WPOS">
+              <path
+                d="M9 11 L14.5 28 L20 17 L25.5 28 L31 11"
+                stroke="white"
+                strokeWidth="3"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
           {isOpen && (
-            <span className="font-bold text-gray-900 dark:text-white text-lg">{APP_NAME}</span>
+            <span className="font-bold text-gray-900 dark:text-white text-base tracking-tight">
+              {APP_NAME}
+            </span>
           )}
           {isOpen && (
             <button
@@ -318,20 +401,25 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
           )}
         </button>
 
-        {/* Role badge */}
+        {/* Role + tier badges */}
         {isOpen && (
-          <div className="px-4 py-2 border-b border-gray-200 dark:border-[#1b2230] flex items-center gap-2">
-            <span
-              className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge[userRole] || badge.USER}`}
-            >
-              {userRole}
+          <div className="px-4 py-2.5 border-b border-gray-200 dark:border-[#1b2230] flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${badge[userRole] || badge.USER}`}
+              >
+                {userRole}
+              </span>
+              <TierChip tier={orgTier.tier} />
+            </div>
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums flex-shrink-0">
+              {visibleNav.length} modules
             </span>
-            <span className="text-xs text-gray-400 truncate">{visibleNav.length} modules</span>
           </div>
         )}
 
         {/* Navigation — FILTERED BY ROLE + TIER */}
-        <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5">
+        <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
           {(() => {
             const coreItems = visibleNav.filter((i) => i.section !== "advanced");
             const advItems = visibleNav.filter((i) => i.section === "advanced");
@@ -340,21 +428,33 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
                 {coreItems.length > 0 && (
                   <>
                     {isOpen && (
-                      <div className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                        {lang === "ar" ? "سير العمل الأساسي" : "Core Workflow"}
+                      <div className="px-3 pt-1 pb-1.5 flex items-center gap-1.5">
+                        <Workflow className="w-3 h-3 text-blue-500 dark:text-blue-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                          {lang === "ar" ? "سير العمل الأساسي" : "Core Workflow"}
+                        </span>
+                        <span className="text-[9px] text-gray-400 dark:text-gray-500 tabular-nums">
+                          · {coreItems.length}
+                        </span>
                       </div>
                     )}
-                    {coreItems.map((item) => renderItem(item))}
+                    <div className="space-y-0.5">{coreItems.map((item) => renderItem(item))}</div>
                   </>
                 )}
                 {advItems.length > 0 && (
                   <>
                     {isOpen && (
-                      <div className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-[#1b2230] mt-3">
-                        {lang === "ar" ? "متقدم" : "Advanced"}
+                      <div className="px-3 pt-4 pb-1.5 flex items-center gap-1.5 mt-2 border-t border-gray-100 dark:border-[#1b2230]">
+                        <FlaskConical className="w-3 h-3 text-purple-500 dark:text-purple-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                          {lang === "ar" ? "متقدم" : "Advanced"}
+                        </span>
+                        <span className="text-[9px] text-gray-400 dark:text-gray-500 tabular-nums">
+                          · {advItems.length}
+                        </span>
                       </div>
                     )}
-                    {advItems.map((item) => renderItem(item))}
+                    <div className="space-y-0.5">{advItems.map((item) => renderItem(item))}</div>
                   </>
                 )}
               </>
