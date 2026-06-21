@@ -24,6 +24,7 @@ import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedProcessesIndexRouteImport } from './routes/_authenticated/processes/index'
 import { Route as AuthenticatedProcessEngineeringIndexRouteImport } from './routes/_authenticated/process-engineering/index'
 import { Route as AuthenticatedPortfolioIndexRouteImport } from './routes/_authenticated/portfolio/index'
+import { Route as AuthenticatedPilotResultsIndexRouteImport } from './routes/_authenticated/pilot-results/index'
 import { Route as AuthenticatedOrganizationIndexRouteImport } from './routes/_authenticated/organization/index'
 import { Route as AuthenticatedOnboardingIndexRouteImport } from './routes/_authenticated/onboarding/index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
@@ -95,13 +96,17 @@ import { Route as AuthenticatedCasesIdRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedAnalyticsRootCauseRouteImport } from './routes/_authenticated/analytics/root-cause'
 import { Route as AuthenticatedAnalyticsEvidenceQualityRouteImport } from './routes/_authenticated/analytics/evidence-quality'
 import { Route as AuthenticatedAnalyticsCompetencyTrendsRouteImport } from './routes/_authenticated/analytics/competency-trends'
-import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
-import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
-import { Route as AuthenticatedAdminSecurityRouteImport } from './routes/_authenticated/admin/security'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
-import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin/audit'
 import { Route as AuthenticatedReportsEnterpriseIndexRouteImport } from './routes/_authenticated/reports/enterprise/index'
 import { Route as AuthenticatedEvidenceDashboardsIndexRouteImport } from './routes/_authenticated/evidence/dashboards/index'
+import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
+import { Route as AuthenticatedAdminSettingsIndexRouteImport } from './routes/_authenticated/admin/settings/index'
+import { Route as AuthenticatedAdminSecurityIndexRouteImport } from './routes/_authenticated/admin/security/index'
+import { Route as AuthenticatedAdminOrganizationsIndexRouteImport } from './routes/_authenticated/admin/organizations/index'
+import { Route as AuthenticatedAdminKpisIndexRouteImport } from './routes/_authenticated/admin/kpis/index'
+import { Route as AuthenticatedAdminDepartmentsIndexRouteImport } from './routes/_authenticated/admin/departments/index'
+import { Route as AuthenticatedAdminAuditIndexRouteImport } from './routes/_authenticated/admin/audit/index'
+import { Route as AuthenticatedAdminAnalyticsIndexRouteImport } from './routes/_authenticated/admin/analytics/index'
 import { Route as AuthenticatedDiagnosticsReportIdRouteImport } from './routes/_authenticated/diagnostics/report/$id'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -186,6 +191,12 @@ const AuthenticatedPortfolioIndexRoute =
   AuthenticatedPortfolioIndexRouteImport.update({
     id: '/portfolio/',
     path: '/portfolio/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPilotResultsIndexRoute =
+  AuthenticatedPilotResultsIndexRouteImport.update({
+    id: '/pilot-results/',
+    path: '/pilot-results/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedOrganizationIndexRoute =
@@ -605,31 +616,9 @@ const AuthenticatedAnalyticsCompetencyTrendsRoute =
     path: '/analytics/competency-trends',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedAdminSettingsRoute =
-  AuthenticatedAdminSettingsRouteImport.update({
-    id: '/admin/settings',
-    path: '/admin/settings',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedAdminSecurityRoute =
-  AuthenticatedAdminSecurityRouteImport.update({
-    id: '/admin/security',
-    path: '/admin/security',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
 const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
   id: '/admin/roles',
   path: '/admin/roles',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
-  id: '/admin/audit',
-  path: '/admin/audit',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedReportsEnterpriseIndexRoute =
@@ -644,6 +633,54 @@ const AuthenticatedEvidenceDashboardsIndexRoute =
     path: '/evidence/dashboards/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminUsersIndexRoute =
+  AuthenticatedAdminUsersIndexRouteImport.update({
+    id: '/admin/users/',
+    path: '/admin/users/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminSettingsIndexRoute =
+  AuthenticatedAdminSettingsIndexRouteImport.update({
+    id: '/admin/settings/',
+    path: '/admin/settings/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminSecurityIndexRoute =
+  AuthenticatedAdminSecurityIndexRouteImport.update({
+    id: '/admin/security/',
+    path: '/admin/security/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminOrganizationsIndexRoute =
+  AuthenticatedAdminOrganizationsIndexRouteImport.update({
+    id: '/admin/organizations/',
+    path: '/admin/organizations/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminKpisIndexRoute =
+  AuthenticatedAdminKpisIndexRouteImport.update({
+    id: '/admin/kpis/',
+    path: '/admin/kpis/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminDepartmentsIndexRoute =
+  AuthenticatedAdminDepartmentsIndexRouteImport.update({
+    id: '/admin/departments/',
+    path: '/admin/departments/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminAuditIndexRoute =
+  AuthenticatedAdminAuditIndexRouteImport.update({
+    id: '/admin/audit/',
+    path: '/admin/audit/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminAnalyticsIndexRoute =
+  AuthenticatedAdminAnalyticsIndexRouteImport.update({
+    id: '/admin/analytics/',
+    path: '/admin/analytics/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDiagnosticsReportIdRoute =
   AuthenticatedDiagnosticsReportIdRouteImport.update({
     id: '/diagnostics/report/$id',
@@ -654,11 +691,7 @@ const AuthenticatedDiagnosticsReportIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login/': typeof LoginIndexRoute
-  '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
-  '/admin/security': typeof AuthenticatedAdminSecurityRoute
-  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/competency-trends': typeof AuthenticatedAnalyticsCompetencyTrendsRoute
   '/analytics/evidence-quality': typeof AuthenticatedAnalyticsEvidenceQualityRoute
   '/analytics/root-cause': typeof AuthenticatedAnalyticsRootCauseRoute
@@ -730,6 +763,7 @@ export interface FileRoutesByFullPath {
   '/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/onboarding/': typeof AuthenticatedOnboardingIndexRoute
   '/organization/': typeof AuthenticatedOrganizationIndexRoute
+  '/pilot-results/': typeof AuthenticatedPilotResultsIndexRoute
   '/portfolio/': typeof AuthenticatedPortfolioIndexRoute
   '/process-engineering/': typeof AuthenticatedProcessEngineeringIndexRoute
   '/processes/': typeof AuthenticatedProcessesIndexRoute
@@ -743,17 +777,21 @@ export interface FileRoutesByFullPath {
   '/strategy/': typeof AuthenticatedStrategyIndexRoute
   '/workflow-studio/': typeof AuthenticatedWorkflowStudioIndexRoute
   '/diagnostics/report/$id': typeof AuthenticatedDiagnosticsReportIdRoute
+  '/admin/analytics/': typeof AuthenticatedAdminAnalyticsIndexRoute
+  '/admin/audit/': typeof AuthenticatedAdminAuditIndexRoute
+  '/admin/departments/': typeof AuthenticatedAdminDepartmentsIndexRoute
+  '/admin/kpis/': typeof AuthenticatedAdminKpisIndexRoute
+  '/admin/organizations/': typeof AuthenticatedAdminOrganizationsIndexRoute
+  '/admin/security/': typeof AuthenticatedAdminSecurityIndexRoute
+  '/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
+  '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/evidence/dashboards/': typeof AuthenticatedEvidenceDashboardsIndexRoute
   '/reports/enterprise/': typeof AuthenticatedReportsEnterpriseIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
-  '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
-  '/admin/security': typeof AuthenticatedAdminSecurityRoute
-  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/competency-trends': typeof AuthenticatedAnalyticsCompetencyTrendsRoute
   '/analytics/evidence-quality': typeof AuthenticatedAnalyticsEvidenceQualityRoute
   '/analytics/root-cause': typeof AuthenticatedAnalyticsRootCauseRoute
@@ -825,6 +863,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/onboarding': typeof AuthenticatedOnboardingIndexRoute
   '/organization': typeof AuthenticatedOrganizationIndexRoute
+  '/pilot-results': typeof AuthenticatedPilotResultsIndexRoute
   '/portfolio': typeof AuthenticatedPortfolioIndexRoute
   '/process-engineering': typeof AuthenticatedProcessEngineeringIndexRoute
   '/processes': typeof AuthenticatedProcessesIndexRoute
@@ -838,6 +877,14 @@ export interface FileRoutesByTo {
   '/strategy': typeof AuthenticatedStrategyIndexRoute
   '/workflow-studio': typeof AuthenticatedWorkflowStudioIndexRoute
   '/diagnostics/report/$id': typeof AuthenticatedDiagnosticsReportIdRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsIndexRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditIndexRoute
+  '/admin/departments': typeof AuthenticatedAdminDepartmentsIndexRoute
+  '/admin/kpis': typeof AuthenticatedAdminKpisIndexRoute
+  '/admin/organizations': typeof AuthenticatedAdminOrganizationsIndexRoute
+  '/admin/security': typeof AuthenticatedAdminSecurityIndexRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsIndexRoute
+  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/evidence/dashboards': typeof AuthenticatedEvidenceDashboardsIndexRoute
   '/reports/enterprise': typeof AuthenticatedReportsEnterpriseIndexRoute
 }
@@ -846,11 +893,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login/': typeof LoginIndexRoute
-  '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
-  '/_authenticated/admin/security': typeof AuthenticatedAdminSecurityRoute
-  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/analytics/competency-trends': typeof AuthenticatedAnalyticsCompetencyTrendsRoute
   '/_authenticated/analytics/evidence-quality': typeof AuthenticatedAnalyticsEvidenceQualityRoute
   '/_authenticated/analytics/root-cause': typeof AuthenticatedAnalyticsRootCauseRoute
@@ -922,6 +965,7 @@ export interface FileRoutesById {
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/onboarding/': typeof AuthenticatedOnboardingIndexRoute
   '/_authenticated/organization/': typeof AuthenticatedOrganizationIndexRoute
+  '/_authenticated/pilot-results/': typeof AuthenticatedPilotResultsIndexRoute
   '/_authenticated/portfolio/': typeof AuthenticatedPortfolioIndexRoute
   '/_authenticated/process-engineering/': typeof AuthenticatedProcessEngineeringIndexRoute
   '/_authenticated/processes/': typeof AuthenticatedProcessesIndexRoute
@@ -935,6 +979,14 @@ export interface FileRoutesById {
   '/_authenticated/strategy/': typeof AuthenticatedStrategyIndexRoute
   '/_authenticated/workflow-studio/': typeof AuthenticatedWorkflowStudioIndexRoute
   '/_authenticated/diagnostics/report/$id': typeof AuthenticatedDiagnosticsReportIdRoute
+  '/_authenticated/admin/analytics/': typeof AuthenticatedAdminAnalyticsIndexRoute
+  '/_authenticated/admin/audit/': typeof AuthenticatedAdminAuditIndexRoute
+  '/_authenticated/admin/departments/': typeof AuthenticatedAdminDepartmentsIndexRoute
+  '/_authenticated/admin/kpis/': typeof AuthenticatedAdminKpisIndexRoute
+  '/_authenticated/admin/organizations/': typeof AuthenticatedAdminOrganizationsIndexRoute
+  '/_authenticated/admin/security/': typeof AuthenticatedAdminSecurityIndexRoute
+  '/_authenticated/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
+  '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/evidence/dashboards/': typeof AuthenticatedEvidenceDashboardsIndexRoute
   '/_authenticated/reports/enterprise/': typeof AuthenticatedReportsEnterpriseIndexRoute
 }
@@ -943,11 +995,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login/'
-    | '/admin/audit'
     | '/admin/roles'
-    | '/admin/security'
-    | '/admin/settings'
-    | '/admin/users'
     | '/analytics/competency-trends'
     | '/analytics/evidence-quality'
     | '/analytics/root-cause'
@@ -1019,6 +1067,7 @@ export interface FileRouteTypes {
     | '/notifications/'
     | '/onboarding/'
     | '/organization/'
+    | '/pilot-results/'
     | '/portfolio/'
     | '/process-engineering/'
     | '/processes/'
@@ -1032,17 +1081,21 @@ export interface FileRouteTypes {
     | '/strategy/'
     | '/workflow-studio/'
     | '/diagnostics/report/$id'
+    | '/admin/analytics/'
+    | '/admin/audit/'
+    | '/admin/departments/'
+    | '/admin/kpis/'
+    | '/admin/organizations/'
+    | '/admin/security/'
+    | '/admin/settings/'
+    | '/admin/users/'
     | '/evidence/dashboards/'
     | '/reports/enterprise/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/admin/audit'
     | '/admin/roles'
-    | '/admin/security'
-    | '/admin/settings'
-    | '/admin/users'
     | '/analytics/competency-trends'
     | '/analytics/evidence-quality'
     | '/analytics/root-cause'
@@ -1114,6 +1167,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/organization'
+    | '/pilot-results'
     | '/portfolio'
     | '/process-engineering'
     | '/processes'
@@ -1127,6 +1181,14 @@ export interface FileRouteTypes {
     | '/strategy'
     | '/workflow-studio'
     | '/diagnostics/report/$id'
+    | '/admin/analytics'
+    | '/admin/audit'
+    | '/admin/departments'
+    | '/admin/kpis'
+    | '/admin/organizations'
+    | '/admin/security'
+    | '/admin/settings'
+    | '/admin/users'
     | '/evidence/dashboards'
     | '/reports/enterprise'
   id:
@@ -1134,11 +1196,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/login/'
-    | '/_authenticated/admin/audit'
     | '/_authenticated/admin/roles'
-    | '/_authenticated/admin/security'
-    | '/_authenticated/admin/settings'
-    | '/_authenticated/admin/users'
     | '/_authenticated/analytics/competency-trends'
     | '/_authenticated/analytics/evidence-quality'
     | '/_authenticated/analytics/root-cause'
@@ -1210,6 +1268,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notifications/'
     | '/_authenticated/onboarding/'
     | '/_authenticated/organization/'
+    | '/_authenticated/pilot-results/'
     | '/_authenticated/portfolio/'
     | '/_authenticated/process-engineering/'
     | '/_authenticated/processes/'
@@ -1223,6 +1282,14 @@ export interface FileRouteTypes {
     | '/_authenticated/strategy/'
     | '/_authenticated/workflow-studio/'
     | '/_authenticated/diagnostics/report/$id'
+    | '/_authenticated/admin/analytics/'
+    | '/_authenticated/admin/audit/'
+    | '/_authenticated/admin/departments/'
+    | '/_authenticated/admin/kpis/'
+    | '/_authenticated/admin/organizations/'
+    | '/_authenticated/admin/security/'
+    | '/_authenticated/admin/settings/'
+    | '/_authenticated/admin/users/'
     | '/_authenticated/evidence/dashboards/'
     | '/_authenticated/reports/enterprise/'
   fileRoutesById: FileRoutesById
@@ -1338,6 +1405,13 @@ declare module '@tanstack/react-router' {
       path: '/portfolio'
       fullPath: '/portfolio/'
       preLoaderRoute: typeof AuthenticatedPortfolioIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/pilot-results/': {
+      id: '/_authenticated/pilot-results/'
+      path: '/pilot-results'
+      fullPath: '/pilot-results/'
+      preLoaderRoute: typeof AuthenticatedPilotResultsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/organization/': {
@@ -1837,39 +1911,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsCompetencyTrendsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/admin/users': {
-      id: '/_authenticated/admin/users'
-      path: '/admin/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/admin/settings': {
-      id: '/_authenticated/admin/settings'
-      path: '/admin/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/admin/security': {
-      id: '/_authenticated/admin/security'
-      path: '/admin/security'
-      fullPath: '/admin/security'
-      preLoaderRoute: typeof AuthenticatedAdminSecurityRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/admin/roles': {
       id: '/_authenticated/admin/roles'
       path: '/admin/roles'
       fullPath: '/admin/roles'
       preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/admin/audit': {
-      id: '/_authenticated/admin/audit'
-      path: '/admin/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/reports/enterprise/': {
@@ -1886,6 +1932,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEvidenceDashboardsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/users/': {
+      id: '/_authenticated/admin/users/'
+      path: '/admin/users'
+      fullPath: '/admin/users/'
+      preLoaderRoute: typeof AuthenticatedAdminUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/settings/': {
+      id: '/_authenticated/admin/settings/'
+      path: '/admin/settings'
+      fullPath: '/admin/settings/'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/security/': {
+      id: '/_authenticated/admin/security/'
+      path: '/admin/security'
+      fullPath: '/admin/security/'
+      preLoaderRoute: typeof AuthenticatedAdminSecurityIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/organizations/': {
+      id: '/_authenticated/admin/organizations/'
+      path: '/admin/organizations'
+      fullPath: '/admin/organizations/'
+      preLoaderRoute: typeof AuthenticatedAdminOrganizationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/kpis/': {
+      id: '/_authenticated/admin/kpis/'
+      path: '/admin/kpis'
+      fullPath: '/admin/kpis/'
+      preLoaderRoute: typeof AuthenticatedAdminKpisIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/departments/': {
+      id: '/_authenticated/admin/departments/'
+      path: '/admin/departments'
+      fullPath: '/admin/departments/'
+      preLoaderRoute: typeof AuthenticatedAdminDepartmentsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/audit/': {
+      id: '/_authenticated/admin/audit/'
+      path: '/admin/audit'
+      fullPath: '/admin/audit/'
+      preLoaderRoute: typeof AuthenticatedAdminAuditIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/analytics/': {
+      id: '/_authenticated/admin/analytics/'
+      path: '/admin/analytics'
+      fullPath: '/admin/analytics/'
+      preLoaderRoute: typeof AuthenticatedAdminAnalyticsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/diagnostics/report/$id': {
       id: '/_authenticated/diagnostics/report/$id'
       path: '/diagnostics/report/$id'
@@ -1897,11 +1999,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
-  AuthenticatedAdminSecurityRoute: typeof AuthenticatedAdminSecurityRoute
-  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
-  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAnalyticsCompetencyTrendsRoute: typeof AuthenticatedAnalyticsCompetencyTrendsRoute
   AuthenticatedAnalyticsEvidenceQualityRoute: typeof AuthenticatedAnalyticsEvidenceQualityRoute
   AuthenticatedAnalyticsRootCauseRoute: typeof AuthenticatedAnalyticsRootCauseRoute
@@ -1973,6 +2071,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
   AuthenticatedOnboardingIndexRoute: typeof AuthenticatedOnboardingIndexRoute
   AuthenticatedOrganizationIndexRoute: typeof AuthenticatedOrganizationIndexRoute
+  AuthenticatedPilotResultsIndexRoute: typeof AuthenticatedPilotResultsIndexRoute
   AuthenticatedPortfolioIndexRoute: typeof AuthenticatedPortfolioIndexRoute
   AuthenticatedProcessEngineeringIndexRoute: typeof AuthenticatedProcessEngineeringIndexRoute
   AuthenticatedProcessesIndexRoute: typeof AuthenticatedProcessesIndexRoute
@@ -1986,16 +2085,20 @@ interface AuthenticatedRouteChildren {
   AuthenticatedStrategyIndexRoute: typeof AuthenticatedStrategyIndexRoute
   AuthenticatedWorkflowStudioIndexRoute: typeof AuthenticatedWorkflowStudioIndexRoute
   AuthenticatedDiagnosticsReportIdRoute: typeof AuthenticatedDiagnosticsReportIdRoute
+  AuthenticatedAdminAnalyticsIndexRoute: typeof AuthenticatedAdminAnalyticsIndexRoute
+  AuthenticatedAdminAuditIndexRoute: typeof AuthenticatedAdminAuditIndexRoute
+  AuthenticatedAdminDepartmentsIndexRoute: typeof AuthenticatedAdminDepartmentsIndexRoute
+  AuthenticatedAdminKpisIndexRoute: typeof AuthenticatedAdminKpisIndexRoute
+  AuthenticatedAdminOrganizationsIndexRoute: typeof AuthenticatedAdminOrganizationsIndexRoute
+  AuthenticatedAdminSecurityIndexRoute: typeof AuthenticatedAdminSecurityIndexRoute
+  AuthenticatedAdminSettingsIndexRoute: typeof AuthenticatedAdminSettingsIndexRoute
+  AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
   AuthenticatedEvidenceDashboardsIndexRoute: typeof AuthenticatedEvidenceDashboardsIndexRoute
   AuthenticatedReportsEnterpriseIndexRoute: typeof AuthenticatedReportsEnterpriseIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
-  AuthenticatedAdminSecurityRoute: AuthenticatedAdminSecurityRoute,
-  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
-  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAnalyticsCompetencyTrendsRoute:
     AuthenticatedAnalyticsCompetencyTrendsRoute,
   AuthenticatedAnalyticsEvidenceQualityRoute:
@@ -2082,6 +2185,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedOnboardingIndexRoute: AuthenticatedOnboardingIndexRoute,
   AuthenticatedOrganizationIndexRoute: AuthenticatedOrganizationIndexRoute,
+  AuthenticatedPilotResultsIndexRoute: AuthenticatedPilotResultsIndexRoute,
   AuthenticatedPortfolioIndexRoute: AuthenticatedPortfolioIndexRoute,
   AuthenticatedProcessEngineeringIndexRoute:
     AuthenticatedProcessEngineeringIndexRoute,
@@ -2096,6 +2200,16 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedStrategyIndexRoute: AuthenticatedStrategyIndexRoute,
   AuthenticatedWorkflowStudioIndexRoute: AuthenticatedWorkflowStudioIndexRoute,
   AuthenticatedDiagnosticsReportIdRoute: AuthenticatedDiagnosticsReportIdRoute,
+  AuthenticatedAdminAnalyticsIndexRoute: AuthenticatedAdminAnalyticsIndexRoute,
+  AuthenticatedAdminAuditIndexRoute: AuthenticatedAdminAuditIndexRoute,
+  AuthenticatedAdminDepartmentsIndexRoute:
+    AuthenticatedAdminDepartmentsIndexRoute,
+  AuthenticatedAdminKpisIndexRoute: AuthenticatedAdminKpisIndexRoute,
+  AuthenticatedAdminOrganizationsIndexRoute:
+    AuthenticatedAdminOrganizationsIndexRoute,
+  AuthenticatedAdminSecurityIndexRoute: AuthenticatedAdminSecurityIndexRoute,
+  AuthenticatedAdminSettingsIndexRoute: AuthenticatedAdminSettingsIndexRoute,
+  AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
   AuthenticatedEvidenceDashboardsIndexRoute:
     AuthenticatedEvidenceDashboardsIndexRoute,
   AuthenticatedReportsEnterpriseIndexRoute:
@@ -2114,3 +2228,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
