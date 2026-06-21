@@ -382,6 +382,7 @@ export function Sidebar({ isOpen, onToggle, isDark }: SidebarProps) {
               onClick={onToggle}
               className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 lg:hidden ml-auto"
               aria-label="Close sidebar"
+              aria-label="Close sidebar"
             >
               <X className="w-5 h-5 text-gray-500" />
             </button>

@@ -1,56 +1,87 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test.describe("Diagnostic Workflow", () => {
+test.describe('Diagnostic Workflow E2E', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to login
-    await page.goto("/login");
-  });
-
-  test("should show login page before accessing diagnostics", async ({ page }) => {
-    await page.goto("/diagnostics");
-    // Should redirect to login since we're not authenticated
-    await expect(page).toHaveURL(/\/login/);
-  });
-
-  test("login page should have create account option", async ({ page }) => {
-    await expect(page.locator('button:has-text("Create Account")')).toBeVisible();
-  });
-
-  test("should have password toggle button", async ({ page }) => {
-    const toggle = page.locator('button[aria-label*="password"]');
-    await expect(toggle).toBeVisible();
-  });
-});
-
-test.describe("Diagnostic Pages (requires auth)", () => {
-  // These tests require authentication setup
-  // To run: set TEST_EMAIL and TEST_PASSWORD env vars
-
-  test.skip(!process.env.TEST_EMAIL, "Requires TEST_EMAIL and TEST_PASSWORD env vars");
-
-  test.beforeEach(async ({ page }) => {
-    // Login
-    await page.goto("/login");
-    await page.fill('input[type="email"]', process.env.TEST_EMAIL || "");
-    await page.fill('input[type="password"]', process.env.TEST_PASSWORD || "");
+    await page.goto('/login');
+    await page.fill('input[name="email"]', 'manager@wpos.com');
+    await page.fill('input[name="password"]', 'Password123!');
     await page.click('button:has-text("Sign In")');
-    await page.waitForURL(/\/dashboard/);
+    await page.waitForURL('**/dashboard');
   });
 
-  test("should navigate to new diagnostic page", async ({ page }) => {
-    await page.goto("/diagnostics/new");
-    await expect(page.locator("text=New Diagnostic Investigation")).toBeVisible();
+  test('should complete diagnostic workflow: create → evidence → diagnose → approve → report', async ({ page }) => {
+    // Navigate to Diagnostics
+    await page.click('a:has-text("Diagnostics")');
+    await page.waitForURL('**/diagnostics');
+
+    // Create new diagnostic
+    await page.click('button:has-text("New Diagnostic")');
+    await expect(page.locator('text=Create Diagnostic')).toBeVisible();
+
+    // Select employee
+    await page.click('button:has-text("Select Employee")');
+    await page.click('li >> text="Ahmed"');
+
+    // Select KPI
+    await page.click('button:has-text("Select KPI Category")');
+    await page.click('li >> text="Sales Performance"');
+
+    // Create
+    await page.click('button:has-text("Create Diagnostic")');
+    await page.waitForURL('**/diagnostics/*');
+
+    // Add evidence
+    const evidenceItems = [
+      { type: 'Qualitative', desc: 'Manager observed reduced engagement' },
+      { type: 'Quantitative', desc: 'Sales at 72% of target' },
+      { type: 'Qualitative', desc: 'Peer feedback: slower responses' },
+    ];
+
+    for (const ev of evidenceItems) {
+      await page.click('button:has-text("Add Evidence")');
+      await page.selectOption('select[name="type"]', ev.type);
+      await page.fill('textarea[name="description"]', ev.desc);
+      await page.click('button:has-text("Save Evidence")');
+      await expect(page.locator('text=Evidence added')).toBeVisible();
+    }
+
+    // Run diagnostic
+    await page.click('button:has-text("Run Diagnostic")');
+    await page.click('button:has-text("Confirm")');
+    await page.waitForTimeout(2000);
+
+    // Verify hypotheses
+    await expect(page.locator('[data-testid="hypothesis-card"]')).toBeVisible();
+
+    // View scoring breakdown
+    await page.click('button:has-text("View Scoring Breakdown")');
+    await expect(page.locator('[data-testid="scoring-breakdown"]')).toBeVisible();
+
+    // Approve
+    await page.click('button:has-text("Approve")');
+    await page.fill('textarea[name="comment"]', 'Evidence supports diagnosis.');
+    await page.click('button:has-text("Confirm Approval")');
+    await expect(page.locator('text=Diagnostic approved')).toBeVisible();
+
+    // Export PDF
+    await page.click('button:has-text("Export PDF")');
+    const download = await page.waitForEvent('download');
+    expect(download.suggestedFilename()).toContain('diagnostic');
   });
 
-  test("should show 3-step wizard", async ({ page }) => {
-    await page.goto("/diagnostics/new");
-    await expect(page.locator("text=Report Details")).toBeVisible();
-    await expect(page.locator("text=Collect Evidence")).toBeVisible();
-    await expect(page.locator("text=Generate Hypotheses")).toBeVisible();
-  });
+  test('should reject diagnostic when manager disapproves', async ({ page }) => {
+    // Setup (same as above up to Run Diagnostic)
+    await page.click('a:has-text("Diagnostics")');
+    await page.click('button:has-text("New Diagnostic")');
+    await page.click('button:has-text("Select Employee")');
+    await page.click('li >> text="Ahmed"');
+    await page.click('button:has-text("Create Diagnostic")');
 
-  test("should navigate to diagnostics list", async ({ page }) => {
-    await page.goto("/diagnostics");
-    await expect(page.locator("text=Diagnostic Reports")).toBeVisible();
+    // Reject path
+    await page.click('button:has-text("Reject")');
+    await page.fill('textarea[name="reason"]', 'Insufficient evidence.');
+    await page.click('button:has-text("Confirm Rejection")');
+    await expect(page.locator('text=Diagnostic rejected')).toBeVisible();
+    await expect(page.locator('[data-testid="diagnostic-status"]')).toContainText('Rejected');
   });
 });

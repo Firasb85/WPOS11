@@ -52,9 +52,14 @@ function RiskHeatmapsPage() {
     })
     .sort((a, b) => b.score - a.score);
 
-  /* Department aggregation */
+  /* Department aggregation (live data) */
   const deptAgg = departments.map((d) => {
-    const count = allSnaps.length > 0 ? Math.round(Math.random() * 30 + 20) : 0;
+    const count = allSnaps.length > 0 
+      ? allSnaps.filter(s => 
+          (s as any).departments?.name === d.name || 
+          (s as any).department_id === d.id
+        ).length 
+      : 0;
     return { name: d.name, score: count };
   });
 

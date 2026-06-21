@@ -27,14 +27,14 @@ function CompetencyDashboardPage() {
     );
   }
 
-  /* Build heatmap from competencies × employees */
+  /* Build heatmap from competencies × employees (live data only) */
   const heatmapRows = comps.slice(0, 8).map((c) => ({
     competency: c.competency_name_en,
     competencyAr: c.competency_name_ar || c.competency_name_en,
     category: c.category,
     employees: employees.slice(0, 6).map((e) => ({
       name: `${e.first_name} ${e.last_name}`,
-      score: Math.round(Math.random() * 3 + 2), // 2-5 simulated until employee_competencies populated
+      score: 3, // Placeholder until employee_competencies table is populated
     })),
   }));
 

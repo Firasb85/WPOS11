@@ -109,7 +109,7 @@ function SecurityPage() {
           </Card>
         </div>
         <div className="mt-6 flex justify-end">
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button aria-label="Save security settings" className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Save className="w-4 h-4" />
             <span>{l === "ar" ? "حفظ الإعدادات الأمنية" : "Save Security Settings"}</span>
           </button>

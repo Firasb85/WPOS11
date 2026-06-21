@@ -95,7 +95,7 @@ function InsightsAssistantPage() {
                 <p className="text-xs font-medium text-gray-500 mb-2">{t("OpenAI API Key (optional)", "مفتاح OpenAI API (اختياري)")}</p>
                 <div className="flex gap-2">
                   <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="sk-..." className="flex-1 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-[#1e2836] bg-white dark:bg-[#111822] focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                  <button onClick={handleSaveKey} className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"><CheckCircle className="w-4 h-4" /></button>
+                  <button onClick={handleSaveKey} aria-label="Save API key" className="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"><CheckCircle className="w-4 h-4" /></button>
                 </div>
                 <p className="text-[10px] text-gray-400 mt-1">{t("Without a key, the local analysis engine is used (no API calls).", "بدون مفتاح، يُستخدم محرك التحليل المحلي (بدون اتصال بـ API).")}</p>
               </div>
@@ -143,7 +143,7 @@ function InsightsAssistantPage() {
             <CardHeader><CardTitle>{t("Quick Prompts", "اقتراحات سريعة")}</CardTitle></CardHeader>
             <div className="space-y-2">
               {suggestions.map((s, i) => (
-                <button key={i} onClick={() => handleSend(s.text, s.type)} disabled={loading} className="w-full flex items-center gap-2.5 p-2.5 text-start text-sm rounded-lg bg-gray-50 dark:bg-[#0d1117] hover:bg-blue-50 dark:hover:bg-blue-500/10 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-40">
+                <button key={i} onClick={() => handleSend(s.text, s.type)} disabled={loading} aria-label={`Send quick prompt: ${s.text}`} className="w-full flex items-center gap-2.5 p-2.5 text-start text-sm rounded-lg bg-gray-50 dark:bg-[#0d1117] hover:bg-blue-50 dark:hover:bg-blue-500/10 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-40">
                   <span className="text-blue-500">{s.icon}</span>
                   <span className="text-xs">{s.text}</span>
                 </button>

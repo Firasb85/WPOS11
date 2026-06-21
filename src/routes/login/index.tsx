@@ -225,7 +225,7 @@ function LoginPage() {
                   </button>
                 </div>
               </div>
-              <button type="submit" disabled={loading} className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md text-sm font-medium transition-all shadow-md">
+              <button type="submit" disabled={loading} aria-label="Sign in to account" className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md text-sm font-medium transition-all shadow-md">
                 {loading && !quickLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
                 Sign In
               </button>

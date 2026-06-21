@@ -292,13 +292,13 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
               </p>
             </div>
           </div>
-          <button
-            aria-label="Close"
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
+            <button
+              aria-label="Close dialog"
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
         </div>
 
         {/* Progress bar */}
@@ -688,11 +688,11 @@ export function GuidedDiagnosticWizard({ open, onClose }: WizardProps) {
                             </p>
                           </div>
 
-                          <button
-                            onClick={() => removeEvidence(i)}
-                            className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg opacity-60 group-hover:opacity-100 transition-all flex-shrink-0"
-                            aria-label="Remove evidence"
-                          >
+                      <button
+                        onClick={() => removeEvidence(i)}
+                        className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg opacity-60 group-hover:opacity-100 transition-all flex-shrink-0"
+                        aria-label="Remove evidence item"
+                      >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>

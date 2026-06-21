@@ -160,7 +160,7 @@ function ProfilePage() {
                   <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("+966 5x xxx xxxx", "+966 5x xxx xxxx")} className="w-full pl-10 pr-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                 </div>
               </div>
-              <button onClick={handleSaveProfile} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
+              <button onClick={handleSaveProfile} disabled={saving} aria-label="Save profile changes" className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 {t("Save Changes", "حفظ التغييرات")}
               </button>
@@ -206,7 +206,7 @@ function ProfilePage() {
                 </div>
                 <p className="text-xs text-gray-400 mt-1">{t("Minimum 8 characters", "8 أحرف كحد أدنى")}</p>
               </div>
-              <button onClick={handleChangePassword} disabled={changingPassword || newPassword.length < 8} className="flex items-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
+              <button onClick={handleChangePassword} disabled={changingPassword || newPassword.length < 8} aria-label="Change password" className="flex items-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
                 {changingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                 {t("Update Password", "تحديث كلمة المرور")}
               </button>

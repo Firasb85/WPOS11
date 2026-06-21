@@ -105,7 +105,7 @@ function SimulationsPage() {
                   <p className="text-sm text-gray-500">
                     {l === "ar" ? "لم يتم تشغيل المحاكاة بعد" : "Not yet simulated"}
                   </p>
-                  <button className="mt-2 px-4 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
+                  <button aria-label="Run simulation" className="mt-2 px-4 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
                     <Play className="w-3 h-3 inline mr-1" />
                     {l === "ar" ? "تشغيل المحاكاة" : "Run Simulation"}
                   </button>
@@ -140,7 +140,7 @@ function SimulationsPage() {
               placeholder={l === "ar" ? "وصف السيناريو..." : "Describe scenario..."}
               currentLang={l}
             />
-            <button className="w-full py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <button aria-label="Start new simulation" className="w-full py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               <Play className="w-4 h-4 inline mr-1" />
               <span>{l === "ar" ? "تشغيل المحاكاة" : "Run Simulation"}</span>
             </button>

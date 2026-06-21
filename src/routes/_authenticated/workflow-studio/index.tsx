@@ -50,11 +50,11 @@ function WorkflowStudioPage() {
               <span className="text-xs text-gray-400 ml-2">{wf.steps} steps</span>
             </div>
             <div className="flex gap-2">
-              <button className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
+              <button aria-label="Add step" className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
                 <Play className="w-3 h-3" />
                 <span>{l === "ar" ? "محاكاة" : "Simulate"}</span>
               </button>
-              <button className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 border border-gray-200 rounded text-xs hover:bg-gray-50">
+              <button aria-label="Remove step" className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 border border-gray-200 rounded text-xs hover:bg-gray-50">
                 <Settings className="w-3 h-3" />
                 <span>{l === "ar" ? "تعديل" : "Edit"}</span>
               </button>

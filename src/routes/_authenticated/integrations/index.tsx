@@ -309,17 +309,17 @@ function IntegrationsPage() {
                   <div className="flex items-center gap-3 mt-4">
                     {sys.status === "connected" ? (
                       <>
-                        <button onClick={() => handleSync(sys.id)} disabled={syncing === sys.id} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
+                        <button onClick={() => handleSync(sys.id)} disabled={syncing === sys.id} aria-label={`Sync ${sys.name}`} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
                           {syncing === sys.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
                           {t("Sync Now", "مزامنة الآن")}
                         </button>
-                        <button onClick={() => handleDisconnect(sys.id)} className="flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium">
+                        <button onClick={() => handleDisconnect(sys.id)} aria-label={`Disconnect ${sys.name}`} className="flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium">
                           <XCircle className="w-4 h-4" />
                           {t("Disconnect", "قطع الاتصال")}
                         </button>
                       </>
                     ) : (
-                      <button onClick={() => handleConnect(sys.id)} disabled={syncing === sys.id} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
+                      <button onClick={() => handleConnect(sys.id)} disabled={syncing === sys.id} aria-label={`Connect ${sys.name}`} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium">
                         {syncing === sys.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />}
                         {t("Connect", "اتصال")}
                       </button>

@@ -38,7 +38,10 @@ function KpiTreeNode({
         onClick={() => hasChildren && setExpanded(!expanded)}
       >
         {hasChildren ? (
-          <button className="p-0.5 hover:bg-white/50 rounded">
+          <button
+            className="p-0.5 hover:bg-white/50 rounded"
+            aria-label={expanded ? "Collapse KPI details" : "Expand KPI details"}
+          >
             {expanded ? (
               <ChevronDown className="w-4 h-4 text-gray-500" />
             ) : (

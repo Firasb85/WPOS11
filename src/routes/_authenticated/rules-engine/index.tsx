@@ -191,7 +191,7 @@ function RulesEnginePage() {
                 placeholder={l === "ar" ? "JSON سياق الاختبار..." : "Test context JSON..."}
                 currentLang={l}
               />
-              <button className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+              <button aria-label="Run rule" className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
                 <Play className="w-4 h-4 inline mr-1" />
                 {l === "ar" ? "تشغيل الاختبار" : "Run Test"}
               </button>

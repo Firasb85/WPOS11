@@ -81,7 +81,7 @@ function DigitalTwinPage() {
         descriptionAr="نموذج مؤسسي حي يظهر جميع الكيانات والتبعيات والتأثيرات"
         currentLang={l}
         actions={
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+          <button aria-label="Reset simulation" className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
             <RefreshCw className="w-4 h-4" />
             <span>{l === "ar" ? "تحديث" : "Refresh"}</span>
           </button>
